@@ -1,0 +1,299 @@
+{
+  "run_at": "2026-10-12T10:50:53.588889+00:00",
+  "purpose": "补测Dense embedding-only/向量检索-only、BM25分词-only/排名-only的细粒度耗时拆分，不重新计算质量指标(Recall/MRR/nDCG继续以已有结果文件为准)",
+  "kb_source_label": "working",
+  "knowledge_evidence_count": 37,
+  "scenario_count": 47,
+  "candidate_k": 20,
+  "snapshot_check": {
+    "before_run": {
+      "checked": true,
+      "stage": "before_run",
+      "recorded_fingerprint": "1bf38ca720fd65f8b0de3e4f0a42c8a0e68bdd2908ecd49e6469afccc00c894c",
+      "current_fingerprint": "1bf38ca720fd65f8b0de3e4f0a42c8a0e68bdd2908ecd49e6469afccc00c894c",
+      "changed": false,
+      "diff": {
+        "overall_changed": false,
+        "knowledge_changed": false,
+        "eval_dataset_changed": false,
+        "config_changed": false
+      }
+    },
+    "after_run": {
+      "checked": true,
+      "stage": "after_run",
+      "recorded_fingerprint": "1bf38ca720fd65f8b0de3e4f0a42c8a0e68bdd2908ecd49e6469afccc00c894c",
+      "current_fingerprint": "1bf38ca720fd65f8b0de3e4f0a42c8a0e68bdd2908ecd49e6469afccc00c894c",
+      "changed": false,
+      "diff": {
+        "overall_changed": false,
+        "knowledge_changed": false,
+        "eval_dataset_changed": false,
+        "config_changed": false
+      }
+    }
+  },
+  "dense_timing_breakdown": {
+    "cold_start_and_model_init": {
+      "embedder_load_seconds": 15.561
+    },
+    "index_build_seconds": 17.97,
+    "warmup_note": "每轮重复前先对第一个Query做2次预热调用(embed_query+collection.query)，不计入下面任何统计量",
+    "repeats_of_full_47_query_scan": 3,
+    "embedding_only": {
+      "n": 141,
+      "total_seconds": 22.7692,
+      "mean_seconds": 0.16148,
+      "p50_seconds": 0.15229,
+      "p95_seconds": 0.24968
+    },
+    "vector_search_only": {
+      "n": 141,
+      "total_seconds": 0.4097,
+      "mean_seconds": 0.00291,
+      "p50_seconds": 0.00275,
+      "p95_seconds": 0.00403
+    },
+    "combined_embedding_plus_search": {
+      "n": 141,
+      "total_seconds": 23.1789,
+      "mean_seconds": 0.16439,
+      "p50_seconds": 0.15528,
+      "p95_seconds": 0.25215
+    },
+    "same_query_repeat_stability": {
+      "工作内容和工作地点\n乙方在甲方从事软件开发岗位工作，工作地点为上海市。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02184,
+        "mean_seconds": 0.14958
+      },
+      "劳动报酬\n乙方正式工资为每月人民币15000元，甲方于次月10日前足额支付。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01415,
+        "mean_seconds": 0.1475
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之五十。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00509,
+        "mean_seconds": 0.14073
+      },
+      "社会保险\n甲方依法为乙方缴纳社会保险，具体险种和缴纳比例按国家及地方规定执行。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01464,
+        "mean_seconds": 0.15176
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之四十。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02494,
+        "mean_seconds": 0.15032
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之六十。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01111,
+        "mean_seconds": 0.1507
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之七十。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00512,
+        "mean_seconds": 0.14317
+      },
+      "违约责任\n任何一方违反本合同约定，应当承担相应的违约责任并赔偿由此造成的损失。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01133,
+        "mean_seconds": 0.1335
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之七十五。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00932,
+        "mean_seconds": 0.13453
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之零。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.03907,
+        "mean_seconds": 0.14825
+      },
+      "合同期限及试用期\n本合同期限为一年。乙方试用期为三个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02013,
+        "mean_seconds": 0.15223
+      },
+      "合同期限及试用期\n本合同期限为六个月。乙方试用期为二个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.0151,
+        "mean_seconds": 0.14601
+      },
+      "合同期限及试用期\n本合同为无固定期限劳动合同。乙方试用期为七个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02049,
+        "mean_seconds": 0.15002
+      },
+      "合同期限及试用期\n本合同以完成软件开发项目为期限，任务完成之日合同终止。乙方试用": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01743,
+        "mean_seconds": 0.15983
+      },
+      "合同期限及试用期\n本合同期限为三年。乙方试用期为七个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01449,
+        "mean_seconds": 0.13627
+      },
+      "合同期限及试用期\n本合同期限自2024年1月1日起至2024年7月1日止。乙方试": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01948,
+        "mean_seconds": 0.18016
+      },
+      "竞业限制\n乙方在劳动合同解除或者终止后三年内，不得到与甲方有竞争关系的单位任职，": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02522,
+        "mean_seconds": 0.18077
+      },
+      "竞业限制\n乙方在劳动合同解除或者终止后二年内，不得到与甲方有竞争关系的单位任职，": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01027,
+        "mean_seconds": 0.21556
+      },
+      "竞业限制\n乙方在劳动合同解除或者终止后四年内，不得到与甲方有竞争关系的单位任职，": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01695,
+        "mean_seconds": 0.21485
+      },
+      "劳动报酬\n乙方正式工资为每月人民币15000元，甲方可以根据资金情况延迟支付，乙": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02155,
+        "mean_seconds": 0.1695
+      },
+      "培训与服务期\n甲方为乙方提供专项培训，培训费用为人民币10000元，双方约定服务": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.03183,
+        "mean_seconds": 0.22887
+      },
+      "违约责任\n乙方违反本合同任何约定的，应向甲方支付违约金人民币20000元。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01882,
+        "mean_seconds": 0.13913
+      },
+      "社会保险\n经双方协商一致，乙方自愿放弃由甲方缴纳社会保险，甲方每月向乙方支付人民": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00758,
+        "mean_seconds": 0.15357
+      },
+      "合同解除\n甲方可随时无理由解除本合同，无需提前通知，亦无需向乙方支付任何经济补偿": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01184,
+        "mean_seconds": 0.15681
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之八十。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01706,
+        "mean_seconds": 0.14481
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之八十五。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02884,
+        "mean_seconds": 0.15389
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之十十。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01399,
+        "mean_seconds": 0.14677
+      },
+      "合同期限及试用期\n本合同期限为一年。乙方试用期为二个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00222,
+        "mean_seconds": 0.13178
+      },
+      "合同期限及试用期\n本合同为无固定期限劳动合同。乙方试用期为六个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00976,
+        "mean_seconds": 0.12703
+      },
+      "合同期限及试用期\n本合同期限为三年。乙方试用期为六个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00619,
+        "mean_seconds": 0.11905
+      },
+      "竞业限制\n乙方在劳动合同解除或者终止后一年内，不得到与甲方有竞争关系的单位任职，": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.0264,
+        "mean_seconds": 0.23175
+      },
+      "培训与服务期\n甲方为乙方提供专项培训，培训费用为人民币12000元，双方约定服务": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02488,
+        "mean_seconds": 0.24415
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之五十五。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01241,
+        "mean_seconds": 0.1637
+      },
+      "工作时间和休息休假\n甲方可根据经营需要安排乙方加班，加班不另行支付加班费，已包含": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01172,
+        "mean_seconds": 0.17217
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之四十五。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02245,
+        "mean_seconds": 0.14653
+      },
+      "合同期限及试用期\n本合同为无固定期限劳动合同。乙方试用期为八个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00247,
+        "mean_seconds": 0.1318
+      },
+      "培训与服务期\n甲方为乙方提供专项培训，培训费用为人民币8000元，双方约定服务期": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.03194,
+        "mean_seconds": 0.22752
+      },
+      "工作地点\n乙方工作地点为深圳市。甲方可以根据经营需要随时调整乙方工作地点，乙方应": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00974,
+        "mean_seconds": 0.14671
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之六十五。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.02766,
+        "mean_seconds": 0.14446
+      },
+      "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之八十一。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.01452,
+        "mean_seconds": 0.15777
+      },
+      "培训与服务期\n甲方为乙方提供专项培训，培训费用为人民币6000元，双方约定服务期": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.0139,
+        "mean_seconds": 0.24763
+      },
+      "合同期限及试用期\n本合同期限为二年。乙方试用期为二个月。": {
+        "n_repeats": 3,
+        "stdev_seconds": 0.00233,
+        "mean_seconds": 0.1446
+      }
+    },
+    "measurement_boundary_note": "embedding_only 只计时 embedder.embed_query(query)；vector_search_only 只计时 kb._store._collection.query(query_embeddings=[已算好的向量], n_results=candidate_k)，没有重复计算embedding，避免把一次额外embedding耗时错算进向量检索里。combined_embedding_plus_search = 两段直接相加，用于和旧结果文件里的dense_query_embedding_and_retrieval做对照(旧字段是similarity_search_with_score一次调用内部自动完成embedding+检索，口径应一致，但本脚本是两次独立调用相加，如果两者数字有系统性差异，可能来自两次调用之间的调度开销，未进一步拆解，如实标注)。"
+  },
+  "bm25_timing_breakdown": {
+    "tokenizer_used": "char_bigram (forced via --tokenizer char_bigram)",
+    "index_build_seconds_for_this_breakdown_run": "见主实验结果文件的index_build_update_delete.bm25.initial_build_seconds，本脚本不重复测量构建耗时",
+    "repeats_of_full_47_query_scan": 3,
+    "query_normalization_note": "NOT_MEASURED_NO_SEPARATE_STEP_IN_CODE(char_bigram_baseline实现里过滤空白后直接两两配对，规范化和分词是同一步，代码里没有可单独计时的规范化子步骤)",
+    "tokenize_only": {
+      "n": 141,
+      "total_seconds": 0.0014,
+      "mean_seconds": 1e-05,
+      "p50_seconds": 8e-06,
+      "p95_seconds": 1.8e-05
+    },
+    "bm25_rank_only": {
+      "n": 141,
+      "total_seconds": 0.0166,
+      "mean_seconds": 0.000118,
+      "p50_seconds": 0.000106,
+      "p95_seconds": 0.000196
+    }
+  },
+  "caveat": "本文件只补测耗时，不包含Recall/MRR/nDCG；对应的质量指标见同目录下working_kb_retrieval_experiment_*.json。并行端到端耗时本脚本仍未测量（Dense/BM25本来就是两个独立通道，本脚本串行测两个通道各自的细分耗时，不构成真正的并发测量，不得当作并行耗时使用）。"
+}

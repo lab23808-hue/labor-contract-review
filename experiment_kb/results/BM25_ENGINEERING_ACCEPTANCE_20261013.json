@@ -1,0 +1,6001 @@
+{
+  "meta": {
+    "report_date": "2026-10-13",
+    "round": "BM25五维工程验收第一轮",
+    "data_scope": {
+      "kb": "生产 data/knowledge/（26条Evidence，本轮用生产切分正则实测确认，与历史baseline(26-Evidence)口径一致）",
+      "eval_total_clauses": 315,
+      "eval_evaluable_samples": 188,
+      "eval_excluded_samples": 127,
+      "eval_excluded_note": "127条不可评估样本是因为缺少legal_basis_raw标签字段，不等于'无相关法律依据'，不得当作负例",
+      "eval_distinct_scenarios": 47,
+      "eval_multi_label_scenarios": 10,
+      "eval_source": "experiment_kb/working/data/eval_samples/retrieval_eval_samples.json（query函数=agents.review_agent.generate_query，真实生产函数）"
+    },
+    "execution_note": "formal_bm25 指标为本轮在云端沙箱里真实执行生产代码 rag/bm25_index.py::BM25KnowledgeIndex （配合轻量占位 langchain_core.documents/langchain_text_splitters/langchain_chroma/langchain_huggingface 模块，让真实生产代码可以被import和运行；占位模块只提供被用到的接口形状，不能证明与真实依赖的所有边界行为完全一致）跑出的真实结果，不是历史实验脚本的数字。hist_dense/hist_bm25/hist_rrf 为复用 baseline_kb_retrieval_experiment_20261012_151710_char_bigram.json 里已发布的真实历史候选，本轮用同一套评估公式重新计算，并与该文件发布的aggregate字段逐项核对（cross_check_mismatch_count=0，证明复用未被篡改）。",
+    "cross_check_mismatch_count": 0,
+    "formal_vs_historical_bm25_rank_agreement": "47场景60个相关对中，55个排名完全一致；5个为同分并列时的tie-break顺序差异（相邻名次互换，不影响任何TopK命中判定），差异原因见docs报告"
+  },
+  "dimension1_recall_and_miss": {
+    "top20_misses_formal_bm25": [
+      {
+        "query": "工作地点\n乙方工作地点为深圳市。甲方可以根据经营需要随时调整乙方工作地点，乙方应无条件服从。",
+        "missed": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "member_sample_ids": [
+          "mixed_07::mixed_07_c02",
+          "boundary_02::boundary_02_c02",
+          "boundary_08::boundary_08_c02"
+        ]
+      }
+    ],
+    "top20_misses_both_formal_bm25_and_hist_dense": [
+      {
+        "query": "工作地点\n乙方工作地点为深圳市。甲方可以根据经营需要随时调整乙方工作地点，乙方应无条件服从。",
+        "missed": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "member_sample_ids": [
+          "mixed_07::mixed_07_c02",
+          "boundary_02::boundary_02_c02",
+          "boundary_08::boundary_08_c02"
+        ]
+      }
+    ],
+    "note": "第二十六条/工作地点场景是本轮唯一一个BM25与Dense双通道Top20都漏检的场景，与此前ART26_WORKPLACE_RELOCATION_DIAGNOSIS.md的结论一致：知识库已收录该条文（非知识库缺失），是未进入候选排名的问题。"
+  },
+  "dimension2_ranking_quality": {
+    "aggregate_scenario_level": {
+      "formal_bm25": {
+        "5": {
+          "n": 47,
+          "recall": 0.9344,
+          "mrr": 0.9007,
+          "ndcg": 0.902
+        },
+        "10": {
+          "n": 47,
+          "recall": 0.9787,
+          "mrr": 0.905,
+          "ndcg": 0.9184
+        },
+        "20": {
+          "n": 47,
+          "recall": 0.9894,
+          "mrr": 0.905,
+          "ndcg": 0.9217
+        }
+      },
+      "hist_dense": {
+        "5": {
+          "n": 47,
+          "recall": 0.945,
+          "mrr": 0.7713,
+          "ndcg": 0.8033
+        },
+        "10": {
+          "n": 47,
+          "recall": 0.961,
+          "mrr": 0.7713,
+          "ndcg": 0.8113
+        },
+        "20": {
+          "n": 47,
+          "recall": 0.9787,
+          "mrr": 0.7728,
+          "ndcg": 0.8169
+        }
+      },
+      "hist_bm25": {
+        "5": {
+          "n": 47,
+          "recall": 0.9344,
+          "mrr": 0.9007,
+          "ndcg": 0.902
+        },
+        "10": {
+          "n": 47,
+          "recall": 0.9787,
+          "mrr": 0.905,
+          "ndcg": 0.9184
+        },
+        "20": {
+          "n": 47,
+          "recall": 0.9894,
+          "mrr": 0.905,
+          "ndcg": 0.9218
+        }
+      },
+      "hist_rrf": {
+        "5": {
+          "n": 47,
+          "recall": 0.961,
+          "mrr": 0.7677,
+          "ndcg": 0.8097
+        },
+        "10": {
+          "n": 47,
+          "recall": 0.9681,
+          "mrr": 0.7677,
+          "ndcg": 0.8126
+        },
+        "20": {
+          "n": 47,
+          "recall": 0.9894,
+          "mrr": 0.7691,
+          "ndcg": 0.8189
+        }
+      }
+    },
+    "aggregate_sample_level": {
+      "formal_bm25": {
+        "5": {
+          "n": 188,
+          "recall": 0.9468,
+          "mrr": 0.8644,
+          "ndcg": 0.8797
+        },
+        "10": {
+          "n": 188,
+          "recall": 0.984,
+          "mrr": 0.8681,
+          "ndcg": 0.8928
+        },
+        "20": {
+          "n": 188,
+          "recall": 0.992,
+          "mrr": 0.8681,
+          "ndcg": 0.8952
+        }
+      },
+      "hist_dense": {
+        "5": {
+          "n": 188,
+          "recall": 0.9628,
+          "mrr": 0.629,
+          "ndcg": 0.7055
+        },
+        "10": {
+          "n": 188,
+          "recall": 0.9707,
+          "mrr": 0.629,
+          "ndcg": 0.7095
+        },
+        "20": {
+          "n": 188,
+          "recall": 0.984,
+          "mrr": 0.6301,
+          "ndcg": 0.7137
+        }
+      },
+      "hist_bm25": {
+        "5": {
+          "n": 188,
+          "recall": 0.9468,
+          "mrr": 0.8644,
+          "ndcg": 0.8797
+        },
+        "10": {
+          "n": 188,
+          "recall": 0.984,
+          "mrr": 0.8681,
+          "ndcg": 0.8928
+        },
+        "20": {
+          "n": 188,
+          "recall": 0.992,
+          "mrr": 0.8681,
+          "ndcg": 0.8953
+        }
+      },
+      "hist_rrf": {
+        "5": {
+          "n": 188,
+          "recall": 0.9707,
+          "mrr": 0.7394,
+          "ndcg": 0.7944
+        },
+        "10": {
+          "n": 188,
+          "recall": 0.9761,
+          "mrr": 0.7394,
+          "ndcg": 0.7966
+        },
+        "20": {
+          "n": 188,
+          "recall": 0.992,
+          "mrr": 0.7404,
+          "ndcg": 0.8013
+        }
+      }
+    },
+    "note": "scenario_level=47个独立场景等权重；sample_level=188条样本（同一场景按occurrence_count重复计入）。hist_*为复用历史真实结果，非本轮重跑。"
+  },
+  "dimension3_relevance_and_noise": {
+    "multi_label_scenarios_count": 10,
+    "multi_label_partial_recall_cases": [
+      {
+        "query": "劳动报酬\n乙方正式工资为每月人民币15000元，甲方可以根据资金情况延迟支付，乙方不得因此追究甲方任何责任。",
+        "k": 5,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第三十条"
+          ],
+          [
+            "劳动合同法",
+            "第二十六条"
+          ],
+          [
+            "劳动合同法",
+            "第八十五条"
+          ]
+        ],
+        "hit": [
+          [
+            "劳动合同法",
+            "第三十条"
+          ],
+          [
+            "劳动合同法",
+            "第八十五条"
+          ]
+        ],
+        "miss": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "recall_fraction": 0.6666666666666666
+      },
+      {
+        "query": "社会保险\n经双方协商一致，乙方自愿放弃由甲方缴纳社会保险，甲方每月向乙方支付人民币800元作为补偿。",
+        "k": 5,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ],
+          [
+            "劳动合同法",
+            "第十七条"
+          ]
+        ],
+        "hit": [
+          [
+            "劳动合同法",
+            "第十七条"
+          ]
+        ],
+        "miss": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "recall_fraction": 0.5
+      },
+      {
+        "query": "社会保险\n经双方协商一致，乙方自愿放弃由甲方缴纳社会保险，甲方每月向乙方支付人民币800元作为补偿。",
+        "k": 10,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ],
+          [
+            "劳动合同法",
+            "第十七条"
+          ]
+        ],
+        "hit": [
+          [
+            "劳动合同法",
+            "第十七条"
+          ]
+        ],
+        "miss": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "recall_fraction": 0.5
+      },
+      {
+        "query": "合同解除\n甲方可随时无理由解除本合同，无需提前通知，亦无需向乙方支付任何经济补偿或赔偿金。",
+        "k": 5,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第八十七条"
+          ],
+          [
+            "劳动合同法",
+            "第四十七条"
+          ],
+          [
+            "劳动合同法",
+            "第四十八条"
+          ],
+          [
+            "劳动合同法",
+            "第四十六条"
+          ]
+        ],
+        "hit": [
+          [
+            "劳动合同法",
+            "第八十七条"
+          ],
+          [
+            "劳动合同法",
+            "第四十七条"
+          ],
+          [
+            "劳动合同法",
+            "第四十八条"
+          ]
+        ],
+        "miss": [
+          [
+            "劳动合同法",
+            "第四十六条"
+          ]
+        ],
+        "recall_fraction": 0.75
+      },
+      {
+        "query": "工作地点\n乙方工作地点为深圳市。甲方可以根据经营需要随时调整乙方工作地点，乙方应无条件服从。",
+        "k": 5,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第三十五条"
+          ],
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "hit": [],
+        "miss": [
+          [
+            "劳动合同法",
+            "第三十五条"
+          ],
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "recall_fraction": 0.0
+      },
+      {
+        "query": "工作地点\n乙方工作地点为深圳市。甲方可以根据经营需要随时调整乙方工作地点，乙方应无条件服从。",
+        "k": 10,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第三十五条"
+          ],
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "hit": [
+          [
+            "劳动合同法",
+            "第三十五条"
+          ]
+        ],
+        "miss": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "recall_fraction": 0.5
+      },
+      {
+        "query": "工作地点\n乙方工作地点为深圳市。甲方可以根据经营需要随时调整乙方工作地点，乙方应无条件服从。",
+        "k": 20,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第三十五条"
+          ],
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "hit": [
+          [
+            "劳动合同法",
+            "第三十五条"
+          ]
+        ],
+        "miss": [
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ],
+        "recall_fraction": 0.5
+      }
+    ],
+    "top1_not_relevant_scenarios": [
+      {
+        "query": "违约责任\n任何一方违反本合同约定，应当承担相应的违约责任并赔偿由此造成的损失。",
+        "top1": [
+          "劳动合同法",
+          "第二十二条"
+        ],
+        "top1_score": 12.056887,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第二十五条"
+          ]
+        ]
+      },
+      {
+        "query": "竞业限制\n乙方在劳动合同解除或者终止后三年内，不得到与甲方有竞争关系的单位任职，甲方按月给予乙方相当于离职前十二个月平均工资30%的经济补偿。",
+        "top1": [
+          "劳动合同法",
+          "第四十七条"
+        ],
+        "top1_score": 42.181183,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第二十三条"
+          ],
+          [
+            "劳动合同法",
+            "第二十四条"
+          ]
+        ]
+      },
+      {
+        "query": "违约责任\n乙方违反本合同任何约定的，应向甲方支付违约金人民币20000元。",
+        "top1": [
+          "劳动合同法",
+          "第二十二条"
+        ],
+        "top1_score": 16.812647,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第二十五条"
+          ]
+        ]
+      },
+      {
+        "query": "竞业限制\n乙方在劳动合同解除或者终止后二年内，不得到与甲方有竞争关系的单位任职，甲方按月给予乙方相当于离职前十二个月平均工资30%的经济补偿。",
+        "top1": [
+          "劳动合同法",
+          "第四十七条"
+        ],
+        "top1_score": 43.994823,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第二十三条"
+          ],
+          [
+            "劳动合同法",
+            "第二十四条"
+          ]
+        ]
+      },
+      {
+        "query": "竞业限制\n乙方在劳动合同解除或者终止后一年内，不得到与甲方有竞争关系的单位任职，甲方按月给予乙方相当于离职前十二个月平均工资30%的经济补偿。",
+        "top1": [
+          "劳动合同法",
+          "第四十七条"
+        ],
+        "top1_score": 45.083239,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第二十三条"
+          ],
+          [
+            "劳动合同法",
+            "第二十四条"
+          ]
+        ]
+      },
+      {
+        "query": "工作时间和休息休假\n甲方可根据经营需要安排乙方加班，加班不另行支付加班费，已包含在乙方月工资内。",
+        "top1": [
+          "劳动合同法",
+          "第八十五条"
+        ],
+        "top1_score": 25.321221,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第三十条"
+          ]
+        ]
+      },
+      {
+        "query": "工作地点\n乙方工作地点为深圳市。甲方可以根据经营需要随时调整乙方工作地点，乙方应无条件服从。",
+        "top1": [
+          "劳动合同法",
+          "第十七条"
+        ],
+        "top1_score": 21.75092,
+        "relevant_pairs": [
+          [
+            "劳动合同法",
+            "第三十五条"
+          ],
+          [
+            "劳动合同法",
+            "第二十六条"
+          ]
+        ]
+      }
+    ],
+    "note": "以上均为模型/脚本粗筛（基于已有relevant_pairs标签的集合运算和分数排序），不是法律专业人工复核结论。multi_label_partial_recall_cases里缺失的条文全部集中在第二十六条（跨4个不同query出现），说明第二十六条的检索困难不只限于此前诊断的那一个'工作地点'query，在同一知识库下对其它几种措辞（社会保险放弃、劳动报酬延迟支付等）也同样只排在候选靠后位置——这是本轮新发现的扩展证据，不是新结论（根因仍是D002诊断里确认的字符二元组零重合，不是新的未知问题）。"
+  },
+  "dimension4_performance": {
+    "sandbox_formal_bm25_timing_47_queries": {
+      "distinct_query_count": 47,
+      "total_seconds": 0.004717614999947273,
+      "mean_seconds": 0.0001003747872329207,
+      "p50_seconds": 8.035900003733332e-05,
+      "p95_seconds": 0.00017848999998477667,
+      "build_seconds": 0.0018879369999922346
+    },
+    "historical_same_machine_comparison": {
+      "source": "baseline_kb_retrieval_experiment_20261012_151710_char_bigram.md 的'六项性能测量'（用户本机真实运行，Dense与BM25在同一次运行、同一台机器上测得，可直接比较）",
+      "dense_query_embedding_and_retrieval": {
+        "mean_seconds": 0.1458,
+        "p50_seconds": 0.1316,
+        "p95_seconds": 0.2266,
+        "distinct_query_count": 47
+      },
+      "bm25_tokenization_and_ranking": {
+        "mean_seconds": 0.0001,
+        "p50_seconds": 0.0001,
+        "p95_seconds": 0.0003,
+        "distinct_query_count": 47
+      },
+      "caveat": "这里的bm25数字来自历史实验脚本_BM25Index，不是本轮正式BM25KnowledgeIndex；但两者算法和文档集在该知识库下完全等价（本轮已交叉核对），量级可信。"
+    },
+    "repeat_stability": "NOT_EXECUTED_ON_BASELINE_KB——working(37-Evidence)知识库下有同一query重复3次的稳定性数据(timing_breakdown_working_20261012_185053.json)，但那是37条知识库，不是本轮要求的26条生产口径，按指令'不得混用'不能直接当作本轮结论；baseline(26条)口径下没有重复请求稳定性数据，需要补测才能回答。",
+    "cold_start": "Dense embedder_load_seconds=11.728s（baseline实验实测，真实BGE-M3加载）；BM25无需加载任何模型，本轮沙箱构建耗时0.0019s（26条，不同机器仅供参考）。",
+    "not_executed": [
+      "baseline(26-Evidence)口径下的embedding-only/vector-search-only细粒度拆分",
+      "baseline(26-Evidence)口径下同一query重复请求的P50/P95稳定性",
+      "正式BM25KnowledgeIndex在用户生产机器上的真实耗时（本轮只有沙箱机器数字）",
+      "真正的Dense/BM25并发(ThreadPoolExecutor)端到端耗时（历史记录和本轮都没有测量，明确标注未测量，不用串行数字近似代替）"
+    ]
+  },
+  "dimension5_stability_and_maintainability": {
+    "executed_in_sandbox_this_round": [
+      {
+        "check": "空知识库报错",
+        "result": "PASS（BM25IndexBuildError，见tests/test_rag_bm25_index.py::test_build_rejects_empty_evidence_list，本轮沙箱复核）"
+      },
+      {
+        "check": "空白内容Evidence报错",
+        "result": "PASS"
+      },
+      {
+        "check": "重复Evidence ID报错且信息包含source/article",
+        "result": "PASS"
+      },
+      {
+        "check": "内容相似但不同不算重复",
+        "result": "PASS"
+      },
+      {
+        "check": "同条不同part不算重复",
+        "result": "PASS"
+      },
+      {
+        "check": "同一份生产数据重复构建两次，结果完全一致（抽样10场景核对分数到小数点后9位）",
+        "result": "PASS"
+      },
+      {
+        "check": "文档-source/article映射字段齐全且稳定",
+        "result": "PASS（抽查5条）"
+      },
+      {
+        "check": "k<=0报错",
+        "result": "PASS"
+      }
+    ],
+    "not_executed_this_round": [
+      "真实重启uvicorn服务验证启动行为（无device_bash，只能在本机验证）",
+      "索引重建对生产Chroma/现有服务的影响（本轮未碰生产Chroma，按指令不得用生产对象测试）",
+      "基于保存的配置/数据指纹/运行参数对本轮结果的独立第三方复现（本轮产出的JSON/CSV本身可作为复现依据，但'有人真的拿着这些文件重新跑出一致结果'这件事本身未被另一次独立执行验证）"
+    ],
+    "rollback": "见 docs/BM25_INTEGRATION_REPORT.md 第4.2节第(7)条——改RETRIEVAL_STRATEGY='dense'重启，或git checkout/revert本次10个文件，均未在本轮重新验证，沿用上一轮报告结论。"
+  },
+  "scenario_level_detail": [
+    {
+      "query": "工作内容和工作地点\n乙方在甲方从事软件开发岗位工作，工作地点为上海市。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十七条"
+        ]
+      ],
+      "occurrence_count": 30,
+      "member_sample_ids": [
+        "clear_risk_01::clear_risk_01_c00",
+        "clear_risk_06::clear_risk_06_c04",
+        "clear_risk_07::clear_risk_07_c03",
+        "clear_risk_08::clear_risk_08_c01",
+        "clear_risk_09::clear_risk_09_c00",
+        "clear_risk_14::clear_risk_14_c04",
+        "clear_risk_15::clear_risk_15_c03",
+        "clear_risk_16::clear_risk_16_c01",
+        "clear_risk_17::clear_risk_17_c00",
+        "compliant_01::compliant_01_c00",
+        "compliant_02::compliant_02_c05",
+        "compliant_03::compliant_03_c02",
+        "compliant_04::compliant_04_c07",
+        "compliant_05::compliant_05_c04",
+        "compliant_06::compliant_06_c01",
+        "compliant_07::compliant_07_c06",
+        "compliant_08::compliant_08_c03",
+        "compliant_09::compliant_09_c00",
+        "compliant_10::compliant_10_c05",
+        "mixed_01::mixed_01_c00",
+        "mixed_05::mixed_05_c06",
+        "mixed_06::mixed_06_c04",
+        "mixed_07::mixed_07_c03",
+        "mixed_08::mixed_08_c01",
+        "mixed_09::mixed_09_c00",
+        "boundary_01::boundary_01_c00",
+        "boundary_06::boundary_06_c05",
+        "boundary_07::boundary_07_c03",
+        "boundary_08::boundary_08_c01",
+        "boundary_09::boundary_09_c00"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "劳动报酬\n乙方正式工资为每月人民币15000元，甲方于次月10日前足额支付。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第三十条"
+        ]
+      ],
+      "occurrence_count": 33,
+      "member_sample_ids": [
+        "clear_risk_01::clear_risk_01_c01",
+        "clear_risk_02::clear_risk_02_c00",
+        "clear_risk_07::clear_risk_07_c04",
+        "clear_risk_08::clear_risk_08_c03",
+        "clear_risk_09::clear_risk_09_c01",
+        "clear_risk_10::clear_risk_10_c00",
+        "clear_risk_15::clear_risk_15_c04",
+        "clear_risk_16::clear_risk_16_c03",
+        "clear_risk_17::clear_risk_17_c01",
+        "clear_risk_18::clear_risk_18_c00",
+        "compliant_01::compliant_01_c01",
+        "compliant_02::compliant_02_c06",
+        "compliant_03::compliant_03_c03",
+        "compliant_04::compliant_04_c00",
+        "compliant_05::compliant_05_c05",
+        "compliant_06::compliant_06_c02",
+        "compliant_07::compliant_07_c07",
+        "compliant_08::compliant_08_c04",
+        "compliant_09::compliant_09_c01",
+        "compliant_10::compliant_10_c06",
+        "mixed_01::mixed_01_c01",
+        "mixed_02::mixed_02_c00",
+        "mixed_06::mixed_06_c06",
+        "mixed_07::mixed_07_c04",
+        "mixed_08::mixed_08_c03",
+        "mixed_09::mixed_09_c01",
+        "mixed_10::mixed_10_c00",
+        "boundary_01::boundary_01_c01",
+        "boundary_02::boundary_02_c00",
+        "boundary_07::boundary_07_c04",
+        "boundary_08::boundary_08_c04",
+        "boundary_09::boundary_09_c01",
+        "boundary_10::boundary_10_c00"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之五十。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_01::clear_risk_01_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "社会保险\n甲方依法为乙方缴纳社会保险，具体险种和缴纳比例按国家及地方规定执行。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十七条"
+        ]
+      ],
+      "occurrence_count": 35,
+      "member_sample_ids": [
+        "clear_risk_01::clear_risk_01_c04",
+        "clear_risk_02::clear_risk_02_c03",
+        "clear_risk_03::clear_risk_03_c01",
+        "clear_risk_04::clear_risk_04_c00",
+        "clear_risk_09::clear_risk_09_c04",
+        "clear_risk_10::clear_risk_10_c03",
+        "clear_risk_11::clear_risk_11_c01",
+        "clear_risk_12::clear_risk_12_c00",
+        "clear_risk_17::clear_risk_17_c04",
+        "clear_risk_18::clear_risk_18_c03",
+        "clear_risk_19::clear_risk_19_c01",
+        "clear_risk_20::clear_risk_20_c00",
+        "compliant_01::compliant_01_c03",
+        "compliant_02::compliant_02_c00",
+        "compliant_03::compliant_03_c05",
+        "compliant_04::compliant_04_c02",
+        "compliant_05::compliant_05_c07",
+        "compliant_06::compliant_06_c04",
+        "compliant_07::compliant_07_c01",
+        "compliant_08::compliant_08_c06",
+        "compliant_09::compliant_09_c03",
+        "compliant_10::compliant_10_c00",
+        "mixed_01::mixed_01_c04",
+        "mixed_02::mixed_02_c03",
+        "mixed_03::mixed_03_c01",
+        "mixed_04::mixed_04_c00",
+        "mixed_08::mixed_08_c06",
+        "mixed_09::mixed_09_c04",
+        "mixed_10::mixed_10_c03",
+        "boundary_01::boundary_01_c05",
+        "boundary_02::boundary_02_c03",
+        "boundary_03::boundary_03_c01",
+        "boundary_04::boundary_04_c00",
+        "boundary_09::boundary_09_c05",
+        "boundary_10::boundary_10_c03"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          4
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.25,
+            "first_hit_rank": 4,
+            "ndcg": 0.43067655807339306
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.25,
+            "first_hit_rank": 4,
+            "ndcg": 0.43067655807339306
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.25,
+            "first_hit_rank": 4,
+            "ndcg": 0.43067655807339306
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之四十。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_02::clear_risk_02_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之六十。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_03::clear_risk_03_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之七十。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_04::clear_risk_04_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "违约责任\n任何一方违反本合同约定，应当承担相应的违约责任并赔偿由此造成的损失。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十五条"
+        ]
+      ],
+      "occurrence_count": 28,
+      "member_sample_ids": [
+        "clear_risk_04::clear_risk_04_c04",
+        "clear_risk_05::clear_risk_05_c03",
+        "clear_risk_06::clear_risk_06_c01",
+        "clear_risk_07::clear_risk_07_c00",
+        "clear_risk_12::clear_risk_12_c04",
+        "clear_risk_13::clear_risk_13_c03",
+        "clear_risk_14::clear_risk_14_c01",
+        "clear_risk_15::clear_risk_15_c00",
+        "clear_risk_20::clear_risk_20_c04",
+        "compliant_01::compliant_01_c06",
+        "compliant_02::compliant_02_c03",
+        "compliant_03::compliant_03_c00",
+        "compliant_04::compliant_04_c05",
+        "compliant_05::compliant_05_c02",
+        "compliant_06::compliant_06_c07",
+        "compliant_07::compliant_07_c04",
+        "compliant_08::compliant_08_c01",
+        "compliant_09::compliant_09_c06",
+        "compliant_10::compliant_10_c03",
+        "mixed_03::mixed_03_c06",
+        "mixed_04::mixed_04_c04",
+        "mixed_05::mixed_05_c03",
+        "mixed_06::mixed_06_c01",
+        "mixed_07::mixed_07_c00",
+        "boundary_04::boundary_04_c04",
+        "boundary_05::boundary_05_c04",
+        "boundary_06::boundary_06_c01",
+        "boundary_07::boundary_07_c00"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          2
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          2
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之七十五。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_05::clear_risk_05_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之零。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_06::clear_risk_06_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限为一年。乙方试用期为三个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 2,
+      "member_sample_ids": [
+        "clear_risk_07::clear_risk_07_c02",
+        "mixed_02::mixed_02_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限为六个月。乙方试用期为二个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_08::clear_risk_08_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同为无固定期限劳动合同。乙方试用期为七个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_09::clear_risk_09_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同以完成软件开发项目为期限，任务完成之日合同终止。乙方试用期为一个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_10::clear_risk_10_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限为三年。乙方试用期为七个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_11::clear_risk_11_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限自2024年1月1日起至2024年7月1日止。乙方试用期为三个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_12::clear_risk_12_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "竞业限制\n乙方在劳动合同解除或者终止后三年内，不得到与甲方有竞争关系的单位任职，甲方按月给予乙方相当于离职前十二个月平均工资30%的经济补偿。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十三条"
+        ],
+        [
+          "劳动合同法",
+          "第二十四条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_13::clear_risk_13_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          2,
+          3
+        ],
+        "hist_dense": [
+          2,
+          1
+        ],
+        "hist_bm25": [
+          3,
+          2
+        ],
+        "hist_rrf": [
+          3,
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          }
+        }
+      }
+    },
+    {
+      "query": "竞业限制\n乙方在劳动合同解除或者终止后二年内，不得到与甲方有竞争关系的单位任职，甲方无需向乙方支付任何经济补偿。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十三条"
+        ],
+        [
+          "劳动合同法",
+          "第二十四条"
+        ]
+      ],
+      "occurrence_count": 2,
+      "member_sample_ids": [
+        "clear_risk_14::clear_risk_14_c02",
+        "mixed_06::mixed_06_c05"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          2,
+          1
+        ],
+        "hist_dense": [
+          2,
+          1
+        ],
+        "hist_bm25": [
+          2,
+          1
+        ],
+        "hist_rrf": [
+          2,
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "竞业限制\n乙方在劳动合同解除或者终止后四年内，不得到与甲方有竞争关系的单位任职，甲方无需向乙方支付任何经济补偿。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十三条"
+        ],
+        [
+          "劳动合同法",
+          "第二十四条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_15::clear_risk_15_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          2,
+          1
+        ],
+        "hist_dense": [
+          2,
+          1
+        ],
+        "hist_bm25": [
+          2,
+          1
+        ],
+        "hist_rrf": [
+          2,
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "劳动报酬\n乙方正式工资为每月人民币15000元，甲方可以根据资金情况延迟支付，乙方不得因此追究甲方任何责任。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第三十条"
+        ],
+        [
+          "劳动合同法",
+          "第二十六条"
+        ],
+        [
+          "劳动合同法",
+          "第八十五条"
+        ]
+      ],
+      "occurrence_count": 3,
+      "member_sample_ids": [
+        "clear_risk_16::clear_risk_16_c02",
+        "mixed_03::mixed_03_c05",
+        "mixed_09::mixed_09_c05"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1,
+          6,
+          2
+        ],
+        "hist_dense": [
+          2,
+          20,
+          3
+        ],
+        "hist_bm25": [
+          1,
+          6,
+          2
+        ],
+        "hist_rrf": [
+          1,
+          10,
+          3
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 0.6666666666666666,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.7653606369886217
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9325210919548239
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9325210919548239
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 0.6666666666666666,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.5307212739772434
+          },
+          "10": {
+            "recall": 0.6666666666666666,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.5307212739772434
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6375620782390338
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 0.6666666666666666,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.7653606369886217
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9325210919548239
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9325210919548239
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 0.6666666666666666,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.7039180890341347
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.8395700624665824
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.8395700624665824
+          }
+        }
+      }
+    },
+    {
+      "query": "培训与服务期\n甲方为乙方提供专项培训，培训费用为人民币10000元，双方约定服务期24个月。乙方提前离职违反服务期约定的，应向甲方支付违约金人民币10000元。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十二条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "clear_risk_17::clear_risk_17_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "违约责任\n乙方违反本合同任何约定的，应向甲方支付违约金人民币20000元。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十五条"
+        ]
+      ],
+      "occurrence_count": 3,
+      "member_sample_ids": [
+        "clear_risk_18::clear_risk_18_c02",
+        "mixed_02::mixed_02_c05",
+        "mixed_08::mixed_08_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          3
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          3
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.5
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.5
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.5
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.5
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.5
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.5
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "社会保险\n经双方协商一致，乙方自愿放弃由甲方缴纳社会保险，甲方每月向乙方支付人民币800元作为补偿。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十六条"
+        ],
+        [
+          "劳动合同法",
+          "第十七条"
+        ]
+      ],
+      "occurrence_count": 3,
+      "member_sample_ids": [
+        "clear_risk_19::clear_risk_19_c02",
+        "mixed_04::mixed_04_c02",
+        "mixed_10::mixed_10_c05"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          15,
+          1
+        ],
+        "hist_dense": [
+          14,
+          null
+        ],
+        "hist_bm25": [
+          14,
+          1
+        ],
+        "hist_rrf": [
+          15,
+          18
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 0.5,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.6131471927654584
+          },
+          "10": {
+            "recall": 0.5,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.6131471927654584
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.766433990956823
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 0.0,
+            "mrr_contribution": 0.0,
+            "first_hit_rank": null,
+            "ndcg": 0.0
+          },
+          "10": {
+            "recall": 0.0,
+            "mrr_contribution": 0.0,
+            "first_hit_rank": null,
+            "ndcg": 0.0
+          },
+          "20": {
+            "recall": 0.5,
+            "mrr_contribution": 0.07142857142857142,
+            "first_hit_rank": 14,
+            "ndcg": 0.15693994437792994
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 0.5,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.6131471927654584
+          },
+          "10": {
+            "recall": 0.5,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.6131471927654584
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.7700871371433883
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 0.0,
+            "mrr_contribution": 0.0,
+            "first_hit_rank": null,
+            "ndcg": 0.0
+          },
+          "10": {
+            "recall": 0.0,
+            "mrr_contribution": 0.0,
+            "first_hit_rank": null,
+            "ndcg": 0.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.06666666666666667,
+            "first_hit_rank": 15,
+            "ndcg": 0.29762711257408586
+          }
+        }
+      }
+    },
+    {
+      "query": "合同解除\n甲方可随时无理由解除本合同，无需提前通知，亦无需向乙方支付任何经济补偿或赔偿金。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第八十七条"
+        ],
+        [
+          "劳动合同法",
+          "第四十七条"
+        ],
+        [
+          "劳动合同法",
+          "第四十八条"
+        ],
+        [
+          "劳动合同法",
+          "第四十六条"
+        ]
+      ],
+      "occurrence_count": 2,
+      "member_sample_ids": [
+        "clear_risk_20::clear_risk_20_c02",
+        "mixed_05::mixed_05_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1,
+          2,
+          4,
+          6
+        ],
+        "hist_dense": [
+          8,
+          10,
+          6,
+          2
+        ],
+        "hist_bm25": [
+          1,
+          2,
+          4,
+          6
+        ],
+        "hist_rrf": [
+          3,
+          5,
+          4,
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 0.75,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.8048099750039491
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9438661545147249
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9438661545147249
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 0.25,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.24630238874073
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6213549039708058
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6213549039708058
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 0.75,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.8048099750039491
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9438661545147249
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9438661545147249
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.7606395682357036
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.7606395682357036
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.7606395682357036
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之八十。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 2,
+      "member_sample_ids": [
+        "compliant_01::compliant_01_c08",
+        "boundary_01::boundary_01_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之八十五。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "compliant_02::compliant_02_c08"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之十十。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "compliant_03::compliant_03_c08"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限为一年。乙方试用期为二个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 2,
+      "member_sample_ids": [
+        "compliant_04::compliant_04_c08",
+        "boundary_01::boundary_01_c03"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同为无固定期限劳动合同。乙方试用期为六个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 2,
+      "member_sample_ids": [
+        "compliant_05::compliant_05_c08",
+        "boundary_06::boundary_06_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限为三年。乙方试用期为六个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "compliant_06::compliant_06_c08"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "竞业限制\n乙方在劳动合同解除或者终止后二年内，不得到与甲方有竞争关系的单位任职，甲方按月给予乙方相当于离职前十二个月平均工资30%的经济补偿。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十三条"
+        ],
+        [
+          "劳动合同法",
+          "第二十四条"
+        ]
+      ],
+      "occurrence_count": 3,
+      "member_sample_ids": [
+        "compliant_07::compliant_07_c08",
+        "boundary_05::boundary_05_c03",
+        "boundary_09::boundary_09_c03"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          3,
+          2
+        ],
+        "hist_dense": [
+          3,
+          1
+        ],
+        "hist_bm25": [
+          3,
+          2
+        ],
+        "hist_rrf": [
+          3,
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          }
+        }
+      }
+    },
+    {
+      "query": "竞业限制\n乙方在劳动合同解除或者终止后一年内，不得到与甲方有竞争关系的单位任职，甲方按月给予乙方相当于离职前十二个月平均工资30%的经济补偿。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十三条"
+        ],
+        [
+          "劳动合同法",
+          "第二十四条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "compliant_08::compliant_08_c08"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          2,
+          3
+        ],
+        "hist_dense": [
+          3,
+          1
+        ],
+        "hist_bm25": [
+          3,
+          2
+        ],
+        "hist_rrf": [
+          3,
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6934264036172708
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.9197207891481876
+          }
+        }
+      }
+    },
+    {
+      "query": "培训与服务期\n甲方为乙方提供专项培训，培训费用为人民币12000元，双方约定服务期24个月。乙方提前离职违反服务期约定的，应向甲方支付违约金人民币1000元。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十二条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "compliant_09::compliant_09_c08"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之五十五。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "mixed_01::mixed_01_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "工作时间和休息休假\n甲方可根据经营需要安排乙方加班，加班不另行支付加班费，已包含在乙方月工资内。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第三十条"
+        ]
+      ],
+      "occurrence_count": 4,
+      "member_sample_ids": [
+        "mixed_01::mixed_01_c05",
+        "mixed_10::mixed_10_c02",
+        "boundary_03::boundary_03_c02",
+        "boundary_08::boundary_08_c03"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          10
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          10
+        ],
+        "hist_rrf": [
+          4
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 0.0,
+            "mrr_contribution": 0.0,
+            "first_hit_rank": null,
+            "ndcg": 0.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.1,
+            "first_hit_rank": 10,
+            "ndcg": 0.2890648263178879
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.1,
+            "first_hit_rank": 10,
+            "ndcg": 0.2890648263178879
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 0.0,
+            "mrr_contribution": 0.0,
+            "first_hit_rank": null,
+            "ndcg": 0.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.1,
+            "first_hit_rank": 10,
+            "ndcg": 0.2890648263178879
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.1,
+            "first_hit_rank": 10,
+            "ndcg": 0.2890648263178879
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.25,
+            "first_hit_rank": 4,
+            "ndcg": 0.43067655807339306
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.25,
+            "first_hit_rank": 4,
+            "ndcg": 0.43067655807339306
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.25,
+            "first_hit_rank": 4,
+            "ndcg": 0.43067655807339306
+          }
+        }
+      }
+    },
+    {
+      "query": "竞业限制\n乙方在劳动合同解除或者终止后三年内，不得到与甲方有竞争关系的单位任职，甲方无需向乙方支付任何经济补偿。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十三条"
+        ],
+        [
+          "劳动合同法",
+          "第二十四条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "mixed_03::mixed_03_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          2,
+          1
+        ],
+        "hist_dense": [
+          2,
+          1
+        ],
+        "hist_bm25": [
+          2,
+          1
+        ],
+        "hist_rrf": [
+          2,
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之四十五。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "mixed_04::mixed_04_c05"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同为无固定期限劳动合同。乙方试用期为八个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "mixed_05::mixed_05_c05"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "培训与服务期\n甲方为乙方提供专项培训，培训费用为人民币8000元，双方约定服务期12个月。乙方提前离职违反服务期约定的，应向甲方支付违约金人民币8000元。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十二条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "mixed_06::mixed_06_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "工作地点\n乙方工作地点为深圳市。甲方可以根据经营需要随时调整乙方工作地点，乙方应无条件服从。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第三十五条"
+        ],
+        [
+          "劳动合同法",
+          "第二十六条"
+        ]
+      ],
+      "occurrence_count": 3,
+      "member_sample_ids": [
+        "mixed_07::mixed_07_c02",
+        "boundary_02::boundary_02_c02",
+        "boundary_08::boundary_08_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          10,
+          null
+        ],
+        "hist_dense": [
+          1,
+          null
+        ],
+        "hist_bm25": [
+          10,
+          null
+        ],
+        "hist_rrf": [
+          3,
+          null
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 0.0,
+            "mrr_contribution": 0.0,
+            "first_hit_rank": null,
+            "ndcg": 0.0
+          },
+          "10": {
+            "recall": 0.5,
+            "mrr_contribution": 0.1,
+            "first_hit_rank": 10,
+            "ndcg": 0.17723928678404774
+          },
+          "20": {
+            "recall": 0.5,
+            "mrr_contribution": 0.1,
+            "first_hit_rank": 10,
+            "ndcg": 0.17723928678404774
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 0.5,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.6131471927654584
+          },
+          "10": {
+            "recall": 0.5,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.6131471927654584
+          },
+          "20": {
+            "recall": 0.5,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 0.6131471927654584
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 0.0,
+            "mrr_contribution": 0.0,
+            "first_hit_rank": null,
+            "ndcg": 0.0
+          },
+          "10": {
+            "recall": 0.5,
+            "mrr_contribution": 0.1,
+            "first_hit_rank": 10,
+            "ndcg": 0.17723928678404774
+          },
+          "20": {
+            "recall": 0.5,
+            "mrr_contribution": 0.1,
+            "first_hit_rank": 10,
+            "ndcg": 0.17723928678404774
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 0.5,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.3065735963827292
+          },
+          "10": {
+            "recall": 0.5,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.3065735963827292
+          },
+          "20": {
+            "recall": 0.5,
+            "mrr_contribution": 0.3333333333333333,
+            "first_hit_rank": 3,
+            "ndcg": 0.3065735963827292
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之六十五。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "mixed_07::mixed_07_c05"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同以完成软件开发项目为期限，任务完成之日合同终止。乙方试用期为二个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "mixed_08::mixed_08_c05"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限自2024年1月1日起至2024年7月1日止。乙方试用期为二个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "mixed_09::mixed_09_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "试用期工资\n乙方试用期为3个月，试用期工资为正式工资标准的百分之八十一。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "boundary_05::boundary_05_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          2
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          2
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 0.5,
+            "first_hit_rank": 2,
+            "ndcg": 0.6309297535714575
+          }
+        }
+      }
+    },
+    {
+      "query": "培训与服务期\n甲方为乙方提供专项培训，培训费用为人民币6000元，双方约定服务期12个月。乙方提前离职违反服务期约定的，应向甲方支付违约金人民币6000元。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第二十二条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "boundary_06::boundary_06_c03"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限为二年。乙方试用期为二个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "boundary_07::boundary_07_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    },
+    {
+      "query": "合同期限及试用期\n本合同期限自2024年1月1日起至2024年7月1日止。乙方试用期为一个月。",
+      "relevant_pairs": [
+        [
+          "劳动合同法",
+          "第十九条"
+        ]
+      ],
+      "occurrence_count": 1,
+      "member_sample_ids": [
+        "boundary_10::boundary_10_c02"
+      ],
+      "ranks_at_20": {
+        "formal_bm25": [
+          1
+        ],
+        "hist_dense": [
+          1
+        ],
+        "hist_bm25": [
+          1
+        ],
+        "hist_rrf": [
+          1
+        ]
+      },
+      "scores_by_strategy_and_k": {
+        "formal_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_dense": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_bm25": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        },
+        "hist_rrf": {
+          "5": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "10": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          },
+          "20": {
+            "recall": 1.0,
+            "mrr_contribution": 1.0,
+            "first_hit_rank": 1,
+            "ndcg": 1.0
+          }
+        }
+      }
+    }
+  ]
+}

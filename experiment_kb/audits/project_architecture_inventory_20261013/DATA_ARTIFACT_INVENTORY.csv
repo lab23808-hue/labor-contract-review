@@ -1,0 +1,21 @@
+path,type,size_bytes,dataset_or_kb_version,addresses_what_problem,input_source,output_content_summary,raw_vs_summary_vs_derived_vs_doc,superseded,independent_retention_value,missing_metadata_for_reproduction,tag
+data/knowledge/劳动合同法.txt,raw_kb_text,10067,生产26条(kb-2026-10-10-01),生产检索的知识来源,人工/官方法律文本,劳动合同法条文全文,raw,否(当前生产唯一权威版),高(生产依赖),无,CONFIRMED
+data/knowledge/VERSION,metadata,17,kb-2026-10-10-01,标识知识库版本,人工维护,版本号字符串,metadata,否,高,无,REPORTED(A004记录,本轮未重读)
+experiment_kb/baseline/,frozen_snapshot_dir,N/A(多文件),baseline=26条(镜像生产),作为所有对照实验的"旧版本"基准,生产知识库在某时间点的拷贝,含完整config/rag代码快照+26条知识库文本,derived(快照),部分(其rag/retriever.py已滞后于生产),高(所有E008-E010/A001等实验的对照基准),retriever.py与生产版本的diff未产出,CONFIRMED
+experiment_kb/working/,frozen_snapshot_dir,N/A(多文件),working=37条(26+11新增法条),验证知识库扩容对检索质量的影响,人工新增LAW_01/LAW_02两份法条文件到baseline基础上,含完整config/rag代码快照+37条知识库文本,derived(快照),部分(同上retriever.py滞后),高(E001-E007等全部实验基准),同上,CONFIRMED
+experiment_kb/reference_only/,isolated_reference_dir,N/A,7条(仲裁法参考材料),刻意隔离、防止误混入常规检索对照的参考数据,仲裁法条文,仲裁法第十条至十六条,raw,否,中(仅在A005/A006全量实验中按设计显式引用),无,CONFIRMED
+experiment_kb/results/RAG_EXPERIMENT_REGISTER.csv,experiment_registry,48365,N/A(横跨E001-A006全部实验),作为"实验总目录"回答"做过哪些实验/用了哪些数据",人工+脚本半自动维护,17条实验记录(E001-E010/D002/A001-A006)的宽表,derived(汇总),否(当前唯一权威实验登记表),极高(未来DB迁移的主要数据源),字段过载问题(见DATA_STORAGE_AUDIT第5节),CONFIRMED
+experiment_kb/datasets/contract_eval_500_20261013/RAG_EXPERIMENT_REGISTER_with_A004.csv,stale_snapshot,34827,A004时期快照,历史快照,RAG_EXPERIMENT_REGISTER.csv在A004完成时的拷贝,A001-A004共14条记录(缺A005/A006),derived,是(已被权威register完全覆盖超越),低(建议归档),无,CONFIRMED
+experiment_kb/datasets/contract_eval_500_20261013/source_450/manifest_450.csv,manifest,306014,450份新合同清单,记录450份合同的SHA256/元数据,450份合成合同文件,450行合同清单(含sha256/template_family等),raw(清单),否,高,无,CONFIRMED
+experiment_kb/datasets/contract_eval_500_20261013/source_450/candidate_labels_pending_review.csv,candidate_labels,169082,450份新合同的候选标签,记录每份合同的候选相关法条(未经人工核验),450份合同query,候选标签(verification_status=candidate/pending_review),raw(候选,非gold standard),否,极高(是A004/A005/A006全部指标的标签来源,但未经人工核验),"缺少人工核验/verified标签",CONFIRMED
+experiment_kb/datasets/contract_eval_500_20261013/retrieval_runs/bm25_run_result.json,raw_run_result,3235429,A004轮BM25检索原始结果,记录450份+现有188样本的全部BM25检索候选明细,BM25KnowledgeIndex真实执行,逐query候选排名明细,raw(全量明细),否,高(体量最大的单个原始结果文件,是miss_analysis/rank_detail等派生文件的来源),无,CONFIRMED
+experiment_kb/datasets/contract_eval_500_20261013/full_kb_experiment/metrics.json,derived_metrics,3195→3195(用户在本轮前重跑后应为约3195字节级别更新),44-Evidence全量知识库(A005),汇总Recall/MRR/nDCG等聚合指标,对bm25_run_result等原始候选的聚合计算,聚合指标JSON,derived(聚合),否,高(A005的核心结论来源),无,CONFIRMED(体量据本轮listing确认,内容本轮未重新打开核对)
+experiment_kb/datasets/contract_eval_500_20261013/full_kb_experiment/miss_analysis.csv,derived_detail,157988,44-Evidence(A005),逐条标注哪些候选法条未被召回及原因分类,对候选标签与检索结果的逐条比对,未召回明细表,derived(明细),否,高,无,CONFIRMED(体量)
+experiment_kb/datasets/contract_eval_500_20261013/full_kb_experiment/workplace_relocation_detail.json,derived_detail,27826,44-Evidence(A005),专项聚焦工作地点(第26/35条)场景的命中明细,对第26/35条相关场景的专项筛选,专项诊断明细,derived,否,高(是A006诊断的直接上游输入之一),无,CONFIRMED(体量)
+experiment_kb/results/bm25_kb_growth_diagnosis_20261013/BM25_KB_GROWTH_DIAGNOSIS_20261013.md,report,N/A,26/37/44三版本对比(A006),对外汇报A006的完整分析结论,kb_growth_diagnosis.py+part2.py的产出,方案A/B/C对比结论文档,doc(报告),否,高(是当前关于"排名退化归因"的权威文档),无,CONFIRMED(存在性,本轮未重新全文读取)
+experiment_kb/tmp_runtime/dense_20261012_143924_431239/,temp_artifact,约400-487KB,E001时期临时Dense索引,无业务价值,Dense实验运行时的临时Chroma索引,chroma.sqlite3+HNSW二进制,raw(临时产物),是(纯磁盘占用),无(建议后续清理,本轮不删除),无,CONFIRMED
+experiment_kb/tmp_runtime/dense_delete_test_20261012_150120_712479/,temp_artifact,约400-487KB,E007删除测试临时索引,无业务价值,E007删除操作验证的临时索引,chroma.sqlite3+HNSW二进制,raw(临时产物),是,无,无,CONFIRMED
+data/eval_samples/RAG_HUMAN_REVIEW_BATCH1.xlsx,unknown_human_artifact,11609,未知(本轮首次发现),未知,未知(本轮未打开),未知,unknown,UNKNOWN,UNKNOWN(需下一轮打开核实,文件名暗示"人工复核批次1",可能是人工标注工作的真实产出,优先级较高),"完全未核实,是OPEN_QUESTIONS的重点项",UNKNOWN
+docs/BM25_ENGINEERING_ACCEPTANCE_20261013.md,report,23932,A001对应报告,BM25正式接入的五维验收报告,A001实验,验收结论文档,doc,否,高,无,CONFIRMED(存在性,本轮未重新全文读取,内容已通过register CSV的A001行交叉确认一致)
+docs/PITFALLS.md,doc,101802,N/A,历史踩坑记录(体量最大的文档之一),历次开发过程,踩坑记录汇编,doc,否,高(应补充本轮发现的retriever.py快照滞后问题),无,CONFIRMED(存在性)
+output/__init__.py,stray_package,0,N/A,未知(疑似早期占位,当前无实际内容),N/A,空文件,N/A,UNKNOWN(可能已废弃),低,是否有任何模块import output包本轮未grep确认,UNKNOWN

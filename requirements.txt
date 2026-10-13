@@ -1,0 +1,31 @@
+# 第一步 schemas
+pydantic>=2.0
+pytest>=7.0
+
+# 第二步 ClauseSplitter
+# LangChain 1.x 中 RecursiveCharacterTextSplitter 在独立包 langchain-text-splitters 里
+# （旧的 langchain.text_splitter 已移除）。langchain 本体等 RAG/LLM 步骤再加。
+langchain-text-splitters>=0.3
+
+# 第五步 RAG（Chroma 向量库 + BGE-M3 Embedding，均为 LangChain 1.x 独立子包）
+langchain-core>=0.3
+langchain-chroma>=0.2
+langchain-huggingface>=0.1
+sentence-transformers>=3.0
+# ↑ langchain-huggingface 的 HuggingFaceEmbeddings 用它在本地加载 BGE-M3
+# chromadb 由 langchain-chroma 自动装好，不需要单独列出
+
+# 第六步 LLM Review（DeepSeek，OpenAI 兼容接口）
+openai>=1.0
+python-dotenv>=1.0
+
+# 第七步 LangGraph 编排层
+langgraph>=0.2
+
+# 第八步 FastAPI API 层
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+# ↑ 解析 multipart/form-data 文件上传（Starlette/FastAPI 运行时依赖，不用就装不上传文件的接口）
+httpx>=0.27
+# ↑ FastAPI 测试用（TestClient 基于 httpx），不是运行时依赖

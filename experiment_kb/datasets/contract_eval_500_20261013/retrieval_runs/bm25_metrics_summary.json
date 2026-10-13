@@ -1,0 +1,108 @@
+{
+  "meta": {
+    "run_at_utc_note": "见外层JSON文件名时间戳",
+    "kb_evidence_count": 26,
+    "kb_articles": [
+      "第一条",
+      "第三十三条",
+      "第三十九条",
+      "第三十五条",
+      "第三十六条",
+      "第三十四条",
+      "第三十条",
+      "第三条",
+      "第二十一条",
+      "第二十三条",
+      "第二十九条",
+      "第二十二条",
+      "第二十五条",
+      "第二十六条",
+      "第二十四条",
+      "第二十条",
+      "第二条",
+      "第八十七条",
+      "第八十二条",
+      "第八十五条",
+      "第十七条",
+      "第十九条",
+      "第四十七条",
+      "第四十八条",
+      "第四十六条",
+      "第四十条"
+    ],
+    "candidate_k": 20,
+    "final_top_k_values": [
+      5,
+      10,
+      20
+    ],
+    "retriever_strategy": "bm25_okapi_char_bigram (生产 rag.bm25_index.BM25KnowledgeIndex，k1=1.5,b=0.75)",
+    "execution_note": "本轮在云端沙箱对真实未改动的生产代码(rag/bm25_index.py, rag/knowledge_loader.py, rag/retriever.py)真实执行；langchain_core/langchain_text_splitters 用轻量占位模块(已验证本轮数据下RecursiveCharacterTextSplitter从未被真实调用)；schemas包(pydantic模型)为真实依赖，非占位。"
+  },
+  "new_450_metrics": {
+    "5": {
+      "n": 450,
+      "recall_all_candidates_kb_gap_counts_as_miss": 0.3648,
+      "recall_kb_in_scope_only": 0.6063,
+      "mrr": 0.3314,
+      "ndcg": 0.311
+    },
+    "10": {
+      "n": 450,
+      "recall_all_candidates_kb_gap_counts_as_miss": 0.4385,
+      "recall_kb_in_scope_only": 0.7222,
+      "mrr": 0.3423,
+      "ndcg": 0.3371
+    },
+    "20": {
+      "n": 450,
+      "recall_all_candidates_kb_gap_counts_as_miss": 0.5752,
+      "recall_kb_in_scope_only": 0.9492,
+      "mrr": 0.3527,
+      "ndcg": 0.3743
+    }
+  },
+  "new_450_kb_coverage": {
+    "fully_in_kb": 229,
+    "fully_missing_from_kb": 135,
+    "partially_missing_from_kb": 86,
+    "total": 450
+  },
+  "old_50_sample_level_188_metrics": {
+    "5": {
+      "n": 188,
+      "recall_all_candidates_kb_gap_counts_as_miss": 0.9468,
+      "recall_kb_in_scope_only": 0.9468,
+      "mrr": 0.8644,
+      "ndcg": 0.8797
+    },
+    "10": {
+      "n": 188,
+      "recall_all_candidates_kb_gap_counts_as_miss": 0.984,
+      "recall_kb_in_scope_only": 0.984,
+      "mrr": 0.8681,
+      "ndcg": 0.8928
+    },
+    "20": {
+      "n": 188,
+      "recall_all_candidates_kb_gap_counts_as_miss": 0.992,
+      "recall_kb_in_scope_only": 0.992,
+      "mrr": 0.8681,
+      "ndcg": 0.8952
+    }
+  },
+  "old_50_kb_coverage": {
+    "fully_in_kb": 188,
+    "fully_missing_from_kb": 0,
+    "partially_missing_from_kb": 0,
+    "total": 188
+  },
+  "workplace_26_special_check": {
+    "new_450_workplace_unilateral_count": 15,
+    "both_articles_hit_at_k20": 8,
+    "missed_第二十六条_at_k20": 5,
+    "missed_第三十五条_at_k20": 2,
+    "historical_existing_50_case": "现有50份中唯一的同类场景(mixed_07/boundary_02/boundary_08对应的'工作地点'场景)在K=20时recall=0.5，命中第三十五条、未命中第二十六条——与本轮450份中5/15的miss26模式一致，但本轮同时发现2/15样本是反过来的miss35模式，说明这不是对第二十六条的绝对系统性漏检，而是和具体查询措辞相关的、方向不固定的检索难点"
+  },
+  "caveat": "以上所有指标均基于候选标签(pending_human_legal_review)计算，是暂定诊断结果，不是经过专业法律人员核验的金标准指标；new_450_metrics的'recall_all_candidates_kb_gap_counts_as_miss'把候选法条不在当前26条知识库范围内的情况计为未命中，这反映的是'知识库覆盖缺口'而不是'检索排序质量缺陷'，两者在报告里必须分开解读，不能把前者归咎于BM25算法本身"
+}

@@ -1,0 +1,102 @@
+{
+  "file_count_check": {
+    "expected": 450,
+    "actual_txt_files": 450,
+    "pass": true
+  },
+  "contract_id_uniqueness": {
+    "unique_ids": 450,
+    "total_rows": 450,
+    "pass": true
+  },
+  "sha256_check": {
+    "mismatches": 0,
+    "pass": true
+  },
+  "empty_or_missing_files": {
+    "count": 0,
+    "pass": true
+  },
+  "required_fields_completeness": {
+    "fields_checked": [
+      "template_family_id",
+      "dataset_split",
+      "scenario_id",
+      "scenario_name",
+      "sha256"
+    ],
+    "rows_with_missing_fields": 0,
+    "pass": true
+  },
+  "dataset_split_distribution": {
+    "development": 360,
+    "final_test": 90
+  },
+  "template_family_distribution": {
+    "family_count": 30,
+    "contracts_per_family": 15
+  },
+  "template_family_split_leakage_check": {
+    "families_spanning_both_splits": 0,
+    "dev_families": [
+      "TF01",
+      "TF02",
+      "TF03",
+      "TF04",
+      "TF05",
+      "TF06",
+      "TF07",
+      "TF08",
+      "TF09",
+      "TF10",
+      "TF11",
+      "TF12",
+      "TF13",
+      "TF14",
+      "TF15",
+      "TF16",
+      "TF17",
+      "TF18",
+      "TF19",
+      "TF20",
+      "TF21",
+      "TF22",
+      "TF23",
+      "TF24"
+    ],
+    "final_test_families": [
+      "TF25",
+      "TF26",
+      "TF27",
+      "TF28",
+      "TF29",
+      "TF30"
+    ],
+    "pass": true
+  },
+  "scenario_count_vs_dataset_summary_json": {
+    "mismatches": 0,
+    "pass": true
+  },
+  "verification_status_check": {
+    "distribution": {
+      "pending_human_legal_review": 450
+    },
+    "any_verified": false
+  },
+  "is_gold_label_check": {
+    "distribution": {
+      "false": 450
+    }
+  },
+  "is_real_executed_contract_check": {
+    "distribution": {
+      "false": 450
+    }
+  },
+  "query_text_verbatim_substring_of_contract_text": {
+    "not_found_count": 0,
+    "pass": true,
+    "note": "450份的target_clause_query全部能在对应合同原文中找到逐字匹配的子串，说明query与目标条款的对应关系在数据构造层面是自洽的"
+  }
+}

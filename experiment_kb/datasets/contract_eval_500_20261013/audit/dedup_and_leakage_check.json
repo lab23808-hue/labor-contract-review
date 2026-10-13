@@ -1,0 +1,64 @@
+{
+  "exact_sha256_cross_duplicate_450_vs_50": 0,
+  "normalized_fingerprint_cross_duplicate_450_vs_50": {
+    "method": "正则去除所有数字并去除全部空白后再算SHA256，用于捕捉'换了数字/公司名但结构雷同'的近似重复",
+    "duplicates_found": 0
+  },
+  "within_450_uniqueness": {
+    "unique_sha256": 450,
+    "unique_normalized_fingerprint": 450
+  },
+  "within_50_uniqueness": {
+    "unique_sha256": 50,
+    "unique_normalized_fingerprint": 50
+  },
+  "template_family_leakage_within_450": {
+    "families_spanning_dev_and_test": 0
+  },
+  "conceptual_scenario_overlap_between_450_and_existing_50": {
+    "method": "人工比对450份的scenario_id/scenario_name与现有50份clause_bank.py条款原型的clause_type描述，找语义上针对同一类法律风险场景的重叠（不是文本重复，是'两套数据都测了同一种风险类型'）",
+    "overlapping_scenario_pairs": [
+      {
+        "new_450_scenario_id": "probation_wage_low",
+        "existing_50_clause_type": "试用期工资低于法定最低标准",
+        "note": "两者都测试试用期工资低于80%下限这一风险点，但具体数值/措辞完全不同"
+      },
+      {
+        "new_450_scenario_id": "noncompete_overbroad",
+        "existing_50_clause_type": "竞业限制",
+        "note": "两者都测试竞业限制期限超过2年上限"
+      },
+      {
+        "new_450_scenario_id": "wage_delay",
+        "existing_50_clause_type": "工资支付拖欠无责任",
+        "note": "两者都测试工资支付时间不明确/无限延期"
+      },
+      {
+        "new_450_scenario_id": "training_penalty",
+        "existing_50_clause_type": "服务期违约金",
+        "note": "两者都测试服务期违约金场景"
+      },
+      {
+        "new_450_scenario_id": "social_insurance_waiver",
+        "existing_50_clause_type": "社会保险放弃现金替代",
+        "note": "两者都测试员工'自愿'放弃社保并以现金替代"
+      },
+      {
+        "new_450_scenario_id": "termination_at_will",
+        "existing_50_clause_type": "违法解除无补偿",
+        "note": "两者都测试用人单位单方任意解除且不予补偿"
+      },
+      {
+        "new_450_scenario_id": "workplace_unilateral",
+        "existing_50_clause_type": "工作地点单方变更",
+        "note": "两者测试的是完全相同的法律场景——这正是本项目已知的'第二十六条/第三十五条'诊断案例所在的场景类别，本轮已对新450份里的15个workplace_unilateral样本单独跑过BM25并与历史案例对比（见检索报告）"
+      },
+      {
+        "new_450_scenario_id": "overtime_flat_salary / overtime_waiver",
+        "existing_50_clause_type": "加班无额外工资",
+        "note": "两者都测试加班费被规章或调休变相取消"
+      }
+    ],
+    "implication": "即使文件SHA256和标准化指纹都不重复，这些场景在法律风险类型上是重叠的；如果不加区分地把500份合同的指标直接相加报告'整体召回率'，会把同一种风险场景的样本量在报告层面不成比例地放大(例如'工作地点单方变更'这一类场景实际上在两个数据集里各出现过)，本轮报告对此的处理方式是：始终分别报告新450份和现有50份的指标，不做未加说明的合并汇总"
+  }
+}

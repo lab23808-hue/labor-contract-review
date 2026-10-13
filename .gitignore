@@ -1,0 +1,40 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# 密钥
+.env
+
+# 运行时数据：合同文件和数据库不进版本库
+data/contracts/*
+!data/contracts/.gitkeep
+*.db
+
+# 向量数据库（二进制、可从 data/knowledge 重新生成）
+data/chroma/*
+!data/chroma/.gitkeep
+
+# 本地 Python 虚拟环境
+venv/
+
+# 实验运行时生成的临时索引
+experiment_kb/tmp_runtime/
+
+# IDE 本地配置
+.idea/
+
+# 前端依赖与构建产物
+frontend/node_modules/
+frontend/dist/
+
+# 本地 SQLite 数据库及运行时文件
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+
+# 评测过程生成的历史备份
+data/eval_samples/*.bak

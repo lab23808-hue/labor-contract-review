@@ -1,0 +1,232 @@
+{
+  "generated_at": "2026-10-11T18:45:20.174589+00:00",
+  "note": "真实生产知识库基线（2026-10-12重新拉取确认）",
+  "knowledge": {
+    "file_count": 1,
+    "total_evidence_count": 26,
+    "files": [
+      {
+        "filename": "劳动合同法.txt",
+        "file_content_hash": "62810baeb84ef24d04ca4f082fc67668f3dd62a22d77cb142c499760d6bf97e8",
+        "evidence_count": 26,
+        "evidence_set_hash": "348227980c8d86aa1e25b6b1268c9075c8dfd7f5b27424c5c49f3b27ac4041a7"
+      }
+    ],
+    "evidence_detail": [
+      {
+        "source": "劳动合同法",
+        "article": "第一条",
+        "part": "",
+        "content_hash": "e9c2cbf0b99b9c58bece1f7986a6108191ef8250b02adf9301d4440e3ffd655a",
+        "content_length": 64
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二条",
+        "part": "",
+        "content_hash": "4f44b3fe4f6f35c1f1ee8b83413973a65d130463a722cc6ce6de8af336d22675",
+        "content_length": 136
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第三条",
+        "part": "",
+        "content_hash": "2f6ae081f1eea19b9fbae694aaf48da4733d0565c40016c21539841bc5cb9e84",
+        "content_length": 78
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第十七条",
+        "part": "",
+        "content_hash": "044474434f3107f9df82413648250d543cb50d02813aace4f344eac137cd2b22",
+        "content_length": 247
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第十九条",
+        "part": "",
+        "content_hash": "d3f0813d04a1460845a3ab18ab650676398b72e1e0e059da90e8a7cce2c729e8",
+        "content_length": 203
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二十条",
+        "part": "",
+        "content_hash": "7f338e1f4d711674661135b46ea8556c5a819a44bf232ae394127887535cd795",
+        "content_length": 68
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二十一条",
+        "part": "",
+        "content_hash": "c4e4cc2cbc467cba5519ea19315c0a77cfc481b3ea8c7e3bb9477e69f4fdea6a",
+        "content_length": 83
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二十三条",
+        "part": "",
+        "content_hash": "a21563034da224d979302a1ad1a6a0a4640aa43ddf39d6816db8c406851bf497",
+        "content_length": 160
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二十四条",
+        "part": "",
+        "content_hash": "665624162416a01ea21dff5d979c005dc62d3084f2686da4fc8b01c24a8c0fbb",
+        "content_length": 187
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二十九条",
+        "part": "",
+        "content_hash": "ed482b5012ddb6827dc137ae8df391a5ae3f3fb1f02f67174c98358965e4e2be",
+        "content_length": 36
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第三十条",
+        "part": "",
+        "content_hash": "34151232be5067c323a459063b6288a7aaf43e6b199c7da8747672ad791ad7eb",
+        "content_length": 95
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第三十三条",
+        "part": "",
+        "content_hash": "db51ca6746a4c74c8ed462a832728440a215abf3a8ceb208fd10e5f9726c0059",
+        "content_length": 46
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第三十四条",
+        "part": "",
+        "content_hash": "a40ab734fdc1cecf89b8fbdab371341f7826c9d009366a0e560766e6c311ec4f",
+        "content_length": 55
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第三十五条",
+        "part": "",
+        "content_hash": "591cd5f4ed4d62e36a44a6a3be406c0a753a891c0d72ed72e61038ebec41c450",
+        "content_length": 75
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二十二条",
+        "part": "",
+        "content_hash": "6005e8b47079efa1db677a618a990ca0081d95a31a56d94f8e55313fed4ed1f6",
+        "content_length": 192
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二十五条",
+        "part": "",
+        "content_hash": "f786a5e827f204223349b65514a124133101b5bd3a96de75799134a540b47164",
+        "content_length": 49
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第二十六条",
+        "part": "",
+        "content_hash": "988de46bdea214f8120aa43909df6a7de6238b156e2a7f0ffd5cd7187fa54ecd",
+        "content_length": 156
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第三十六条",
+        "part": "",
+        "content_hash": "aed19ca682f644c3ba0492d96044b2370b9733dfdf68a0460cae09667c5e9c25",
+        "content_length": 28
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第三十九条",
+        "part": "",
+        "content_hash": "5117909105b25494809188aa132bcb250c85aeb5cd57d3ab16cf9c72b89034c3",
+        "content_length": 209
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第四十条",
+        "part": "",
+        "content_hash": "74abdd89d9a89ca6fa40de574550d8d30e9c1f78210db3e3fc1d22a06586e775",
+        "content_length": 218
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第四十六条",
+        "part": "",
+        "content_hash": "64dad364290e03d8f60f69a66432650588b588128c6b36b356fb431cf6ccb7ec",
+        "content_length": 287
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第四十七条",
+        "part": "",
+        "content_hash": "44144e08b64c538467f2ce708c5315c6a16d3648e7b9c0c26dfe434436f0b765",
+        "content_length": 218
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第四十八条",
+        "part": "",
+        "content_hash": "ed8e40704c500b9b21493c30bc70d51353cd8268f0d36798f618728821e5a34f",
+        "content_length": 106
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第八十二条",
+        "part": "",
+        "content_hash": "71822fa960c135915bf4b98eeab7a9fd1521a01495779b28aee4f71065eb39db",
+        "content_length": 117
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第八十五条",
+        "part": "",
+        "content_hash": "d234922fe145a46dd8a1290b5b3de814c6f94dedd0b3aed572fd60890f47e557",
+        "content_length": 230
+      },
+      {
+        "source": "劳动合同法",
+        "article": "第八十七条",
+        "part": "",
+        "content_hash": "cbe550cb9484d8edf74ae607c87a8ba2fed28de2d245240851351ccc4c7a87a8",
+        "content_length": 60
+      }
+    ],
+    "files_fingerprint": "1311dbff9b554be9aebf2190a510464b56ced830b334cbdd2ab6c8114825347d",
+    "evidence_fingerprint": "348227980c8d86aa1e25b6b1268c9075c8dfd7f5b27424c5c49f3b27ac4041a7",
+    "knowledge_snapshot_fingerprint": "f9a4897645aa0f4c6426966bc529c9702101fd8904a2d2a25207ae387c0a741f"
+  },
+  "eval_dataset": {
+    "sample_count": 315,
+    "evaluable_count": 188,
+    "whole_file_byte_hash": "069dce3cbb9b492afef3e378216c191b5ef38081c88aadfc8d0ad3699d361e91",
+    "gold_answer_content_fingerprint": "e9efe0abbd74b34bb72150e25175991e83cce8eaf0585bb0ec8859851f81c8db"
+  },
+  "config": {
+    "RETRIEVAL_TOP_K": 5,
+    "EMBEDDING_MODEL_NAME": "BAAI/bge-m3",
+    "CHROMA_COLLECTION_NAME": "legal_knowledge",
+    "KNOWLEDGE_CHUNK_SIZE": 500,
+    "KNOWLEDGE_CHUNK_OVERLAP": 50,
+    "BM25_K1_documented": 1.5,
+    "BM25_B_documented": 0.75,
+    "DEFAULT_RRF_K_documented": 60
+  },
+  "environment": {
+    "python_version": "3.11.15",
+    "package_versions": {
+      "langchain-chroma": "未安装/无法确认（当前环境没有这个包，不代表用户机器上没有）",
+      "langchain-core": "未安装/无法确认（当前环境没有这个包，不代表用户机器上没有）",
+      "langchain-huggingface": "未安装/无法确认（当前环境没有这个包，不代表用户机器上没有）",
+      "langchain-text-splitters": "未安装/无法确认（当前环境没有这个包，不代表用户机器上没有）",
+      "chromadb": "未安装/无法确认（当前环境没有这个包，不代表用户机器上没有）",
+      "jieba": "未安装/无法确认（当前环境没有这个包，不代表用户机器上没有）"
+    }
+  },
+  "config_hash": "77731497002ad88402854a3b7ea50679c724758a5f7647a61b26561f5d60965b",
+  "overall_content_fingerprint": "5ea17f262959b4a5665e720ba9b33b9d4196179ffa4ba3c7bd52f41115b9f505"
+}

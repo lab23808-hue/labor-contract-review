@@ -1,0 +1,708 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #f5f6f8;
+  color: #1f2329;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e3e5e8;
+  background: #ffffff;
+}
+
+.page-title {
+  font-size: 20px;
+  margin: 0;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* ---------- 合同库（左侧） ---------- */
+
+.contract-library {
+  width: 260px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-right: 1px solid #e3e5e8;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.library-title {
+  font-size: 15px;
+  margin: 0 0 12px;
+  color: #4a5063;
+}
+
+.upload-panel {
+  border: 1px dashed #c7ccd6;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 16px;
+}
+
+.upload-file-label input[type="file"] {
+  width: 100%;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.contract-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contract-list-item {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+.contract-list-item:hover {
+  background: #f3f5f9;
+}
+
+.contract-list-item.active {
+  background: #eaf0fd;
+  border-color: #2f6fed;
+}
+
+.contract-list-name {
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contract-list-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.contract-list-version {
+  font-size: 11px;
+  color: #9aa1ac;
+}
+
+/* ---------- 工作区（右侧） ---------- */
+
+.contract-workspace {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.workspace-empty-state {
+  color: #6b7280;
+  text-align: center;
+  padding-top: 80px;
+}
+
+.workspace-header {
+  margin-bottom: 16px;
+}
+
+.workspace-title {
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+.workspace-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+  color: #6b7280;
+  align-items: center;
+}
+
+.workspace-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #e3e5e8;
+  margin-bottom: 16px;
+}
+
+.workspace-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 8px 14px;
+  margin-top: 0;
+  font-size: 14px;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.workspace-tab:hover {
+  color: #1f2329;
+}
+
+.workspace-tab.active {
+  color: #2f6fed;
+  border-bottom-color: #2f6fed;
+  font-weight: 600;
+}
+
+.workspace-content {
+  max-width: 900px;
+}
+
+/* ---------- 通用卡片 / 表单元素 ---------- */
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e3e5e8;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 17px;
+}
+
+button {
+  margin-top: 12px;
+  padding: 8px 18px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background: #2f6fed;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #b7c2d6;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  background: #eef1f5;
+  color: #2f6fed;
+}
+
+.error-banner {
+  background: #fdecea;
+  border: 1px solid #f5c2c0;
+  color: #a33;
+  padding: 10px 24px;
+  cursor: pointer;
+}
+
+.error-text {
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.hint-text {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.empty-state {
+  padding: 12px 0;
+}
+
+.mono-text {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  row-gap: 8px;
+  column-gap: 12px;
+  margin: 0 0 14px;
+}
+
+.info-grid dt {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.info-grid dd {
+  margin: 0;
+  font-size: 14px;
+}
+
+.status-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #eef1f5;
+  color: #4a5063;
+}
+
+.status-tag.status-reviewed {
+  background: #eaf6ea;
+  color: #2e7d32;
+}
+
+.status-tag.status-failed {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+.task-status-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #fff4e5;
+  color: #b7791f;
+}
+
+/* ---------- 条款查看 ---------- */
+
+.clause-viewer-body {
+  display: flex;
+  gap: 16px;
+}
+
+.clause-directory {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.clause-directory-item {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  margin-top: 0;
+  color: #1f2329;
+  font-size: 13px;
+}
+
+.clause-directory-item:hover {
+  background: #f3f5f9;
+}
+
+.clause-directory-item.active {
+  background: #eaf0fd;
+  border-color: #2f6fed;
+  color: #2f6fed;
+}
+
+.clause-directory-type {
+  display: block;
+  font-size: 11px;
+  color: #9aa1ac;
+}
+
+.clause-directory-item.active .clause-directory-type {
+  color: #6f95e0;
+}
+
+.clause-detail {
+  flex: 1;
+  border-left: 1px solid #eaecef;
+  padding-left: 16px;
+}
+
+.clause-heading {
+  font-weight: 600;
+}
+
+.clause-type-tag {
+  font-weight: 400;
+  color: #2f6fed;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+.clause-text {
+  white-space: pre-wrap;
+  margin: 6px 0 0;
+  line-height: 1.6;
+}
+
+/* ---------- 审查工作区 ---------- */
+
+.overall-risk {
+  font-size: 15px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.review-record-meta {
+  font-size: 12px;
+}
+
+.risk-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.risk-high {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+.risk-medium {
+  background: #fff4e5;
+  color: #b7791f;
+}
+
+.risk-low {
+  background: #eaf6ea;
+  color: #2e7d32;
+}
+
+.risk-none {
+  background: #eef1f5;
+  color: #5f6773;
+}
+
+.summary-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.summary-item {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.failed-clauses-warning {
+  background: #fff4e5;
+  border: 1px solid #f3d9a6;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.failed-clauses-warning ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.review-workspace-body {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.review-result-directory {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.review-result-directory-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  margin-top: 0;
+  font-size: 13px;
+}
+
+.review-result-directory-item:hover {
+  background: #f3f5f9;
+}
+
+.review-result-directory-item.active {
+  border-color: #2f6fed;
+  background: #eaf0fd;
+}
+
+.review-result-directory-label {
+  color: #1f2329;
+}
+
+.review-result-detail {
+  flex: 1;
+  border-left: 1px solid #eaecef;
+  padding-left: 16px;
+}
+
+.review-field {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.review-field-label {
+  color: #6b7280;
+  margin-right: 4px;
+}
+
+.review-source {
+  font-size: 12px;
+}
+
+.related-clauses {
+  margin-top: 10px;
+  background: #f8f9fb;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.related-clauses-title {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.related-clause-block {
+  margin-bottom: 8px;
+}
+
+.related-clause-block:last-child {
+  margin-bottom: 0;
+}
+
+.review-result-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.review-result-actions button {
+  margin-top: 0;
+}
+
+/* ---------- 修改任务 ---------- */
+
+.modification-task-form {
+  margin-top: 14px;
+  background: #f8f9fb;
+  border: 1px solid #e3e5e8;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.modification-task-form-title {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.modification-task-form-original {
+  margin-bottom: 8px;
+}
+
+.modification-task-textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px;
+  border: 1px solid #c7ccd6;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+.modification-task-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.modification-task-form-actions button {
+  margin-top: 8px;
+}
+
+.modification-task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modification-task-item {
+  border: 1px solid #eaecef;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.modification-task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.modification-task-id {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ---------- 修改任务：状态标签、Agent 候选结果、律师意见历史 ---------- */
+
+.task-status-tag.task-status-reviewing {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.task-status-tag.task-status-rejected {
+  background: #fff4e5;
+  color: #b7791f;
+}
+
+.task-status-tag.task-status-needs_human {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+.task-status-tag.task-status-confirmed,
+.task-status-tag.task-status-completed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.lawyer-instruction-list {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.modification-task-actions {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #e0e0e0;
+}
+
+.modification-candidate-box {
+  background: #fafafa;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.validator-error-box {
+  background: #fdecea;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  color: #c0392b;
+  font-size: 13px;
+}
+
+.validator-error-box ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+/* ---------- 版本（V2 / Diff / 风险 Diff） ---------- */
+
+.version-generate-box,
+.version-detail-box {
+  margin-top: 12px;
+}
+
+.version-detail-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.version-review-report,
+.clause-diff-list,
+.risk-diff-list {
+  margin-top: 16px;
+}
+
+.v2-text-view-content {
+  white-space: pre-wrap;
+  font-family: inherit;
+  line-height: 1.6;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid #eaecef;
+  border-radius: 6px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.clause-diff-item,
+.risk-diff-item {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.clause-diff-item.changed {
+  border-left: 3px solid #1565c0;
+}
+
+.risk-diff-item.risk-diff-resolved {
+  border-left: 3px solid #2e7d32;
+}
+
+.risk-diff-item.risk-diff-new,
+.risk-diff-item.risk-diff-changed {
+  border-left: 3px solid #c0392b;
+}
+
+.risk-diff-item.risk-diff-unmatched {
+  border-left: 3px solid #b7791f;
+}

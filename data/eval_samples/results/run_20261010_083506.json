@@ -1,0 +1,2444 @@
+{
+  "run_at": "2026-10-10T08:35:06.386047+00:00",
+  "mode": "offline",
+  "sample_filter": null,
+  "contracts_count": 50,
+  "stages": {
+    "1": {
+      "stage": 1,
+      "status": "real_run",
+      "result": {
+        "knowledge_base_files": [
+          "劳动合同法.txt"
+        ],
+        "knowledge_base_article_count": 26,
+        "required_citation_total": 15,
+        "found_count": 15,
+        "found": [
+          "《劳动合同法》第三十五条",
+          "《劳动合同法》第三十条",
+          "《劳动合同法》第二十三条",
+          "《劳动合同法》第二十二条",
+          "《劳动合同法》第二十五条",
+          "《劳动合同法》第二十六条",
+          "《劳动合同法》第二十四条",
+          "《劳动合同法》第二十条",
+          "《劳动合同法》第八十七条",
+          "《劳动合同法》第八十五条",
+          "《劳动合同法》第十七条",
+          "《劳动合同法》第十九条",
+          "《劳动合同法》第四十七条",
+          "《劳动合同法》第四十八条",
+          "《劳动合同法》第四十六条"
+        ],
+        "missing_count": 0,
+        "missing": [],
+        "unparsable_count": 0,
+        "unparsable": [],
+        "coverage_rate": 1.0
+      }
+    },
+    "2": {
+      "stage": 2,
+      "status": "not_run_in_sandbox",
+      "name": "条款切分检查（标准答案条款 vs document.splitter.ClauseSplitter 真实切分结果对比）",
+      "reason": "缺少依赖/环境：langchain_text_splitters（document/splitter.py 模块顶层 import，本沙箱无法 pip install）",
+      "local_command": "pip install -r requirements.txt && python -c \"from document.splitter import ClauseSplitter; from evaluation.generate_contracts import build_all_contracts; [ClauseSplitter().split(c.full_text) for c in build_all_contracts()]\" # 需要你自己补一个对比脚本：把切分结果的 clause 边界/原文和标准答案逐条对比，不是只跑通不报错",
+      "note": "本沙箱明确不允许用 FakeLLM/模拟结果代替此阶段——没跑就是没跑，不伪造数值。"
+    },
+    "3": {
+      "stage": 3,
+      "status": "not_run_in_sandbox",
+      "name": "RAG 独立检索检查（Recall@K / MRR / 不相关证据占比）",
+      "reason": "缺少依赖/环境：langchain_chroma + sentence-transformers（rag/database.py, rag/knowledge_loader.py），以及需要先用真实 BGE-M3 构建好 data/chroma 向量库",
+      "local_command": "pip install -r requirements.txt && python scripts/build_knowledge_base.py && python scripts/run_eval_samples.py --mode online --stage 3  # 需要你自己补充人工标注的「条款->应检索到的法条」对照表，不能只用系统自己的检索结果当 ground truth",
+      "note": "本沙箱明确不允许用 FakeLLM/模拟结果代替此阶段——没跑就是没跑，不伪造数值。"
+    },
+    "4": {
+      "stage": 4,
+      "status": "not_run_in_sandbox",
+      "name": "区分切分问题与检索问题（标准条款文本 vs 实际切分文本分别检索对比）",
+      "reason": "缺少依赖/环境：同实验 2 + 实验 3 的依赖",
+      "local_command": "pip install -r requirements.txt && python scripts/build_knowledge_base.py && python scripts/run_eval_samples.py --mode online --stage 4",
+      "note": "本沙箱明确不允许用 FakeLLM/模拟结果代替此阶段——没跑就是没跑，不伪造数值。"
+    },
+    "5": {
+      "stage": 5,
+      "status": "not_run_in_sandbox",
+      "name": "区分检索问题与 LLM 判断问题（原始系统结果 vs 标准条款文本 vs 标准法律依据 三组对照）",
+      "reason": "缺少依赖/环境：openai 客户端 + DEEPSEEK_API_KEY（llm/client.py）+ 实验3的依赖",
+      "local_command": "pip install -r requirements.txt && # 在 .env 里配置 DEEPSEEK_API_KEY 和可用的模型名（见 config/settings.py 顶部注释）\npython scripts/build_knowledge_base.py && python scripts/run_eval_samples.py --mode online --stage 5  # 需固定 temperature/模型版本并重复跑几次，处理 LLM 非确定性",
+      "note": "本沙箱明确不允许用 FakeLLM/模拟结果代替此阶段——没跑就是没跑，不伪造数值。"
+    },
+    "6": {
+      "stage": 6,
+      "status": "real_run",
+      "part": "rules_only",
+      "result": {
+        "ruleset_version": "probation_duration_exceeds_legal_cap+probation_salary_below_80_percent",
+        "contracts_checked": 50,
+        "total_expected_hits": 17,
+        "total_actual_hits": 15,
+        "total_matched": 15,
+        "missed_count": 2,
+        "missed": [
+          {
+            "sample_id": "clear_risk_10",
+            "clause_id": "clear_risk_10_c02"
+          },
+          {
+            "sample_id": "mixed_08",
+            "clause_id": "mixed_08_c05"
+          }
+        ],
+        "false_positive_count": 0,
+        "false_positive": [],
+        "known_limitation_gap_count": 28,
+        "known_limitation_gap": [
+          {
+            "sample_id": "clear_risk_12",
+            "clause_id": "clear_risk_12_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "clear_risk_13",
+            "clause_id": "clear_risk_13_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "clear_risk_14",
+            "clause_id": "clear_risk_14_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "clear_risk_15",
+            "clause_id": "clear_risk_15_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "clear_risk_16",
+            "clause_id": "clear_risk_16_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "clear_risk_17",
+            "clause_id": "clear_risk_17_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "clear_risk_18",
+            "clause_id": "clear_risk_18_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "clear_risk_19",
+            "clause_id": "clear_risk_19_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "clear_risk_20",
+            "clause_id": "clear_risk_20_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_01",
+            "clause_id": "mixed_01_c05",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_02",
+            "clause_id": "mixed_02_c05",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_03",
+            "clause_id": "mixed_03_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_03",
+            "clause_id": "mixed_03_c05",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_04",
+            "clause_id": "mixed_04_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_05",
+            "clause_id": "mixed_05_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_06",
+            "clause_id": "mixed_06_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_06",
+            "clause_id": "mixed_06_c05",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_07",
+            "clause_id": "mixed_07_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_08",
+            "clause_id": "mixed_08_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_09",
+            "clause_id": "mixed_09_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_09",
+            "clause_id": "mixed_09_c05",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_10",
+            "clause_id": "mixed_10_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "mixed_10",
+            "clause_id": "mixed_10_c05",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "boundary_02",
+            "clause_id": "boundary_02_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "boundary_03",
+            "clause_id": "boundary_03_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "boundary_06",
+            "clause_id": "boundary_06_c03",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "boundary_08",
+            "clause_id": "boundary_08_c02",
+            "expected_rule_id": null
+          },
+          {
+            "sample_id": "boundary_08",
+            "clause_id": "boundary_08_c03",
+            "expected_rule_id": null
+          }
+        ],
+        "recall": 0.8824,
+        "precision": 1.0,
+        "contract_reports": [
+          {
+            "sample_id": "clear_risk_01",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_01_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_01_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_01_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_01_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_01_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_02",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_02_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_02_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_02_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_02_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_02_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_03",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_03_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_03_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_03_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_03_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_03_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_04",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_04_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_04_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_04_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_04_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_04_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_05",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_05_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_05_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_05_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_05_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_05_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_06",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_06_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_06_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_06_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_06_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_06_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_07",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_07_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_07_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_07_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_07_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_07_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_08",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_08_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_08_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_08_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_08_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_08_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_09",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_09_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_09_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_09_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_09_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_09_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_10",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_10_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_10_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_10_c02",
+                "expected_hit": true,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_10_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_10_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_11",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_11_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_11_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_11_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_11_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_11_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_12",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_12_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_12_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_12_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_12_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_12_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_13",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_13_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_13_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_13_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_13_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_13_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_14",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_14_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_14_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_14_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_14_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_14_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_15",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_15_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_15_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_15_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_15_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_15_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_16",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_16_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_16_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_16_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_16_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_16_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_17",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_17_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_17_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_17_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_17_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_17_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_18",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_18_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_18_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_18_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_18_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_18_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_19",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_19_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_19_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_19_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_19_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_19_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "clear_risk_20",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "clear_risk_20_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_20_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_20_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "clear_risk_20_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "clear_risk_20_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_01",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_01_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_01_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_01_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_01_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_01_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_01_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_01_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_01_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_01_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_02",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_02_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_02_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_02_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_02_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_02_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_02_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_02_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_02_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_02_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_03",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_03_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_03_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_03_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_03_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_03_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_03_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_03_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_03_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_03_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_04",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_04_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_04_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_04_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_04_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_04_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_04_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_04_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_04_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_04_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_05",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_05_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_05_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_05_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_05_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_05_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_05_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_05_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_05_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_05_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_06",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_06_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_06_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_06_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_06_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_06_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_06_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_06_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_06_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_06_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_07",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_07_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_07_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_07_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_07_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_07_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_07_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_07_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_07_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_07_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_08",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_08_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_08_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_08_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_08_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_08_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_08_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_08_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_08_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_08_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_09",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_09_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_09_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_09_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_09_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_09_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_09_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_09_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_09_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_09_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "compliant_10",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "compliant_10_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_10_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_10_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_10_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_10_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_10_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_10_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_10_c07",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "compliant_10_c08",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_01",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "mixed_01_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_01_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_01_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_01_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_01_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_01_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_01_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_02",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "mixed_02_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_02_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_02_c02",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_02_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_02_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_02_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_02_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_03",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "mixed_03_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_03_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_03_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_03_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_03_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_03_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_03_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_04",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "mixed_04_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_04_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_04_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_04_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_04_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_04_c05",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_04_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_05",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "mixed_05_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_05_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_05_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_05_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_05_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_05_c05",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_05_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_06",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "mixed_06_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_06_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_06_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_06_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_06_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_06_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_06_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_07",
+            "rule_results_count": 1,
+            "per_clause": [
+              {
+                "clause_id": "mixed_07_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_07_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_07_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_07_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_07_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_07_c05",
+                "expected_hit": true,
+                "actual_hit": true,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_07_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_08",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "mixed_08_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_08_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_08_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_08_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_08_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_08_c05",
+                "expected_hit": true,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_08_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_09",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "mixed_09_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_09_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_09_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_09_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_09_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_09_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_09_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "mixed_10",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "mixed_10_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_10_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_10_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_10_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_10_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "mixed_10_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "mixed_10_c06",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_01",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_01_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_01_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_01_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_01_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_01_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_01_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_02",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_02_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_02_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_02_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "boundary_02_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_02_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_03",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_03_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_03_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_03_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "boundary_03_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_03_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_04",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_04_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_04_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_04_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_04_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_04_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_05",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_05_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_05_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_05_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_05_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_05_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_05_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_06",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_06_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_06_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_06_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_06_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "boundary_06_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_06_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_07",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_07_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_07_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_07_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_07_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_07_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_08",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_08_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_08_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_08_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "boundary_08_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": true
+              },
+              {
+                "clause_id": "boundary_08_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_08_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_09",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_09_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_09_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_09_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_09_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_09_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_09_c05",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          },
+          {
+            "sample_id": "boundary_10",
+            "rule_results_count": 0,
+            "per_clause": [
+              {
+                "clause_id": "boundary_10_c00",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_10_c01",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_10_c02",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_10_c03",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              },
+              {
+                "clause_id": "boundary_10_c04",
+                "expected_hit": false,
+                "actual_hit": false,
+                "ground_truth_risk": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "7": {
+      "stage": 7,
+      "status": "not_run_in_sandbox",
+      "name": "端到端质量评估（全部 50 份合同：风险级别 P/R/F1、法律依据准确率、建议可执行性、耗时、token/成本）",
+      "reason": "缺少依赖/环境：openai + langgraph + langchain_chroma 全链路（workflows/review_workflow.py 整条链）",
+      "local_command": "pip install -r requirements.txt && # 配置 .env 后：\npython scripts/build_knowledge_base.py && python scripts/run_eval_samples.py --mode online --stage 7 --output data/eval_samples/results/e2e_$(date +%Y%m%d_%H%M).json",
+      "note": "本沙箱明确不允许用 FakeLLM/模拟结果代替此阶段——没跑就是没跑，不伪造数值。"
+    }
+  }
+}

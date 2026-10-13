@@ -1,0 +1,39 @@
+path,size_bytes,read_this_round,inferred_purpose,likely_triggers_external_calls,likely_modifies_existing_data,risk_if_executed,superseded_status,tag
+scripts/_common.py,UNKNOWN,NO,"疑似多个eval脚本共享的公共函数(基于命名惯例推断)",UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,INFERRED/UNKNOWN
+scripts/_jieba_probe_tmp.py,UNKNOWN,NO,"疑似jieba分词探测用的临时脚本(命名含_tmp)",UNKNOWN,UNKNOWN,UNKNOWN,"疑似临时/一次性脚本",INFERRED/UNKNOWN
+scripts/_samples.py,UNKNOWN,NO,"疑似评测样本构造的公共辅助模块",UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,INFERRED/UNKNOWN
+scripts/build_knowledge_base.py,UNKNOWN,NO,"疑似构建生产/实验知识库索引的脚本","是(可能涉及Embedding/Chroma写入)",可能(索引构建类脚本通常会重建索引),"中高(如涉及重建正式索引,执行前需确认目标路径)",UNKNOWN,INFERRED/UNKNOWN
+scripts/build_retrieval_eval_samples.py,UNKNOWN,NO,"疑似构建检索评测样本集(retrieval_eval_samples.json的生成脚本)",否(本地数据处理),可能(会生成/覆盖评测样本文件),中,UNKNOWN,INFERRED/UNKNOWN
+scripts/build_snapshot_fingerprint.py,16517,NO(仅确认体量),"疑似计算知识库快照指纹(sha256/evidence_count等),根目录与experiment_kb/根下同名文件是否为同一文件本轮未核实",否,否(只读计算),低,"需确认与experiment_kb/build_snapshot_fingerprint.py(同名)是否内容一致",UNKNOWN
+scripts/compare_eval_results.py,UNKNOWN,NO,"疑似对比两轮评测结果差异的脚本",否,否,低,UNKNOWN,INFERRED/UNKNOWN
+scripts/eval_bm25_boundary_experiment.py,18123,NO,"BM25边界条件实验(命名指向boundary),历史E-系列脚本",否,可能生成结果文件,中,"疑似已被正式BM25接入(A001)取代为验收对象,本轮未核实是否仍被引用",INFERRED/UNKNOWN
+scripts/eval_bm25_preprocessing_experiment.py,15531,NO,"BM25预处理(分词/清洗)对比实验",否,可能生成结果文件,中,UNKNOWN,INFERRED/UNKNOWN
+scripts/eval_bm25_tokenizer_experiment.py,18421,NO,"不同tokenizer(jieba/char_bigram)对BM25效果的对比实验,对应E002/E005等历史记录",否,可能生成结果文件,中,"历史产出已被RAG_EXPERIMENT_REGISTER记录(E002/E005),脚本本身本轮未重跑",INFERRED/UNKNOWN
+scripts/eval_full_sample_diagnostics.py,22835,NO,"全量评测样本诊断脚本,对应data/eval_samples/full_sample_diagnostics.json/.md",否,可能生成/覆盖diagnostics文件,中,UNKNOWN,INFERRED/UNKNOWN
+scripts/eval_retrieval_baseline.py,12340,NO,"检索基线评测脚本",否,可能生成结果文件,中,UNKNOWN,INFERRED/UNKNOWN
+scripts/eval_retrieval_strategy_experiment.py,46811,NO,"检索策略(Dense/BM25/RRF)对比实验,体量最大(46811B),疑似working_kb_retrieval等实验的源脚本",是(Dense路径需Embedding调用),可能生成结果文件,高(含真实Embedding调用,成本/耗时不可忽略),"产出已记录在E001-E006等历史实验行",INFERRED/UNKNOWN
+scripts/eval_retrieval_topk_experiment.py,12973,NO,"不同candidate_k取值对召回影响的实验",否,可能生成结果文件,中,UNKNOWN,INFERRED/UNKNOWN
+scripts/eval_weighted_rrf_experiment.py,25171,NO,"加权RRF融合策略实验",否,可能生成结果文件,中,UNKNOWN,INFERRED/UNKNOWN
+scripts/generate_eval_contracts.py,1817,NO,"疑似调用evaluation/generate_contracts.py生成评测合同的入口脚本",否,"是(会写入data/eval_samples/contracts)",中(如误执行会覆盖现有50份评测合同),UNKNOWN,INFERRED/UNKNOWN
+scripts/README.md,8184,NO,"scripts/目录说明文档,是了解全部29个脚本真实用途的最高优先级后续阅读对象",N/A,N/A,无(只读文档),N/A,下一轮优先读取项
+scripts/run_eval_samples.py,10477,NO,"疑似统一入口,批量运行评测样本相关脚本",是(取决于内部调用链),是(批量运行可能触发多个子脚本的写入),高(批量入口风险更不可控,执行前必须先读README确认),UNKNOWN,INFERRED/UNKNOWN
+scripts/test_snapshot_fingerprint.py,5509,NO,"snapshot_fingerprint相关的单元测试",否,否(测试脚本),低,N/A,INFERRED/UNKNOWN
+scripts/validate_knowledge_base.py,7995,NO,"知识库完整性校验脚本(只读校验,不修改)",否,"否(推断为纯校验,未读源码确认)",低,UNKNOWN,INFERRED/UNKNOWN
+scripts/verify_agent_function_calling.py,8352,NO,"验证Agent function-calling能力,疑似会真实调用LLM",是(很可能调用DeepSeek LLM API),否,中高(涉及真实LLM调用成本),UNKNOWN,INFERRED/UNKNOWN
+scripts/verify_di_fix.py,11396,NO,"验证依赖注入修复(对应api/dependencies.py文档提到的历史DI bug)",否,否,低,"疑似已完成验证,历史修复已固化进dependencies.py",INFERRED/UNKNOWN
+scripts/verify_full_pipeline.py,4473,NO,"端到端全流程验证脚本,很可能触发完整Review Workflow(含LLM调用)",是(大概率调用真实LLM),"可能(如写入测试合同到data/contracts/)",高,UNKNOWN,INFERRED/UNKNOWN
+scripts/verify_modification.py,30594,NO,"修改闭环(Modification Agent)验证脚本,体量较大,很可能触发真实Modification Agent调用",是(很可能调用LLM),"可能写入测试数据",高,UNKNOWN,INFERRED/UNKNOWN
+scripts/verify_p24_newline_write.py,6154,NO,"验证P-24号历史问题(换行符写入,对应ContractManager.save_parsed_text的newline=''设计)",否,"可能(写入测试文件验证换行行为)",低中,"疑似已完成验证,结论已固化进contract/manager.py注释",INFERRED/UNKNOWN
+scripts/verify_real_retrieval.py,2334,NO,"验证真实检索链路(非mock)",可能(取决于dense/bm25路径),否,中,UNKNOWN,INFERRED/UNKNOWN
+scripts/verify_review_pipeline.py,4823,NO,"验证审查流程(Review Workflow)",是(可能调用真实LLM),可能写入测试数据,中高,UNKNOWN,INFERRED/UNKNOWN
+scripts/verify_rules_pipeline.py,5066,NO,"验证规则引擎(RuleChecker)流程",否(规则引擎是纯代码逻辑不涉及LLM),否,低,UNKNOWN,INFERRED/UNKNOWN
+scripts/verify_v2_article_reconstruction.py,8871,NO,"验证V2条文重建逻辑(对应V2GenerationService)",可能,可能写入测试数据,中,UNKNOWN,INFERRED/UNKNOWN
+experiment_kb/build_snapshot_fingerprint.py,16517,NO,"与scripts/build_snapshot_fingerprint.py同名同体量,是否为同一份文件本轮未diff确认",否,否,低,"需下一轮用hash比对两份同名文件是否完全一致",UNKNOWN(需下一轮核实)
+experiment_kb/scripts/eval_timing_breakdown.py,17929,NO,"耗时分解实验脚本(p50/p95相关)",否,可能生成结果文件,中,"A005/A006两轮均记录NOT_MEASURED的耗时字段,疑似本脚本未被实际调用产出那两轮的耗时数据",INFERRED/UNKNOWN
+experiment_kb/scripts/eval_working_kb_retrieval.py,53060,NO,"working知识库检索评测脚本,体量最大(53060B),很可能是E001-E006历史实验的源脚本之一",是(Dense路径需Embedding),可能生成结果文件,高,"产出对应E001-E006历史记录",INFERRED/UNKNOWN
+experiment_kb/scripts/evaluate_contract_eval_500_full_kb.py,30532,YES(本次会话曾修复并验证执行,非本轮首次读取但内容已知),"44-Evidence全量知识库上对450+188份评测数据运行BM25检索,是A005实验的直接产出脚本;本会话早前曾修复过其conftest_fakes导入问题(ModuleNotFoundError)并用device_commit_files重新推送确认生效","否(仅BM25,不涉及Embedding/LLM)",是(会生成experiment_kb/datasets/.../full_kb_experiment/下的8个产出文件),中(已验证为真实生产代码路径,非mock,但重跑会覆盖现有A005产出文件),"当前有效,A005的权威产出脚本",CONFIRMED(本会话历史轮次验证)
+experiment_kb/scripts/kb_growth_diagnosis.py,18503,YES(本会话历史轮次编写并验证),"构建26/37/44三版本知识库并对360条development查询做BM25检索,输出rank_change_detail.csv等,是A006实验Part1的产出脚本",否,"是(写入experiment_kb/results/bm25_kb_growth_diagnosis_20261013/下的产出文件)",中,"当前有效,A006的权威产出脚本之一",CONFIRMED(本会话历史轮次验证)
+experiment_kb/scripts/kb_growth_diagnosis_part2.py,12373,YES(本会话历史轮次编写并验证,修复过oob_miss_ratio的tuple比较bug),"基于kb_growth_diagnosis.py产出,计算方案A/B/C(全局BM25/独立索引round-robin/查询路由)对比指标,是A006实验Part2的产出脚本",否,"是(写入A006的JSON/MD报告)",中,"当前有效,A006的权威产出脚本之一,已知修复过oob_miss_ratio()的tuple-vs-string比较bug",CONFIRMED(本会话历史轮次验证+修复)
+
+NOTE_ON_SCOPE,,,,,,,,
+本轮(2026-10-13盘点)对以上34个脚本(scripts/29个+experiment_kb/scripts及根目录5个相关)只核实了存在性与字节大小(通过device_list_dir),未逐篇Read源码确认真实行为。唯一例外是experiment_kb/scripts/下3个脚本(evaluate_contract_eval_500_full_kb.py/kb_growth_diagnosis.py/kb_growth_diagnosis_part2.py),因为是本次Claude会话此前(非本轮,但同一会话)亲自编写/修复并通过device端真实执行验证过的脚本,其行为CONFIRMED。其余31个脚本的inferred_purpose列全部基于文件名与历史文档的间接推断(INFERRED),risk/triggers/modifies列标注UNKNOWN处均需要下一轮实际打开文件逐一确认后才能升级为CONFIRMED。本轮严格遵守"不执行任何脚本"的约束,所有判断均为静态推断,不构成已验证事实。,,,,,,,,

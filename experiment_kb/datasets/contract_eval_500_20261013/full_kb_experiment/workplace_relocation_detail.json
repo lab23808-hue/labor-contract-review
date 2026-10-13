@@ -1,0 +1,1485 @@
+[
+  {
+    "contract_id": "LC_SYN_0030",
+    "query_id": "LC_SYN_0030_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0030",
+    "query_id": "LC_SYN_0030_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0030",
+    "query_id": "LC_SYN_0030_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0042",
+    "query_id": "LC_SYN_0042_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0042",
+    "query_id": "LC_SYN_0042_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0042",
+    "query_id": "LC_SYN_0042_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0043",
+    "query_id": "LC_SYN_0043_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0043",
+    "query_id": "LC_SYN_0043_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0043",
+    "query_id": "LC_SYN_0043_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0052",
+    "query_id": "LC_SYN_0052_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0052",
+    "query_id": "LC_SYN_0052_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0052",
+    "query_id": "LC_SYN_0052_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0053",
+    "query_id": "LC_SYN_0053_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0053",
+    "query_id": "LC_SYN_0053_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0053",
+    "query_id": "LC_SYN_0053_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0058",
+    "query_id": "LC_SYN_0058_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0058",
+    "query_id": "LC_SYN_0058_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0058",
+    "query_id": "LC_SYN_0058_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0064",
+    "query_id": "LC_SYN_0064_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0064",
+    "query_id": "LC_SYN_0064_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0064",
+    "query_id": "LC_SYN_0064_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0065",
+    "query_id": "LC_SYN_0065_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0065",
+    "query_id": "LC_SYN_0065_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0065",
+    "query_id": "LC_SYN_0065_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0070",
+    "query_id": "LC_SYN_0070_Q1",
+    "topk": 5,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0070",
+    "query_id": "LC_SYN_0070_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0070",
+    "query_id": "LC_SYN_0070_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0076",
+    "query_id": "LC_SYN_0076_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0076",
+    "query_id": "LC_SYN_0076_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0076",
+    "query_id": "LC_SYN_0076_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0077",
+    "query_id": "LC_SYN_0077_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0077",
+    "query_id": "LC_SYN_0077_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0077",
+    "query_id": "LC_SYN_0077_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0082",
+    "query_id": "LC_SYN_0082_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0082",
+    "query_id": "LC_SYN_0082_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0082",
+    "query_id": "LC_SYN_0082_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0092",
+    "query_id": "LC_SYN_0092_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0092",
+    "query_id": "LC_SYN_0092_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0092",
+    "query_id": "LC_SYN_0092_Q1",
+    "topk": 20,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0135",
+    "query_id": "LC_SYN_0135_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0135",
+    "query_id": "LC_SYN_0135_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0135",
+    "query_id": "LC_SYN_0135_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0145",
+    "query_id": "LC_SYN_0145_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0145",
+    "query_id": "LC_SYN_0145_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0145",
+    "query_id": "LC_SYN_0145_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0146",
+    "query_id": "LC_SYN_0146_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0146",
+    "query_id": "LC_SYN_0146_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0146",
+    "query_id": "LC_SYN_0146_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0157",
+    "query_id": "LC_SYN_0157_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0157",
+    "query_id": "LC_SYN_0157_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0157",
+    "query_id": "LC_SYN_0157_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0158",
+    "query_id": "LC_SYN_0158_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0158",
+    "query_id": "LC_SYN_0158_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0158",
+    "query_id": "LC_SYN_0158_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0163",
+    "query_id": "LC_SYN_0163_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0163",
+    "query_id": "LC_SYN_0163_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0163",
+    "query_id": "LC_SYN_0163_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0169",
+    "query_id": "LC_SYN_0169_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0169",
+    "query_id": "LC_SYN_0169_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0169",
+    "query_id": "LC_SYN_0169_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0170",
+    "query_id": "LC_SYN_0170_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0170",
+    "query_id": "LC_SYN_0170_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0170",
+    "query_id": "LC_SYN_0170_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0175",
+    "query_id": "LC_SYN_0175_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0175",
+    "query_id": "LC_SYN_0175_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0175",
+    "query_id": "LC_SYN_0175_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0185",
+    "query_id": "LC_SYN_0185_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0185",
+    "query_id": "LC_SYN_0185_Q1",
+    "topk": 10,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0185",
+    "query_id": "LC_SYN_0185_Q1",
+    "topk": 20,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0197",
+    "query_id": "LC_SYN_0197_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0197",
+    "query_id": "LC_SYN_0197_Q1",
+    "topk": 10,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0197",
+    "query_id": "LC_SYN_0197_Q1",
+    "topk": 20,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0238",
+    "query_id": "LC_SYN_0238_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0238",
+    "query_id": "LC_SYN_0238_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0238",
+    "query_id": "LC_SYN_0238_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0239",
+    "query_id": "LC_SYN_0239_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0239",
+    "query_id": "LC_SYN_0239_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0239",
+    "query_id": "LC_SYN_0239_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0250",
+    "query_id": "LC_SYN_0250_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0250",
+    "query_id": "LC_SYN_0250_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0250",
+    "query_id": "LC_SYN_0250_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0251",
+    "query_id": "LC_SYN_0251_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0251",
+    "query_id": "LC_SYN_0251_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0251",
+    "query_id": "LC_SYN_0251_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0262",
+    "query_id": "LC_SYN_0262_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0262",
+    "query_id": "LC_SYN_0262_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0262",
+    "query_id": "LC_SYN_0262_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0263",
+    "query_id": "LC_SYN_0263_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0263",
+    "query_id": "LC_SYN_0263_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0263",
+    "query_id": "LC_SYN_0263_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0268",
+    "query_id": "LC_SYN_0268_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0268",
+    "query_id": "LC_SYN_0268_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0268",
+    "query_id": "LC_SYN_0268_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0272",
+    "query_id": "LC_SYN_0272_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0272",
+    "query_id": "LC_SYN_0272_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0272",
+    "query_id": "LC_SYN_0272_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0273",
+    "query_id": "LC_SYN_0273_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0273",
+    "query_id": "LC_SYN_0273_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0273",
+    "query_id": "LC_SYN_0273_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0278",
+    "query_id": "LC_SYN_0278_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0278",
+    "query_id": "LC_SYN_0278_Q1",
+    "topk": 10,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0278",
+    "query_id": "LC_SYN_0278_Q1",
+    "topk": 20,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0290",
+    "query_id": "LC_SYN_0290_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0290",
+    "query_id": "LC_SYN_0290_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0290",
+    "query_id": "LC_SYN_0290_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0302",
+    "query_id": "LC_SYN_0302_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0302",
+    "query_id": "LC_SYN_0302_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0302",
+    "query_id": "LC_SYN_0302_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0343",
+    "query_id": "LC_SYN_0343_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0343",
+    "query_id": "LC_SYN_0343_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0343",
+    "query_id": "LC_SYN_0343_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0344",
+    "query_id": "LC_SYN_0344_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0344",
+    "query_id": "LC_SYN_0344_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0344",
+    "query_id": "LC_SYN_0344_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0355",
+    "query_id": "LC_SYN_0355_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0355",
+    "query_id": "LC_SYN_0355_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0355",
+    "query_id": "LC_SYN_0355_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0356",
+    "query_id": "LC_SYN_0356_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0356",
+    "query_id": "LC_SYN_0356_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0356",
+    "query_id": "LC_SYN_0356_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0365",
+    "query_id": "LC_SYN_0365_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0365",
+    "query_id": "LC_SYN_0365_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0365",
+    "query_id": "LC_SYN_0365_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0366",
+    "query_id": "LC_SYN_0366_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0366",
+    "query_id": "LC_SYN_0366_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0366",
+    "query_id": "LC_SYN_0366_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0371",
+    "query_id": "LC_SYN_0371_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0371",
+    "query_id": "LC_SYN_0371_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0371",
+    "query_id": "LC_SYN_0371_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ],
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0377",
+    "query_id": "LC_SYN_0377_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0377",
+    "query_id": "LC_SYN_0377_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0377",
+    "query_id": "LC_SYN_0377_Q1",
+    "topk": 20,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0378",
+    "query_id": "LC_SYN_0378_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0378",
+    "query_id": "LC_SYN_0378_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0378",
+    "query_id": "LC_SYN_0378_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0383",
+    "query_id": "LC_SYN_0383_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0383",
+    "query_id": "LC_SYN_0383_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0383",
+    "query_id": "LC_SYN_0383_Q1",
+    "topk": 20,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0395",
+    "query_id": "LC_SYN_0395_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0395",
+    "query_id": "LC_SYN_0395_Q1",
+    "topk": 10,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0395",
+    "query_id": "LC_SYN_0395_Q1",
+    "topk": 20,
+    "recall_lensA": 0.5,
+    "hits": [
+      [
+        "劳动合同法",
+        "第二十六条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0448",
+    "query_id": "LC_SYN_0448_Q1",
+    "topk": 5,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0448",
+    "query_id": "LC_SYN_0448_Q1",
+    "topk": 10,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0448",
+    "query_id": "LC_SYN_0448_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  },
+  {
+    "contract_id": "LC_SYN_0449",
+    "query_id": "LC_SYN_0449_Q1",
+    "topk": 5,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0449",
+    "query_id": "LC_SYN_0449_Q1",
+    "topk": 10,
+    "recall_lensA": 0.0,
+    "hits": []
+  },
+  {
+    "contract_id": "LC_SYN_0449",
+    "query_id": "LC_SYN_0449_Q1",
+    "topk": 20,
+    "recall_lensA": 1.0,
+    "hits": [
+      [
+        "劳动合同法",
+        "第三十五条"
+      ]
+    ]
+  }
+]

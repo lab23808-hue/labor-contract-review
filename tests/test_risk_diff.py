@@ -20,8 +20,8 @@
        就把不同的 related_clause_ids 组合混为一谈。
 """
 
-from diff.risk_diff import risk_diff
-from schemas import ReviewResult, ReviewSource, RiskLevel
+from domain.diff.risk_diff import risk_diff
+from core import ReviewResult, ReviewSource, RiskLevel
 
 
 def _llm_result(clause_id: str, risk_level: RiskLevel, reason: str = "r") -> ReviewResult:

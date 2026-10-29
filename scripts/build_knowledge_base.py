@@ -1,7 +1,7 @@
-"""正式知识库初始化脚本：把 data/knowledge 下的法律文本用真实 BGE-M3 写入 data/chroma。
+"""正式知识库初始化脚本：把 data/knowledge 下的法律文本用真实 BGE-M3 写入 data/index/chroma。
 
-跟 scripts/verify_rag_pipeline.py 的区别：这个脚本写的是正式知识库（data/chroma，
-rag/database.py 里的默认持久化目录和 collection），且强制使用真实 BGE-M3——
+跟 scripts/verify_rag_pipeline.py 的区别：这个脚本写的是正式知识库（data/index/chroma，
+rag/vectorstore.py 里的默认持久化目录和 collection），且强制使用真实 BGE-M3——
 始终使用真实 BGE-M3；模型加载失败只报告环境问题（见 scripts/_common.py），不会换成假实现。
 
 用法：
@@ -16,11 +16,12 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from config.settings import KNOWLEDGE_DIR  # noqa: E402
-from rag import ChromaKnowledgeBase, KnowledgeLoader  # noqa: E402
+from retrieval import DenseBackend, KnowledgeLoader  # noqa: E402
 from _common import load_real_embedder_or_exit  # noqa: E402
 
 
@@ -37,7 +38,7 @@ def main() -> None:
     embedder = load_real_embedder_or_exit()
     print("      模型加载成功\n")
 
-    kb = ChromaKnowledgeBase(embedder)  # 使用 rag/database.py 的默认 persist_directory + collection_name
+    kb = DenseBackend(embedder)  # 使用 retrieval/backends/dense 的默认 persist_directory + collection_name
     if not args.append:
         kb.reset()
 

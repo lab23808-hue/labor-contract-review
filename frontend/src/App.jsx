@@ -3,7 +3,6 @@ import ContractLibrary from "./components/ContractLibrary.jsx";
 import ContractWorkspace from "./components/ContractWorkspace.jsx";
 import {
   abandonModificationTask,
-  askQuestion,
   confirmModificationTask,
   createContract,
   createModificationBatch,
@@ -64,11 +63,6 @@ export default function App() {
   // 这一种最简单的场景，不支持在界面上切换查看历史批次。
   const [currentBatch, setCurrentBatch] = useState(null);
   const [startBatchLoading, setStartBatchLoading] = useState(false);
-
-  // 问答（QA）标签页专用状态：只保留"最近一次问答"，不维护多轮历史。
-  const [asking, setAsking] = useState(false);
-  const [lastAnswer, setLastAnswer] = useState(null);
-  const [lastQuestion, setLastQuestion] = useState(null);
 
   // V2 相关状态："版本"标签页专用，和 V1 的 reviewRecord/reviewHistoryCount 分开放，
   // 避免把两个版本的数据混在同一组 state 里。
@@ -152,8 +146,6 @@ export default function App() {
     setV2ReviewError(null);
     setV2Text(null);
     setV2TextError(null);
-    setLastAnswer(null);
-    setLastQuestion(null);
     try {
       const [contract, contractClauses, latestReview, reviews, tasks, versions, batches] = await Promise.all([
         getContract(contractId),
@@ -416,21 +408,6 @@ export default function App() {
     }
   }
 
-  async function handleAsk(question) {
-    if (!currentContract) return;
-    setError(null);
-    setAsking(true);
-    try {
-      const { answer } = await askQuestion(currentContract.contract_id, question);
-      setLastQuestion(question);
-      setLastAnswer(answer);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setAsking(false);
-    }
-  }
-
   async function handleLoadDiff() {
     if (!currentContract || !version) return;
     setError(null);
@@ -572,10 +549,6 @@ export default function App() {
           onStartBatch={handleStartBatch}
           startBatchLoading={startBatchLoading}
           latestReviewId={reviewRecord ? reviewRecord.review_id : null}
-          onAsk={handleAsk}
-          asking={asking}
-          lastAnswer={lastAnswer}
-          lastQuestion={lastQuestion}
           version={version}
           versionsLoading={versionsLoading}
           onGenerateVersion={handleGenerateVersion}

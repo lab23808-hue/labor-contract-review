@@ -8,7 +8,7 @@
 
 query 由生产代码 agents.review_agent.generate_query 生成，和正式审查链路使用同一份实现。
 知识库建在一个临时目录里，每次运行都是全新的、跑完自动删除，
-不会污染 data/chroma 里正式的知识库，重复运行也不会累积重复数据。
+不会污染 data/index/chroma 里正式的知识库，重复运行也不会累积重复数据。
 """
 
 import argparse
@@ -18,21 +18,22 @@ import tempfile
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from agents.review_agent import generate_query  # noqa: E402
+from domain.agents.review_agent import generate_query  # noqa: E402
 from config import settings  # noqa: E402
 from config.settings import KNOWLEDGE_DIR  # noqa: E402
-from document import ClauseSplitter  # noqa: E402
-from rag import ChromaKnowledgeBase, KnowledgeLoader, LegalKnowledgeRetriever, build_embedder  # noqa: E402
-from schemas import Evidence  # noqa: E402
+from domain.document import ClauseSplitter  # noqa: E402
+from retrieval import DenseBackend, KnowledgeLoader, LegalKnowledgeRetriever, build_embedder  # noqa: E402
+from core import Evidence  # noqa: E402
 from _samples import RAG_RETRIEVAL_SAMPLE  # noqa: E402
 
 
-def build_knowledge_base(persist_dir: Path) -> ChromaKnowledgeBase:
+def build_knowledge_base(persist_dir: Path) -> DenseBackend:
     embedder = build_embedder()
-    kb = ChromaKnowledgeBase(embedder, persist_directory=persist_dir, collection_name="verify_rag")
+    kb = DenseBackend(embedder, persist_directory=persist_dir, collection_name="verify_rag")
 
     loader = KnowledgeLoader(kb)
     files = sorted(KNOWLEDGE_DIR.glob("*.txt"))

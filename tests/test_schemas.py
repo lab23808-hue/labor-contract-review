@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import pytest
 from pydantic import ValidationError
 
-from schemas import (
+from core import (
     RISK_LEVEL_LABELS_ZH,
     Clause,
     Contract,

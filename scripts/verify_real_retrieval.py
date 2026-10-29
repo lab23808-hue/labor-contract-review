@@ -1,4 +1,4 @@
-"""正式知识库真实检索验证：从已经持久化的 data/chroma 读取，用真实 BGE-M3 做检索。
+"""正式知识库真实检索验证：从已经持久化的 data/index/chroma 读取，用真实 BGE-M3 做检索。
 
 跑之前请先运行 scripts/build_knowledge_base.py 完成初始化。本脚本只读，不写入数据。
 始终使用真实 BGE-M3；模型加载失败只报告环境问题（见 scripts/_common.py），不会换成假实现。
@@ -9,11 +9,12 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from config import settings  # noqa: E402
-from rag import LegalKnowledgeRetriever  # noqa: E402
+from retrieval import LegalKnowledgeRetriever  # noqa: E402
 from _common import load_real_embedder_or_exit, open_knowledge_base_or_exit  # noqa: E402
 
 TEST_QUERIES = [
@@ -32,7 +33,7 @@ def main() -> None:
     embedder = load_real_embedder_or_exit()
     print("模型加载成功\n")
 
-    kb = open_knowledge_base_or_exit(embedder)  # 读取 data/chroma/ 里正式的知识库（只读）
+    kb = open_knowledge_base_or_exit(embedder)  # 读取 data/index/chroma/ 里正式的知识库（只读）
     print(f'知识库当前共有 {kb.count()} 条文档（collection="{kb.collection_name}"）\n')
 
     retriever = LegalKnowledgeRetriever(kb, top_k=args.top_k)

@@ -1,7 +1,7 @@
 """rules/probation_salary.py 的单元测试。"""
 
-from rules.probation_salary import RULE_ID, check_probation_salary
-from schemas import Clause, ReviewSource, RiskLevel
+from domain.rules.probation_salary import RULE_ID, check_probation_salary
+from core import Clause, ReviewSource, RiskLevel
 
 
 def make_clause(text: str, clause_id: str = "clause_001") -> Clause:

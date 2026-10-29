@@ -1,7 +1,7 @@
 """rules/probation_duration.py 的单元测试。"""
 
-from rules.probation_duration import RULE_ID, check_probation_duration
-from schemas import Clause, ReviewSource, RiskLevel
+from domain.rules.probation_duration import RULE_ID, check_probation_duration
+from core import Clause, ReviewSource, RiskLevel
 
 
 def make_clause(text: str, clause_id: str) -> Clause:

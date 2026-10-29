@@ -6,7 +6,7 @@ DeepSeek），所以这里复用与 test_api_dependencies.py 相同的替身策�
 构造点换掉，避免真实下载 BGE-M3 / 调用真实 DeepSeek。
 
 ContractManager 通过 FastAPI 的 dependency_overrides 换成指向 tmp_path 的
-真实实例——这样测试产生的合同文件写在临时目录里，不会碰 data/contracts 下的
+真实实例——这样测试产生的合同文件写在临时目录里，不会碰 data/runtime/contracts 下的
 生产数据，同时也验证了"路由确实是通过依赖注入拿到 ContractManager"这件事。
 """
 
@@ -21,10 +21,10 @@ from fastapi.testclient import TestClient
 from api.app import app
 from api.dependencies import get_contract_manager, get_reviewer
 from config import settings
-from contract import ContractManager
-from llm.client import OpenAICompatibleClient
-from rag.database import ChromaKnowledgeBase
-from schemas import Clause, ContractStatus, ContractVersion, ReviewResult, ReviewSource, RiskLevel
+from infra.storage import ContractManager
+from infra.llm.client import OpenAICompatibleClient
+from retrieval import DenseBackend
+from core import Clause, ContractStatus, ContractVersion, ReviewResult, ReviewSource, RiskLevel
 from tests._rag_fakes import FakeEmbeddings
 
 
@@ -62,12 +62,12 @@ class _FakeReviewer:
 def _patch_heavy_builders(monkeypatch, tmp_path):
     # 2026-10-12 BM25 正式接入后生产默认变成 "bm25"；本文件测的是路由本身
     # （/contracts 等），不是检索策略，显式钉回 "dense"，让下面构造的
-    # ChromaKnowledgeBase 替身真的会被用到，行为与接入前一致。
+    # DenseBackend 替身真的会被用到，行为与接入前一致。
     monkeypatch.setattr(settings, "RETRIEVAL_STRATEGY", "dense")
     monkeypatch.setattr("api.dependencies.build_embedder", lambda: FakeEmbeddings())
     monkeypatch.setattr(
-        "api.dependencies.ChromaKnowledgeBase",
-        lambda embedding_function: ChromaKnowledgeBase(
+        "api.dependencies.DenseBackend",
+        lambda embedding_function: DenseBackend(
             embedding_function=embedding_function,
             persist_directory=tmp_path / "chroma",
             collection_name="test_api_contracts",

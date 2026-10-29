@@ -3,8 +3,8 @@
 核心语义：纯拼接，不覆盖、不去重、不比较——LLM 结果和规则结果都完整保留。
 """
 
-from rules.merge import merge_review_results
-from schemas import ReviewResult, ReviewSource, RiskLevel
+from domain.rules.merge import merge_review_results
+from core import ReviewResult, ReviewSource, RiskLevel
 
 
 def make_llm_result(clause_id: str, risk: bool = False) -> ReviewResult:

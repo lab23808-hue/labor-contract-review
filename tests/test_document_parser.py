@@ -2,7 +2,7 @@
 
 import pytest
 
-from document import (
+from domain.document import (
     BaseParser,
     ClauseSplitter,
     DocumentParseError,

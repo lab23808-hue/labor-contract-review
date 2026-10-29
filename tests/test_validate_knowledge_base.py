@@ -75,8 +75,8 @@ def test_validate_file_no_false_positive_on_clean_file(tmp_path):
 
 
 def test_real_knowledge_base_file_has_no_duplicate_or_empty_articles():
-    """对项目里真实的 data/knowledge/劳动合同法.txt 跑一次，确认本次扩充没有引入
-    重复条号或空块（这是本次新增 12 条之后最基本的健全性检查）。
+    """对项目里真实的 data/knowledge/劳动合同法.txt 跑一次，确认当前知识库没有
+    重复条号、空块或无法解析的条号（最基本的健全性检查）。
     """
     from config import settings
 
@@ -86,6 +86,6 @@ def test_real_knowledge_base_file_has_no_duplicate_or_empty_articles():
     assert report["duplicate_articles"] == []
     assert report["empty_blocks"] == []
     assert report["unparsable_numbers"] == []
-    # 本次扩充前是 14 条，新增 12 条后应为 26 条——用具体数字而不是 >= 防止
-    # 以后有人不小心删了条文却没人发现。
-    assert report["article_count"] == 26
+    # 当前知识库文件有 32 个条标题——用具体数字而不是 >=，防止以后有人
+    # 不小心删了条文却没人发现。
+    assert report["article_count"] == 32

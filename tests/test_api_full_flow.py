@@ -12,7 +12,7 @@
       → ReviewReport，contract_id 与上面贯通一致
 
 本文件复用与 tests/test_api_contracts.py 相同的替身策略（FakeEmbeddings /
-指向 tmp_path 的真实 ChromaKnowledgeBase / 不连网络的 DeepSeek 客户端替身 /
+指向 tmp_path 的真实 DenseBackend / 不连网络的 DeepSeek 客户端替身 /
 不调用真实 LLM 的 reviewer 替身），ContractManager 用真实实现（指向
 tmp_path），RuleChecker 用真实实现（无外部依赖）。POST /review 会真实跑一遍
 review/pipeline.py 里的 LangGraph（build_graph/run_review），只有 LLM 与
@@ -31,10 +31,10 @@ from fastapi.testclient import TestClient
 from api.app import app
 from api.dependencies import get_contract_manager, get_reviewer
 from config import settings
-from contract import ContractManager
-from llm.client import OpenAICompatibleClient
-from rag.database import ChromaKnowledgeBase
-from schemas import Clause, ReviewResult, ReviewSource, RiskLevel
+from infra.storage import ContractManager
+from infra.llm.client import OpenAICompatibleClient
+from retrieval import DenseBackend
+from core import Clause, ReviewResult, ReviewSource, RiskLevel
 from tests._rag_fakes import FakeEmbeddings
 
 # 三条款样例文本，与 tests/test_api_contracts.py 保持一致（同一份
@@ -79,12 +79,12 @@ class _FakeReviewer:
 def _patch_heavy_builders(monkeypatch, tmp_path):
     # 2026-10-12 BM25 正式接入后生产默认变成 "bm25"；本文件测的是 review 全链路
     # 贯通本身（reviewer 另外被替身化），不是检索策略，显式钉回 "dense"，让
-    # 下面构造的 ChromaKnowledgeBase 替身真的会被用到，行为与接入前一致。
+    # 下面构造的 DenseBackend 替身真的会被用到，行为与接入前一致。
     monkeypatch.setattr(settings, "RETRIEVAL_STRATEGY", "dense")
     monkeypatch.setattr("api.dependencies.build_embedder", lambda: FakeEmbeddings())
     monkeypatch.setattr(
-        "api.dependencies.ChromaKnowledgeBase",
-        lambda embedding_function: ChromaKnowledgeBase(
+        "api.dependencies.DenseBackend",
+        lambda embedding_function: DenseBackend(
             embedding_function=embedding_function,
             persist_directory=tmp_path / "chroma",
             collection_name="test_api_full_flow",

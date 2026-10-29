@@ -6,9 +6,9 @@
 
 import pytest
 
-from agents.review_agent import ClauseReviewer, ReviewError, generate_query
-from llm import LLMClientError
-from schemas import Clause, Evidence, ReviewSource, RiskLevel
+from domain.agents.review_agent import ClauseReviewer, ReviewError, generate_query
+from infra.llm import LLMClientError
+from core import Clause, Evidence, ReviewSource, RiskLevel
 
 
 def make_clause(original_text: str, clause_type: str = "unknown", clause_id: str = "clause_001") -> Clause:

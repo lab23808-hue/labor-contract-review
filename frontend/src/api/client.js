@@ -407,19 +407,3 @@ export async function getRiskDiffOrNull(contractId, versionNumber = "v2") {
   }
 }
 
-/**
- * POST /contracts/{contract_id}/qa —— 最小化自然语言问答：提一个关于这份
- * 合同的问题，返回一段纯文本回答（{ answer: "..." }）。
- */
-export async function askQuestion(contractId, question) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/contracts/${contractId}/qa`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question }),
-    });
-    return await handleResponse(response);
-  } catch (error) {
-    throw wrapNetworkError(error);
-  }
-}

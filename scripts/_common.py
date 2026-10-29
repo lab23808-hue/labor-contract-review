@@ -7,8 +7,8 @@
 
 import sys
 
-from llm import build_deepseek_client
-from rag import ChromaKnowledgeBase, build_embedder
+from infra.llm import build_deepseek_client
+from retrieval import DenseBackend, build_embedder
 
 
 def load_real_embedder_or_exit():
@@ -40,11 +40,11 @@ def load_real_embedder_or_exit():
 
 
 def open_knowledge_base_or_exit(embedder):
-    """打开 data/chroma 里正式的知识库；如果是空的，提示先初始化并退出。
+    """打开 data/index/chroma 里正式的知识库；如果是空的，提示先初始化并退出。
 
     只负责"打开 + 检查非空"，不写入任何数据。
     """
-    kb = ChromaKnowledgeBase(embedder)
+    kb = DenseBackend(embedder)
     if kb.count() == 0:
         raise SystemExit(
             f'知识库是空的（collection="{kb.collection_name}"，目录={kb.persist_directory}）。'

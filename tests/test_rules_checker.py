@@ -5,8 +5,8 @@
 不管有没有命中规则的条款和没命中的条款混在一起，只有真正命中的才会有结果。
 """
 
-from rules.checker import RuleChecker
-from schemas import Clause, ReviewSource
+from domain.rules.checker import RuleChecker
+from core import Clause, ReviewSource
 
 
 def make_clause(text: str, clause_id: str) -> Clause:

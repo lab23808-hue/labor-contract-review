@@ -2,7 +2,7 @@
 
 import pytest
 
-from document import ClauseSplitter
+from domain.document import ClauseSplitter
 
 CID = "contract_001"
 

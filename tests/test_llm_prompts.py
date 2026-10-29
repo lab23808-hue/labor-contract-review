@@ -1,7 +1,7 @@
 """prompts/review.py 的单元测试：只测字符串拼装逻辑，不涉及网络。"""
 
-from prompts.review import SYSTEM_PROMPT, build_review_messages
-from schemas import Evidence
+from domain.prompts.review import SYSTEM_PROMPT, build_review_messages
+from core import Evidence
 
 
 def make_evidence(article="第十九条", source="劳动合同法", content="试用期不得超过六个月。"):

@@ -15,12 +15,12 @@ RuleChecker 会命中两条规则：
 
 import pytest
 
-from agents.review_agent import ClauseReviewer
-from contract import ContractManager, ContractNotFoundError
-from llm import LLMClientError
-from rules import RuleChecker
-from schemas import Evidence, ReviewReport, ReviewSource
-from workflows.review_workflow import ReviewGraphState, run_review, run_review_graph
+from domain.agents.review_agent import ClauseReviewer
+from infra.storage import ContractManager, ContractNotFoundError
+from infra.llm import LLMClientError
+from domain.rules import RuleChecker
+from core import Evidence, ReviewReport, ReviewSource
+from workflow.review_workflow import ReviewGraphState, run_review, run_review_graph
 
 CONTRACT_TEXT = (
     "第一条 合同期限\n"
@@ -247,7 +247,7 @@ def test_report_assembly_node_writes_real_report_into_state(tmp_path):
 
 def test_run_review_returns_a_review_report_not_a_bare_state(tmp_path):
     """Stage 2 调整：run_review 对外的返回值必须是 ReviewReport 业务对象，
-    不是裸的 LangGraph state dict——调用方（API、application/review_service.py、
+    不是裸的 LangGraph state dict——调用方（API、app/review_service.py、
     ModificationService 的 V2 复审）不应该再伸手去读 final_state["final_results"]。
     """
     manager, contract_id = make_contract(tmp_path)

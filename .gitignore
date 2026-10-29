@@ -6,20 +6,15 @@ __pycache__/
 # 密钥
 .env
 
-# 运行时数据：合同文件和数据库不进版本库
-data/contracts/*
-!data/contracts/.gitkeep
-*.db
+# 运行时数据：用户合同与运行产物，不进版本库
+data/runtime/*
 
-# 向量数据库（二进制、可从 data/knowledge 重新生成）
-data/chroma/*
-!data/chroma/.gitkeep
+# 向量索引（二进制派生数据，可从 data/knowledge 重新生成）
+data/index/*
+*.db
 
 # 本地 Python 虚拟环境
 venv/
-
-# 实验运行时生成的临时索引
-experiment_kb/tmp_runtime/
 
 # IDE 本地配置
 .idea/
@@ -35,6 +30,3 @@ frontend/dist/
 *.sqlite-shm
 *.sqlite3-wal
 *.sqlite3-shm
-
-# 评测过程生成的历史备份
-data/eval_samples/*.bak

@@ -4,7 +4,6 @@ import ClauseViewer from "./ClauseViewer.jsx";
 import ReviewWorkspace from "./ReviewWorkspace.jsx";
 import ModificationTaskPanel from "./ModificationTaskPanel.jsx";
 import VersionPanel from "./VersionPanel.jsx";
-import QAPanel from "./QAPanel.jsx";
 import V2TextView from "./V2TextView.jsx";
 
 const TABS = [
@@ -16,7 +15,6 @@ const TABS = [
   // "V2 原文"只在确实已经生成 V2 时才出现（见下方 visibleTabs 的过滤），
   // 不在这个静态列表里直接判断——这个数组本身不知道"当前合同"是谁。
   { key: "v2text", label: "V2 原文" },
-  { key: "qa", label: "问答" },
 ];
 
 /**
@@ -68,10 +66,6 @@ export default function ContractWorkspace({
   v2TextLoading,
   v2TextError,
   onLoadV2Text,
-  onAsk,
-  asking,
-  lastAnswer,
-  lastQuestion,
 }) {
   if (workspaceLoading) {
     return (
@@ -177,9 +171,6 @@ export default function ContractWorkspace({
         )}
         {activeView === "v2text" && (
           <V2TextView version={version} text={v2Text} loading={v2TextLoading} error={v2TextError} onRetry={onLoadV2Text} />
-        )}
-        {activeView === "qa" && (
-          <QAPanel onAsk={onAsk} asking={asking} lastAnswer={lastAnswer} lastQuestion={lastQuestion} />
         )}
       </div>
     </main>

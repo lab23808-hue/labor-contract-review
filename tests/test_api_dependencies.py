@@ -8,7 +8,7 @@
 
 不调用真实 DeepSeek，不下载真实 BGE-M3：
     - embedder      换成 tests/_rag_fakes.py 里的 FakeEmbeddings（确定性向量，无下载）
-    - ChromaKnowledgeBase 仍然是真实类，但指向 tmp_path，避免读写 data/chroma 下的
+    - DenseBackend 仍然是真实类，但指向 tmp_path，避免读写 data/index/chroma 下的
       生产数据（这与项目里"真实 Chroma + 假 embedding"的 module 测试用法一致）
     - DeepSeek client 换成一个不触发真实网络请求的替身（跳过父类 __init__ 里的
       OpenAI(...) 构造；这些测试也不会调用它的 chat()）
@@ -31,10 +31,10 @@ from api.dependencies import (
     lifespan,
 )
 from config import settings
-from llm.client import OpenAICompatibleClient
-from rag.bm25_index import BM25IndexBuildError, BM25KnowledgeIndex
-from rag.database import ChromaKnowledgeBase
-from rules import RuleChecker
+from infra.llm.client import OpenAICompatibleClient
+from retrieval import BM25IndexBuildError, BM25Backend
+from retrieval import DenseBackend
+from domain.rules import RuleChecker
 from tests._rag_fakes import FakeEmbeddings
 
 
@@ -61,8 +61,8 @@ def _patch_heavy_builders(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "RETRIEVAL_STRATEGY", "dense")
     monkeypatch.setattr("api.dependencies.build_embedder", lambda: FakeEmbeddings())
     monkeypatch.setattr(
-        "api.dependencies.ChromaKnowledgeBase",
-        lambda embedding_function: ChromaKnowledgeBase(
+        "api.dependencies.DenseBackend",
+        lambda embedding_function: DenseBackend(
             embedding_function=embedding_function,
             persist_directory=tmp_path / "chroma",
             collection_name="test_api_dependencies",
@@ -85,7 +85,7 @@ def test_build_app_state_wires_existing_modules_together(monkeypatch, tmp_path):
 
     assert isinstance(state, AppState)
     assert isinstance(state.rule_checker, RuleChecker)
-    assert isinstance(state.knowledge_base, ChromaKnowledgeBase)
+    assert isinstance(state.knowledge_base, DenseBackend)
     assert state.retriever.knowledge_base is state.knowledge_base
     assert state.reviewer.retriever is state.retriever
     assert state.reviewer.llm_client is state.llm_client
@@ -144,10 +144,10 @@ def test_build_app_state_wires_bm25_backend_when_strategy_is_bm25(monkeypatch, t
         lambda: (embedder_calls.append(1), FakeEmbeddings())[1],
     )
     monkeypatch.setattr(
-        "api.dependencies.ChromaKnowledgeBase",
+        "api.dependencies.DenseBackend",
         lambda embedding_function: (
             chroma_calls.append(1),
-            ChromaKnowledgeBase(
+            DenseBackend(
                 embedding_function=embedding_function,
                 persist_directory=tmp_path / "chroma",
                 collection_name="should_not_be_used",
@@ -170,7 +170,7 @@ def test_build_app_state_wires_bm25_backend_when_strategy_is_bm25(monkeypatch, t
 
     assert state.embedder is None
     assert state.knowledge_base is None
-    assert isinstance(state.retriever.knowledge_base, BM25KnowledgeIndex)
+    assert isinstance(state.retriever.knowledge_base, BM25Backend)
     assert state.retriever.knowledge_base.count() == 2
     # 确认真的没有初始化 Chroma/BGE-M3，不只是配置写了 bm25
     assert embedder_calls == []

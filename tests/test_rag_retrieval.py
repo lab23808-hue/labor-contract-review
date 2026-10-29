@@ -2,14 +2,14 @@
 
 import pytest
 
-from rag.database import ChromaKnowledgeBase
-from rag.retriever import LegalKnowledgeRetriever
-from schemas import Evidence
+from retrieval import DenseBackend
+from retrieval.retriever import LegalKnowledgeRetriever
+from core import Evidence
 from tests._rag_fakes import FakeEmbeddings
 
 
 def make_retriever(tmp_path, **kwargs) -> LegalKnowledgeRetriever:
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     kb.add_texts(
         ["劳动合同期限三个月以上不满一年的，试用期不得超过一个月。", "竞业限制期限不得超过二年。"],
         [{"source": "劳动合同法", "article": "第十九条"}, {"source": "劳动合同法", "article": "第二十四条"}],
@@ -47,7 +47,7 @@ def test_search_rejects_empty_query(tmp_path):
 
 
 def test_retriever_rejects_non_positive_top_k(tmp_path):
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     with pytest.raises(ValueError):
         LegalKnowledgeRetriever(kb, top_k=0)
 
@@ -85,7 +85,7 @@ def test_evidence_survives_json_roundtrip(tmp_path):
 
 
 def test_search_on_empty_knowledge_base_returns_empty_list(tmp_path):
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     retriever = LegalKnowledgeRetriever(kb)
 
     assert retriever.search_legal_knowledge("任意查询") == []

@@ -7,9 +7,9 @@ import uuid
 
 import pytest
 
-from contract import ContractError, ContractManager, ContractNotFoundError
-from schemas import ContractStatus
-from document.preparation import parse_contract
+from infra.storage import ContractError, ContractManager, ContractNotFoundError
+from core import ContractStatus
+from domain.document.preparation import parse_contract
 
 # 含中文、CRLF、首尾空白，用来验证内容是否被原样解析和保存
 TEXT = "  \r\n第一条 工作地点\r\n1.北京市。\r\n2.可调整。\r\n  "
@@ -144,7 +144,7 @@ def test_get_parsed_text_before_parsing_raises(tmp_path):
 
 def test_parsing_empty_file_raises_and_does_not_change_status(tmp_path):
     # 内容全是空白：DocumentParser 会拒绝，不应产生 parsed_text.txt，状态也不应变化
-    from document.parser import DocumentParseError
+    from domain.document.parser import DocumentParseError
 
     manager = make_manager(tmp_path)
     contract = make_and_upload(tmp_path, manager, data=b"   \r\n  ")

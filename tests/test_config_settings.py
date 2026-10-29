@@ -4,16 +4,16 @@ import ast
 import inspect
 from pathlib import Path
 
-from agents.review_agent import ClauseReviewer
+from domain.agents.review_agent import ClauseReviewer
 from config import settings
-from contract import ContractManager
-from contract.manager import DEFAULT_ROOT_DIR
-from document.splitter import ClauseSplitter
-from llm.client import DEFAULT_DEEPSEEK_MODEL
-from rag.database import DEFAULT_COLLECTION_NAME, DEFAULT_PERSIST_DIR
-from rag.embedding import DEFAULT_MODEL_NAME
-from rag.knowledge_loader import KnowledgeLoader
-from rag.retriever import LegalKnowledgeRetriever
+from infra.storage import ContractManager
+from infra.storage.manager import DEFAULT_ROOT_DIR
+from domain.document.splitter import ClauseSplitter
+from infra.llm.client import DEFAULT_DEEPSEEK_MODEL
+from retrieval import DEFAULT_COLLECTION_NAME, DEFAULT_PERSIST_DIR
+from retrieval.embedding import DEFAULT_MODEL_NAME
+from retrieval.knowledge_loader import KnowledgeLoader
+from retrieval.retriever import LegalKnowledgeRetriever
 
 
 def _default_of(func, param_name):
@@ -23,13 +23,14 @@ def _default_of(func, param_name):
 # ---------- settings 本身 ----------
 
 def test_project_root_points_at_the_real_project_root():
-    assert (settings.PROJECT_ROOT / "config" / "settings.py").is_file()
+    assert (settings.PROJECT_ROOT / "src" / "config" / "settings.py").is_file()
 
 
 def test_data_directories_live_under_data_dir():
-    for directory in (settings.CONTRACTS_DIR, settings.KNOWLEDGE_DIR, settings.CHROMA_DIR):
-        assert directory.parent == settings.DATA_DIR
     assert settings.DATA_DIR == settings.PROJECT_ROOT / "data"
+    assert settings.KNOWLEDGE_DIR == settings.DATA_DIR / "knowledge"
+    assert settings.CHROMA_DIR == settings.DATA_DIR / "index" / "chroma"
+    assert settings.CONTRACTS_DIR == settings.DATA_DIR / "runtime" / "contracts"
 
 
 def test_settings_holds_no_secrets():

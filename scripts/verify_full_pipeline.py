@@ -9,7 +9,7 @@
 requirements.txt，包含 langgraph）。
 
 前提：
-    1. 已经跑过 scripts/build_knowledge_base.py，data/chroma/ 里有正式知识库；
+    1. 已经跑过 scripts/build_knowledge_base.py，data/index/chroma/ 里有正式知识库；
     2. .env 里配置了 DEEPSEEK_API_KEY。
 
 用法：
@@ -23,15 +23,16 @@ import tempfile
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from agents.review_agent import ClauseReviewer  # noqa: E402
+from domain.agents.review_agent import ClauseReviewer  # noqa: E402
 from config import settings  # noqa: E402
-from contract import ContractManager  # noqa: E402
-from rag import LegalKnowledgeRetriever  # noqa: E402
-from rules import RuleChecker  # noqa: E402
-from workflows.review_workflow import run_review  # noqa: E402
+from infra.storage import ContractManager  # noqa: E402
+from retrieval import LegalKnowledgeRetriever  # noqa: E402
+from domain.rules import RuleChecker  # noqa: E402
+from workflow.review_workflow import run_review  # noqa: E402
 from _common import (  # noqa: E402
     build_real_llm_client_or_exit,
     load_real_embedder_or_exit,
@@ -50,7 +51,7 @@ def main() -> None:
     embedder = load_real_embedder_or_exit()
     print("      完成\n")
 
-    kb = open_knowledge_base_or_exit(embedder)  # 读取 data/chroma/ 里正式的知识库（只读）
+    kb = open_knowledge_base_or_exit(embedder)  # 读取 data/index/chroma/ 里正式的知识库（只读）
 
     print("[2/4] 构造真实 DeepSeek 客户端...")
     llm_client = build_real_llm_client_or_exit()
@@ -59,7 +60,7 @@ def main() -> None:
     retriever = LegalKnowledgeRetriever(kb, top_k=args.top_k)
     reviewer = ClauseReviewer(retriever, llm_client, top_k=args.top_k)
     rule_checker = RuleChecker()
-    contract_manager = ContractManager()  # 默认根目录 data/contracts/
+    contract_manager = ContractManager()  # 默认根目录 data/runtime/contracts/
 
     # 准备合同文件：用户指定的，或者内置示例（写到临时文件）
     if args.file:

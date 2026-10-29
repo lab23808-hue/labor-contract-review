@@ -8,11 +8,11 @@ scripts/build_knowledge_base.py）。
 
 from unittest.mock import patch
 
-from rag.embedding import DEFAULT_MODEL_NAME, build_embedder
+from retrieval.embedding import DEFAULT_MODEL_NAME, build_embedder
 
 
 def test_build_embedder_uses_bge_m3_by_default():
-    with patch("rag.embedding.HuggingFaceEmbeddings") as mock_cls:
+    with patch("retrieval.embedding.HuggingFaceEmbeddings") as mock_cls:
         build_embedder()
         _, kwargs = mock_cls.call_args
 
@@ -21,7 +21,7 @@ def test_build_embedder_uses_bge_m3_by_default():
 
 def test_build_embedder_normalizes_embeddings():
     # BGE 系列官方推荐：归一化后向量内积等价于余弦相似度
-    with patch("rag.embedding.HuggingFaceEmbeddings") as mock_cls:
+    with patch("retrieval.embedding.HuggingFaceEmbeddings") as mock_cls:
         build_embedder()
         _, kwargs = mock_cls.call_args
 
@@ -29,7 +29,7 @@ def test_build_embedder_normalizes_embeddings():
 
 
 def test_build_embedder_allows_custom_model_and_device():
-    with patch("rag.embedding.HuggingFaceEmbeddings") as mock_cls:
+    with patch("retrieval.embedding.HuggingFaceEmbeddings") as mock_cls:
         build_embedder(model_name="other/model", device="cuda")
         _, kwargs = mock_cls.call_args
 
@@ -38,7 +38,7 @@ def test_build_embedder_allows_custom_model_and_device():
 
 
 def test_build_embedder_defaults_to_cpu():
-    with patch("rag.embedding.HuggingFaceEmbeddings") as mock_cls:
+    with patch("retrieval.embedding.HuggingFaceEmbeddings") as mock_cls:
         build_embedder()
         _, kwargs = mock_cls.call_args
 
@@ -46,7 +46,7 @@ def test_build_embedder_defaults_to_cpu():
 
 
 def test_build_embedder_returns_constructed_instance():
-    with patch("rag.embedding.HuggingFaceEmbeddings") as mock_cls:
+    with patch("retrieval.embedding.HuggingFaceEmbeddings") as mock_cls:
         result = build_embedder()
 
     assert result is mock_cls.return_value

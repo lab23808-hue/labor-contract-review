@@ -6,8 +6,9 @@ import uuid
 
 import pytest
 
-from contract import ContractError, ContractManager, ContractNotFoundError
-from schemas import Contract, ContractStatus, ContractVersion
+from infra.storage import ContractError, ContractManager, ContractNotFoundError
+from core import Contract, ContractStatus, ContractVersion
+from config import settings
 
 # 含中文、CRLF 的内容，确认文件是被原样保存的
 DATA = "第一条 合同期限\r\n本合同期限三年。\r\n".encode("utf-8")
@@ -207,8 +208,8 @@ def test_save_original_file_returns_saved_path(tmp_path):
 def test_default_root_is_project_data_contracts():
     root = ContractManager().root_dir
     assert root.is_absolute()
-    assert root.parts[-2:] == ("data", "contracts")
-    assert (root / ".gitkeep").exists()  # 指向项目自带的目录，而不是随当前目录变化
+    assert root.parts[-2:] == ("runtime", "contracts")
+    assert root == settings.CONTRACTS_DIR  # 指向项目自带的目录，而不是随当前目录变化
 
 
 # ---------- list_contracts：exclude_version_hosts（阶段 1 新增） ----------

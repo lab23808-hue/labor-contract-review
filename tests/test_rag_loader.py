@@ -2,9 +2,9 @@
 
 import pytest
 
-from rag.database import ChromaKnowledgeBase
-from rag.knowledge_loader import KnowledgeLoader
-from schemas import Evidence
+from retrieval import DenseBackend
+from retrieval.knowledge_loader import KnowledgeLoader
+from core import Evidence
 from tests._rag_fakes import FakeEmbeddings
 
 SAMPLE_LAW = (
@@ -15,7 +15,7 @@ SAMPLE_LAW = (
 
 
 def make_loader(tmp_path, **kwargs) -> KnowledgeLoader:
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     return KnowledgeLoader(kb, **kwargs)
 
 
@@ -32,7 +32,7 @@ def test_split_text_produces_one_evidence_per_article(tmp_path):
 
 
 def test_split_text_without_articles_keeps_whole_text():
-    loader = KnowledgeLoader(ChromaKnowledgeBase(FakeEmbeddings(), persist_directory="/tmp/unused_kb_dir_x"))
+    loader = KnowledgeLoader(DenseBackend(FakeEmbeddings(), persist_directory="/tmp/unused_kb_dir_x"))
     evidences = loader.split_text("这是一段没有条号的说明性文字。", source="说明")
 
     assert len(evidences) == 1
@@ -59,7 +59,7 @@ def test_short_articles_are_not_split(tmp_path):
 
 
 def test_reference_to_another_article_is_not_a_heading():
-    loader = KnowledgeLoader(ChromaKnowledgeBase(FakeEmbeddings(), persist_directory="/tmp/unused_kb_dir_y"))
+    loader = KnowledgeLoader(DenseBackend(FakeEmbeddings(), persist_directory="/tmp/unused_kb_dir_y"))
     text = "第一条 违约处理\n依照\n第三十九条的规定处理。\n第二条 其他\n无。"
 
     evidences = loader.split_text(text, source="法A")
@@ -68,7 +68,7 @@ def test_reference_to_another_article_is_not_a_heading():
 
 
 def test_invalid_chunk_parameters_rejected(tmp_path):
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     with pytest.raises(ValueError):
         KnowledgeLoader(kb, chunk_size=0)
     with pytest.raises(ValueError):
@@ -113,7 +113,7 @@ def test_load_directory_reads_all_txt_files_with_own_source(tmp_path):
 def test_load_and_index_file_writes_to_knowledge_base(tmp_path):
     law_file = tmp_path / "劳动合同法.txt"
     law_file.write_text(SAMPLE_LAW, encoding="utf-8")
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     loader = KnowledgeLoader(kb)
 
     evidences = loader.load_and_index_file(law_file)
@@ -123,7 +123,7 @@ def test_load_and_index_file_writes_to_knowledge_base(tmp_path):
 
 
 def test_index_metadata_does_not_leak_none_article(tmp_path):
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     loader = KnowledgeLoader(kb)
     loader.index(loader.split_text("没有条号的说明文字。", source="说明"))
 
@@ -133,7 +133,7 @@ def test_index_metadata_does_not_leak_none_article(tmp_path):
 
 
 def test_index_empty_list_does_not_touch_database(tmp_path):
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     assert KnowledgeLoader(kb).index([]) == []
     assert kb.count() == 0
 
@@ -142,13 +142,13 @@ def test_reindexing_is_idempotent_and_does_not_duplicate(tmp_path):
     # 2026-10-10 修正：之前这个测试叫 test_reindexing_appends_duplicates_by_design，
     # 断言的是 kb.count() == 6（旧版本确实会追加重复数据，这是当时的已知、被接受的行为）。
     # 现在 KnowledgeLoader.index() 用内容算出确定性 id 并以 ids= 调用
-    # ChromaKnowledgeBase.add_texts → langchain_chroma.Chroma.add_texts，后者内部统一走
+    # DenseBackend.add_texts → langchain_chroma.Chroma.add_texts，后者内部统一走
     # self._collection.upsert(...)（已对照 langchain-ai/langchain 仓库源码确认，见
     # rag/knowledge_loader.py::index() 的 docstring），upsert 对相同 id 是覆盖写入，
     # 所以重复加载同一份文件不应该让文档数量翻倍。
     law_file = tmp_path / "劳动合同法.txt"
     law_file.write_text(SAMPLE_LAW, encoding="utf-8")
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     loader = KnowledgeLoader(kb)
 
     loader.load_and_index_file(law_file)
@@ -162,7 +162,7 @@ def test_evidence_id_is_deterministic_and_content_sensitive(tmp_path):
     相同内容产出相同 id（否则 upsert 不会命中同一条记录），不同内容产出不同 id
     （否则会把两条不同的法条互相覆盖，造成数据丢失，比"不去重"更糟）。
     """
-    loader = KnowledgeLoader(ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma"))
+    loader = KnowledgeLoader(DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma"))
     a1 = loader.split_text(SAMPLE_LAW, source="劳动合同法")
     a2 = loader.split_text(SAMPLE_LAW, source="劳动合同法")
 
@@ -184,7 +184,7 @@ def test_evidence_id_differs_by_source_even_with_same_content(tmp_path):
     文件里字面完全相同的条文会被错误地当成"同一条"，互相覆盖，丢数据。
     之前只测过"改内容→id变"，没测过"内容不变、只改 source→id 也要变"，这里补上。
     """
-    loader = KnowledgeLoader(ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma"))
+    loader = KnowledgeLoader(DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma"))
     same_text = "乙方应当遵守用人单位的规章制度。"
     e_from_a = Evidence(content=same_text, source="法A", article="第一条")
     e_from_b = Evidence(content=same_text, source="法B", article="第一条")
@@ -196,7 +196,7 @@ def test_evidence_id_differs_by_article_even_with_same_content_and_source(tmp_pa
     """同上，变量换成只改 `article`（同一份法律文件内部，不同条号恰好写了
     完全相同的一句话，这在真实法律文本里不是不可能——比如多处"依照本法有关
     规定执行"这类套话）。"""
-    loader = KnowledgeLoader(ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma"))
+    loader = KnowledgeLoader(DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma"))
     same_text = "依照本法有关规定执行。"
     e_article_1 = Evidence(content=same_text, source="法A", article="第一条")
     e_article_2 = Evidence(content=same_text, source="法A", article="第二条")
@@ -211,7 +211,7 @@ def test_index_called_directly_twice_with_same_evidences_list_does_not_duplicate
     聚焦。这里直接构造一份 `Evidence` 列表，两次调用 `index()` 本身，隔离出
     "index() 这一个方法是否幂等"这个最小问题，不依赖文件 I/O 或切分逻辑。
     """
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     loader = KnowledgeLoader(kb)
     evidences = [
         Evidence(content="第一条内容。", source="法A", article="第一条"),
@@ -238,7 +238,7 @@ def test_changing_chunk_boundaries_leaves_orphaned_old_chunks_unless_reset(tmp_p
     law_file = tmp_path / "法A.txt"
     law_file.write_text(long_article, encoding="utf-8")
 
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
 
     # 第一次：用较小的 chunk_size 切分并索引
     loader_small_chunks = KnowledgeLoader(kb, chunk_size=100, chunk_overlap=20)
@@ -280,7 +280,7 @@ def test_evidence_id_differs_by_part_even_with_identical_content(tmp_path):
     part 不同而不同"这个性质，不依赖真实的 `RecursiveCharacterTextSplitter`
     是否真的会切出重复内容（那是集成层面的事，这里只测 `_evidence_id()` 本身）。
     """
-    loader = KnowledgeLoader(ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma"))
+    loader = KnowledgeLoader(DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma"))
     same_text = "违反规章制度的，用人单位可以解除劳动合同。"
     part_1 = Evidence(content=same_text, source="法A", article="第一条", metadata={"part": 1, "parts": 3})
     part_2 = Evidence(content=same_text, source="法A", article="第一条", metadata={"part": 2, "parts": 3})
@@ -289,7 +289,7 @@ def test_evidence_id_differs_by_part_even_with_identical_content(tmp_path):
 
     # 端到端确认：这两个 part 一起 index() 不会因为内容相同而互相覆盖或报错，
     # 两条都应该被当成独立记录写入。
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma2")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma2")
     loader2 = KnowledgeLoader(kb)
     loader2.index([part_1, part_2])
     assert kb.count() == 2
@@ -303,7 +303,7 @@ def test_index_deduplicates_literal_duplicate_evidences_within_one_call(tmp_path
     的处理方式是按 id 去重、只保留一条写入（不报错、也不会凭空生成随机 id
     把它们强行区分开，否则会破坏"相同内容=相同 id"这条幂等性的基础）。
     """
-    kb = ChromaKnowledgeBase(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(FakeEmbeddings(), persist_directory=tmp_path / "chroma")
     loader = KnowledgeLoader(kb)
     duplicate = Evidence(content="第一条内容。", source="法A", article="第一条")
 

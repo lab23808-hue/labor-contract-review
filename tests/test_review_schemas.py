@@ -3,8 +3,8 @@
 import pytest
 from pydantic import ValidationError
 
-from agents.review_schemas import LLMReviewOutput
-from schemas import RiskLevel
+from domain.agents.review_schemas import LLMReviewOutput
+from core import RiskLevel
 
 
 def test_valid_risk_output():

@@ -26,11 +26,6 @@ TEST_LAYERS = {
         "test_rules_merge.py",
         "test_risk_diff.py",
         "test_validate_knowledge_base.py",
-        "test_review_versions.py",
-        "test_eval_schemas.py",
-        "test_eval_generator.py",
-        "test_eval_rules_diagnostics.py",
-        "test_run_eval_scripts.py",
     ],
     "module": [
         "test_parser_integration.py",

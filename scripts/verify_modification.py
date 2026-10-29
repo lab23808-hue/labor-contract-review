@@ -11,7 +11,7 @@ Service）新增和变更的全部业务逻辑：
       ModificationAgent + 【假的】ClauseReviewer 代替真实 LLM 调用，因为
       openai 包在此沙箱不可用；Validator、ContractManager、状态机、
       risk_resolution 全部是真实代码真实执行）
-    - application.v2_generation_service.V2GenerationService（批次就绪判断、
+    - app.v2_generation_service.V2GenerationService（批次就绪判断、
       V2 生成成功/失败/重试、ABANDONED 任务保留 V1 原文）
 
 关于 document.preparation.split_contract 未被真实使用：
@@ -35,6 +35,7 @@ import types
 from pathlib import Path
 
 import pathlib
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "src"))
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 if "openai" not in sys.modules:
@@ -97,19 +98,19 @@ class _DummyStateGraph:
 _stub_module("langgraph")
 _stub_module("langgraph.graph", END="__end__", START="__start__", StateGraph=_DummyStateGraph)
 
-from application.v2_generation_service import V2GenerationService
-from contract import ContractManager
-from document.preparation import parse_contract
-import document.preparation as _preparation_module
-from modification.risk_resolution import determine_risk_resolution
-from modification.service import (
+from app.v2_generation_service import V2GenerationService
+from infra.storage import ContractManager
+from domain.document.preparation import parse_contract
+import domain.document.preparation as _preparation_module
+from domain.modification.risk_resolution import determine_risk_resolution
+from domain.modification.service import (
     ModificationConflictError,
     ModificationService,
     ModificationServiceError,
     compute_batch_readiness,
 )
-from modification.validator import validate
-from schemas import (
+from domain.modification.validator import validate
+from core import (
     Clause,
     ModificationBatchStatus,
     ModificationResult,
@@ -184,7 +185,7 @@ class FakeAgent:
         if isinstance(action, tuple):
             action, custom_text = action
         if action == "fail":
-            from agents.modification_agent import ModificationAgentError
+            from domain.agents.modification_agent import ModificationAgentError
 
             raise ModificationAgentError("模拟：LLM 调用失败")
         if action == "bad":
@@ -323,7 +324,7 @@ check(batch.batch_id == "batch_001", "第一个批次应编号为 batch_001")
 check(batch.status == ModificationBatchStatus.IN_PROGRESS, "新建批次状态应为 in_progress")
 check(batch.task_ids == [], "新建批次任务列表应为空")
 
-from schemas.modification_task import ReviewResultSnapshot
+from core.modification_task import ReviewResultSnapshot
 
 snapshot = ReviewResultSnapshot.from_review_result(v1_report.results[0])
 task = manager.create_modification_task(

@@ -1,13 +1,13 @@
-"""rag/database.py（ChromaKnowledgeBase）的单元测试。运行：在项目根目录执行 `pytest`。"""
+"""rag/vectorstore.py（DenseBackend）的单元测试。运行：在项目根目录执行 `pytest`。"""
 
 import pytest
 
-from rag.database import ChromaKnowledgeBase
+from retrieval import DenseBackend
 from tests._rag_fakes import FakeEmbeddings
 
 
-def make_kb(tmp_path, collection_name="test_collection") -> ChromaKnowledgeBase:
-    return ChromaKnowledgeBase(
+def make_kb(tmp_path, collection_name="test_collection") -> DenseBackend:
+    return DenseBackend(
         embedding_function=FakeEmbeddings(),
         persist_directory=tmp_path / "chroma",
         collection_name=collection_name,
@@ -70,7 +70,7 @@ def test_different_collection_names_are_isolated(tmp_path):
 
 def test_add_texts_calls_embedding_function(tmp_path):
     embedder = FakeEmbeddings()
-    kb = ChromaKnowledgeBase(embedder, persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(embedder, persist_directory=tmp_path / "chroma")
 
     kb.add_texts(["第一条 内容", "第二条 内容"], [{"source": "法A"}, {"source": "法A"}])
 
@@ -79,7 +79,7 @@ def test_add_texts_calls_embedding_function(tmp_path):
 
 def test_similarity_search_calls_embed_query(tmp_path):
     embedder = FakeEmbeddings()
-    kb = ChromaKnowledgeBase(embedder, persist_directory=tmp_path / "chroma")
+    kb = DenseBackend(embedder, persist_directory=tmp_path / "chroma")
     kb.add_texts(["第一条 内容"], [{"source": "法A"}])
 
     kb.similarity_search("查询文本", k=1)

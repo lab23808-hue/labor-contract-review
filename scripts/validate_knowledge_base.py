@@ -24,6 +24,7 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from config import settings  # noqa: E402
@@ -179,7 +180,7 @@ def main() -> None:
     print("  \"本方法不做去重，重复调用会把相同内容再写入一份\"——这是生产代码自己声明的")
     print("  设计行为（不是本脚本发现的 bug），意味着如果不小心对同一份文件调用两次")
     print("  load_and_index_file()，向量库里会出现两份完全相同的 Evidence。真实验证")
-    print("  需要用真实 ChromaKnowledgeBase 调用两次 index() 后 kb.count()，本沙箱无")
+    print("  需要用真实 DenseBackend 调用两次 index() 后 kb.count()，本沙箱无")
     print("  chromadb，这一步留给本地环境验证（见 docs/EVAL_DIAGNOSTICS.md）。")
     print()
     print("结论：" + ("未发现结构性问题" if all_ok else "发现上述结构性问题，建议处理后再重建索引"))

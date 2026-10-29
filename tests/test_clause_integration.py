@@ -7,9 +7,9 @@ import uuid
 
 import pytest
 
-from contract import ContractError, ContractManager, ContractNotFoundError
-from schemas import ContractStatus
-from document.preparation import parse_contract, split_contract
+from infra.storage import ContractError, ContractManager, ContractNotFoundError
+from core import ContractStatus
+from domain.document.preparation import parse_contract, split_contract
 
 CONTRACT_A = (
     "劳动合同书\n\n甲方：某某公司\n乙方：张三\n\n"
@@ -86,7 +86,7 @@ def test_every_clause_is_bound_to_its_contract_id(tmp_path):
 
 def test_save_clauses_rejects_mismatched_contract_id(tmp_path):
     # 直接调用 ContractManager 的保存接口，模拟调用方传错了别的合同的 Clause 列表
-    from schemas import Clause
+    from core import Clause
 
     manager = make_manager(tmp_path)
     contract, _ = upload_and_parse(tmp_path, manager, CONTRACT_A)

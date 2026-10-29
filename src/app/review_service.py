@@ -82,3 +82,8 @@ class ReviewApplicationService:
         """
         report = self._run(contract_id)
         return self.contract_manager.save_review(contract_id, report, contract_version=contract_version)
+
+    def review_version(self, contract_id: str, version_number: str) -> ReviewRecord:
+        """解析版本号对应的 linked_contract_id，再发起独立复审。"""
+        version = self.contract_manager.get_version(contract_id, version_number)
+        return self.review_and_save(version.linked_contract_id, contract_version=version_number)

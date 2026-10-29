@@ -22,18 +22,24 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
 
 from api.dependencies import (
-    get_contract_manager,
+    get_contract_service,
     get_diff_service,
     get_modification_service,
     get_review_service,
     get_v2_generation_service,
 )
+from api.errors import (
+    ContractError,
+    ContractNotFoundError,
+    DocumentParseError,
+    ModificationConflictError,
+    ModificationServiceError,
+    UnsupportedFormatError,
+)
+from app.contract_service import ContractApplicationService
 from app.diff_service import DiffApplicationService
 from app.review_service import ReviewApplicationService
 from app.v2_generation_service import V2GenerationService
-from infra.storage import ContractError, ContractManager, ContractNotFoundError
-from domain.document.parser import DocumentParseError, UnsupportedFormatError
-from domain.modification.service import ModificationConflictError, ModificationService, ModificationServiceError
 from core import ClauseDiffEntry, ContractVersion, ModificationBatch, ModificationTask, ReviewRecord, RiskDiffResult
 
 router = APIRouter(prefix="/contracts", tags=["modification"])
@@ -91,7 +97,7 @@ def _map_service_error(exc: ModificationServiceError) -> HTTPException:
 def create_batch(
     contract_id: str,
     payload: CreateBatchRequest,
-    modification_service: ModificationService = Depends(get_modification_service),
+    modification_service=Depends(get_modification_service),
 ) -> ModificationBatch:
     """律师显式"开始一轮修改"：创建一个新的 ModificationBatch。
 
@@ -117,11 +123,11 @@ def create_batch(
 )
 def list_batches(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> list[ModificationBatch]:
     """列出某份合同的全部修改批次。"""
     try:
-        return contract_manager.list_batches(contract_id)
+        return contract_service.list_batches(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except ContractError as exc:
@@ -136,11 +142,11 @@ def list_batches(
 def get_batch(
     contract_id: str,
     batch_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> ModificationBatch:
     """查询单个修改批次当前的状态（前端据此判断"能不能生成 V2"）。"""
     try:
-        return contract_manager.get_batch(contract_id, batch_id)
+        return contract_service.get_batch(contract_id, batch_id)
     except ContractNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except ContractError as exc:
@@ -155,7 +161,7 @@ def get_batch(
 def start_modification(
     contract_id: str,
     task_id: str,
-    modification_service: ModificationService = Depends(get_modification_service),
+    modification_service=Depends(get_modification_service),
 ) -> ModificationTask:
     """发起（或重新发起）一轮 Modification Agent 调用。
 
@@ -182,7 +188,7 @@ def confirm_modification(
     contract_id: str,
     task_id: str,
     payload: ConfirmModificationRequest = ConfirmModificationRequest(),
-    modification_service: ModificationService = Depends(get_modification_service),
+    modification_service=Depends(get_modification_service),
 ) -> ModificationTask:
     """律师确认结果（Human-in-the-loop 的确认入口）。
 
@@ -209,7 +215,7 @@ def reject_modification(
     contract_id: str,
     task_id: str,
     payload: RejectModificationRequest,
-    modification_service: ModificationService = Depends(get_modification_service),
+    modification_service=Depends(get_modification_service),
 ) -> ModificationTask:
     """律师拒绝当前候选，附带新的修改意见（不满意，重新修改）。"""
     try:
@@ -230,7 +236,7 @@ def reject_modification(
 def abandon_modification(
     contract_id: str,
     task_id: str,
-    modification_service: ModificationService = Depends(get_modification_service),
+    modification_service=Depends(get_modification_service),
 ) -> ModificationTask:
     """律师明确放弃这条修改任务（REJECTED / NEEDS_HUMAN → ABANDONED），
     不再重试，该条款会在 V2 中保留 V1 原文。
@@ -278,11 +284,11 @@ def generate_version(
 )
 def list_versions(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> list[ContractVersion]:
     """列出某份合同的全部非 V1 版本（本阶段实际最多一条：v2）。"""
     try:
-        return contract_manager.list_versions(contract_id)
+        return contract_service.list_versions(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except ContractError as exc:
@@ -318,7 +324,7 @@ def get_clause_diff(
 def run_version_review(
     contract_id: str,
     version_number: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
     review_service: ReviewApplicationService = Depends(get_review_service),
 ) -> ReviewRecord:
     """对 V2 发起一次完全独立的复审（不复用 V1 的 ReviewReport）。
@@ -336,8 +342,7 @@ def run_version_review(
     存在"两种情况（ContractManager.get_version 对这两者抛的是同一个异常）。
     """
     try:
-        version = contract_manager.get_version(contract_id, version_number)
-        return review_service.review_and_save(version.linked_contract_id, contract_version=version_number)
+        return review_service.review_version(contract_id, version_number)
     except ContractNotFoundError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
     except UnsupportedFormatError as exc:

@@ -17,12 +17,17 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
 from pydantic import BaseModel, Field
 
-from api.dependencies import get_contract_manager, get_modification_service, get_review_service
+from api.dependencies import get_contract_service, get_modification_service, get_review_service
+from api.errors import (
+    ContractError,
+    ContractNotFoundError,
+    DocumentParseError,
+    ModificationConflictError,
+    ModificationServiceError,
+    UnsupportedFormatError,
+)
+from app.contract_service import ContractApplicationService
 from app.review_service import ReviewApplicationService
-from infra.storage import ContractError, ContractManager, ContractNotFoundError
-from domain.document.parser import DocumentParseError, UnsupportedFormatError
-from domain.document.preparation import parse_and_split_contract as prepare_contract
-from domain.modification.service import ModificationConflictError, ModificationService, ModificationServiceError
 from core import Clause, Contract, ModificationTask, ReviewRecord, ReviewReport
 
 router = APIRouter(prefix="/contracts", tags=["contracts"])
@@ -65,7 +70,7 @@ class ContractTextResponse(BaseModel):
 
 @router.get("", response_model=list[Contract], status_code=status.HTTP_200_OK)
 def list_contracts(
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> list[Contract]:
     """列出合同库中的全部合同（合同库页面用）。
 
@@ -81,13 +86,13 @@ def list_contracts(
     其他读取合同数据的路由都不传这个参数，继续原样读取 V2 自己的数据
     （它们本来就需要能正常访问 V2，不能被这个过滤影响）。
     """
-    return contract_manager.list_contracts(exclude_version_hosts=True)
+    return contract_service.list_contracts(exclude_version_hosts=True)
 
 
 @router.post("", response_model=Contract, status_code=status.HTTP_201_CREATED)
 def create_contract(
     file: UploadFile,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> Contract:
     """上传合同文件，创建一份新的合同记录。
 
@@ -132,7 +137,7 @@ def create_contract(
             )
 
         try:
-            return contract_manager.create_contract(tmp_path)
+            return contract_service.create_contract(tmp_path)
         except FileNotFoundError as exc:
             # 正常流程下不会发生（临时文件是我们自己刚写好的）；
             # 保留兜底处理，避免临时文件在极端情况下被外部删除时抛出未分类的 500。
@@ -154,7 +159,7 @@ def create_contract(
 @router.post("/{contract_id}/parse", response_model=list[Clause], status_code=status.HTTP_200_OK)
 def parse_contract_route(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> list[Clause]:
     """解析并切分一份已上传的合同，返回 Clause 列表。
 
@@ -177,7 +182,7 @@ def parse_contract_route(
     Contract Preparation 能力时顺手改名修复，不再有命名冲突。）
     """
     try:
-        return prepare_contract(contract_id, contract_manager)
+        return contract_service.parse_and_split(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -215,7 +220,7 @@ def parse_contract_route(
 @router.get("/{contract_id}/clauses", response_model=list[Clause], status_code=status.HTTP_200_OK)
 def get_contract_clauses(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> list[Clause]:
     """读取某份合同已保存的 Clause 列表。
 
@@ -229,7 +234,7 @@ def get_contract_clauses(
     只有一种业务异常映射：404。
     """
     try:
-        return contract_manager.get_clauses(contract_id)
+        return contract_service.get_clauses(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -247,7 +252,7 @@ def get_contract_clauses(
 @router.get("/{contract_id}/text", response_model=ContractTextResponse, status_code=status.HTTP_200_OK)
 def get_contract_text(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> ContractTextResponse:
     """读取某份合同已保存的完整解析文本（parsed_text.txt）。
 
@@ -269,7 +274,7 @@ def get_contract_text(
     开有助于一眼看出是不是出现了更严重的数据不一致。
     """
     try:
-        contract_manager.get_contract(contract_id)
+        contract_service.get_contract(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -282,7 +287,7 @@ def get_contract_text(
         ) from exc
 
     try:
-        text = contract_manager.get_parsed_text(contract_id)
+        text = contract_service.get_text(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -357,7 +362,7 @@ def review_contract(
 @router.get("/{contract_id}/review", response_model=ReviewRecord, status_code=status.HTTP_200_OK)
 def get_latest_review(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> ReviewRecord:
     """取某份合同最近一次的审查记录（合同工作区"审查结果"页用）。
 
@@ -366,7 +371,7 @@ def get_latest_review(
     "尚未切分"的处理方式保持一致，统一映射成 404，不在这里额外区分。
     """
     try:
-        return contract_manager.get_latest_review(contract_id)
+        return contract_service.get_latest_review(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -382,7 +387,7 @@ def get_latest_review(
 @router.get("/{contract_id}/reviews", response_model=list[ReviewRecord], status_code=status.HTTP_200_OK)
 def list_reviews(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> list[ReviewRecord]:
     """列出某份合同的全部历史审查记录（"版本"页展示审查次数用，本阶段
     前端暂不展示完整历史内容，但接口按 ContractManager 的真实能力提供）。
@@ -391,7 +396,7 @@ def list_reviews(
     反映 ContractManager.list_reviews 的行为，本路由不重新定义语义。
     """
     try:
-        return contract_manager.list_reviews(contract_id)
+        return contract_service.list_reviews(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -412,7 +417,7 @@ def list_reviews(
 def create_modification_task(
     contract_id: str,
     payload: ModificationTaskCreate,
-    modification_service: ModificationService = Depends(get_modification_service),
+    modification_service=Depends(get_modification_service),
 ) -> ModificationTask:
     """创建一条修改任务：律师对某个条款提出修改意见，状态固定为 pending。
 
@@ -462,7 +467,7 @@ def create_modification_task(
 )
 def list_modification_tasks(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> list[ModificationTask]:
     """列出某份合同的全部修改任务（"修改任务"页用）。
 
@@ -470,7 +475,7 @@ def list_modification_tasks(
     ContractManager.list_modification_tasks 的行为。
     """
     try:
-        return contract_manager.list_modification_tasks(contract_id)
+        return contract_service.list_modification_tasks(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -486,14 +491,14 @@ def list_modification_tasks(
 @router.get("/{contract_id}", response_model=Contract, status_code=status.HTTP_200_OK)
 def get_contract(
     contract_id: str,
-    contract_manager: ContractManager = Depends(get_contract_manager),
+    contract_service: ContractApplicationService = Depends(get_contract_service),
 ) -> Contract:
     """查询某份合同的元数据（当前处理到哪一步、文件信息等）。
 
     直接调用 ContractManager.get_contract，不重新拼装或计算任何字段。
     """
     try:
-        return contract_manager.get_contract(contract_id)
+        return contract_service.get_contract(contract_id)
     except ContractNotFoundError as exc:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

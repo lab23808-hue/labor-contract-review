@@ -22,6 +22,7 @@ from langchain_core.embeddings import Embeddings
 
 from domain.agents.modification_agent import ModificationAgent
 from domain.agents.review_agent import ClauseReviewer
+from app.contract_service import ContractApplicationService
 from app.diff_service import DiffApplicationService
 from app.review_service import ReviewApplicationService
 from app.v2_generation_service import V2GenerationService
@@ -205,6 +206,12 @@ def get_rule_checker(request: Request) -> RuleChecker:
 
 def get_modification_agent(request: Request) -> ModificationAgent:
     return get_app_state(request).modification_agent
+
+
+def get_contract_service(
+    contract_manager: ContractManager = Depends(get_contract_manager),
+) -> ContractApplicationService:
+    return ContractApplicationService(contract_manager=contract_manager)
 
 
 def get_modification_service(

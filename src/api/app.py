@@ -22,9 +22,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.dependencies import lifespan
+from api.errors import install_exception_handlers
 from api.routes import contracts, modification
 
 app = FastAPI(title="劳动合同智能审查系统 API", lifespan=lifespan)
+install_exception_handlers(app)
 
 # 仅为前端 MVP（Vite 开发服务器 http://localhost:5173）放行跨域请求。
 # 这是本次前端任务里唯一允许的后端改动，不涉及任何业务逻辑，

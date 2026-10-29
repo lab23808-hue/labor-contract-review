@@ -1,8 +1,8 @@
 """标准答案（golden sample）的数据结构。
 
-这些 schema 独立于 `schemas/`（生产数据模型）——标准答案描述的是"人工/开发者
+这些 schema 独立于 `core/`（生产数据模型）——标准答案描述的是"人工/开发者
 认为应该是什么"，不是"系统实际产出的是什么"，两者故意不共享类型，即使字段
-名看起来相似（这和 `schemas/modification_task.py::ReviewResultSnapshot` 相对
+名看起来相似（这和 `core/modification_task.py::ReviewResultSnapshot` 相对
 `ReviewResult`"故意不是别名或子类"的理由一样：标准答案的形状不应该被动跟着
 生产 schema 的变化而变化）。
 

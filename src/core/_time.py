@@ -1,4 +1,4 @@
-"""schemas 内部共用的时间工具。统一使用带时区的 UTC 时间，避免 SQLite 存取时出现时区混乱。"""
+"""schemas 内部共用的时间工具。统一使用带时区的 UTC 时间，避免 文件/内存存取时出现时区混乱。"""
 
 from datetime import datetime, timezone
 

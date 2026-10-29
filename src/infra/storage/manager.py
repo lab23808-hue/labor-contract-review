@@ -330,7 +330,7 @@ class ContractManager:
 
         contract_version 由调用方显式传入（P-22 修复前这里曾经硬编码
         "v1"，导致 V1、V2 各自第一次保存的 review 都被编号成 "v1_001"，
-        字符串巧合相同、极具误导性，见 docs/PITFALLS.md）：
+        字符串巧合相同、极具误导性，
             - api/routes/contracts.py（通过 ReviewApplicationService）对 V1
               自己的 contract_id 调用时传 "v1"；
             - api/routes/modification.py::run_version_review（通过

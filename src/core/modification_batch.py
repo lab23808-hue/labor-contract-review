@@ -15,7 +15,7 @@ ModificationBatch 把"一轮修改"显式建模成一个实体：
       合同下所有历史任务。
 
 持久化方式：和 ModificationTask 一样，存在【原合同】目录下的独立 JSON 文件
-（contract/manager.py 新增 _MODIFICATION_BATCHES_DIR，文件命名/读写模式与
+（infra/storage/manager.py 新增 _MODIFICATION_BATCHES_DIR，文件命名/读写模式与
 modification_tasks 完全一致），不使用数据库。
 """
 

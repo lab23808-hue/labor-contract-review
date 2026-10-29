@@ -1,6 +1,6 @@
 """ModificationAgent：合同修改工作流里"决定怎么改"的那一步。
 
-和 agents/review_agent.py 的 ClauseReviewer 是同一种角色定位（单一职责、不做
+和 domain/agents/review_agent.py 的 ClauseReviewer 是同一种角色定位（单一职责、不做
 编排），但服务的是完全不同的业务目标，所以故意不合并、不复用同一个类：
     ClauseReviewer     —— 审查 Agent：判断条款有没有风险。
     ModificationAgent  —— 修改 Agent：在律师明确要求下，生成条款的修改文本。
@@ -20,9 +20,8 @@ Agent 和普通 LLM 调用的区别，在这里具体体现为：
     - 不做重试策略（重试次数、"基于原文而不是上一次候选重新生成"这些策略
       属于编排层 modification/service.py，不属于 Agent 本身）
 
-依赖边界：只依赖 llm.client（LLM 连接层）、prompts.modification（Prompt 模板）、
-modification.tool（工具执行/校验）、schemas；不依赖 workflows/*、不依赖
-contract.manager。
+依赖边界：只依赖 domain.ports.LLMPort、domain.prompts.modification、
+domain.modification.tool、core；不依赖 workflow/*、不依赖 infra。
 """
 
 from typing import Optional, Union

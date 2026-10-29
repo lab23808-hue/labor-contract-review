@@ -15,7 +15,7 @@
 openai / langgraph / 网络），这里不提供"降级模拟"版本——降级模拟会被误读成
 真实结果，这正是任务要求明确禁止的事（"不得使用 FakeLLM 的结果冒充真实模型
 审查效果"）。这些实验的脚本和本地运行命令见
-`scripts/run_eval_samples.py` 和 `docs/EVAL_DIAGNOSTICS.md`。
+`scripts/run_eval_samples.py`。
 """
 
 import re
@@ -25,7 +25,7 @@ from typing import Optional
 from evaluation.schemas import ContractAnswer
 
 # 和 scripts/validate_knowledge_base.py 保持一致的切分正则（见该文件说明：
-# 不 import rag/knowledge_loader.py，因为它的模块顶层需要
+# 不 import retrieval/knowledge_loader.py，因为它的模块顶层需要
 # langchain_text_splitters，这里要的只是"这个条号是否存在于知识库文本里"，
 # 不需要真的切分成 Evidence）。
 _CN_DIGITS = "一二三四五六七八九十百千零〇两"

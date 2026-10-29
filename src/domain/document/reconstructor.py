@@ -6,7 +6,7 @@
 这一个纯文本算法。
 
 算法说明（与原 modification/service.py 中的实现保持一致；2026-09-29 修复过
-一次款级内容丢失的 bug，见 docs/PITFALLS.md，下面这段描述的是修复后的行为）：
+一次款级内容丢失的 bug，，下面这段描述的是修复后的行为）：
     以“条”为单位重建原文，而不是简单拼接 Clause 文本：ClauseSplitter 会把
     带款项编号的条拆成 1 个 hierarchy_level=0（条，只含标题/引导文字）+
     N 个 hierarchy_level=1（款，parent_clause 指回这个条）；一条的完整原文

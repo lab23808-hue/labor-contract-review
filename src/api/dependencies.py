@@ -1,7 +1,7 @@
 """FastAPI 依赖注入：应用启动时把当前业务需要的重对象构造一次，
 请求期间通过 Depends 从同一份实例里取用，不重复构造。
 
-本文件只负责"接线"——调用已有业务模块（contract / rag / llm / review / rules）
+本文件只负责"接线"——调用已有业务模块（infra / retrieval / domain / app）
 各自的构造函数，把结果的生命周期交给 FastAPI 的 lifespan 管理。
 本文件不重新实现、也不改变任何业务逻辑；ContractManager、RAG 检索、
 LLM 调用、RuleChecker 的行为完全由各自的模块决定。
@@ -69,7 +69,7 @@ class AppState:
     # build_app_state() 构造时那一个 ContractManager 实例上，测试用
     # app.dependency_overrides[get_contract_manager] 换成指向 tmp_path 的
     # 实例时，ModificationService 会完全感知不到、继续用生产数据目录——
-    # 这正是曾经出现过的一个真实 bug（见 docs/troubleshooting.md）。
+    # 这正是曾经出现过的一个真实 bug。
     modification_agent: ModificationAgent
 
 
@@ -109,7 +109,7 @@ def build_app_state() -> AppState:
         # split_text() 从不触碰 self.knowledge_base，只有 index()/
         # load_and_index_*() 才会用到它；BM25 路径不调用那些写入方法，这里
         # 传 None 是安全的。类型标注上仍要求一个 VectorSink/DenseBackend——这是
-        # 已知的、刻意不去改动 rag/knowledge_loader.py 而接受的小瑕疵（把
+        # 已知的、刻意不去改动 retrieval/knowledge_loader.py 而接受的小瑕疵（把
         # "读取/切分"方法改成不依赖 knowledge_base 参数的 staticmethod/独立
         # 函数会更干净，留作后续知识树建议，不在本轮改动范围内）。
         evidences = KnowledgeLoader(knowledge_base=None).load_directory(settings.KNOWLEDGE_DIR)

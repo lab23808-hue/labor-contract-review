@@ -27,7 +27,7 @@
     ContractManager.save_version() 把 ContractVersion 存在【原合同】的目录
     下（contracts/<contract_id>/versions/version_<number>.json），查找时
     按"目录"定位、按 version_number 匹配文件名——这个存储方式本身没有变
-    （Storage 边界本次不调整，见 contract/manager.py）。为了不在同一次改动
+    （Storage 边界本次不调整，见 infra/storage/manager.py）。为了不在同一次改动
     里又去改 ContractManager 的存储路径算法，本模型保留了 contract_id 这个
     字段名（语义调整为"family_id 的别名：这个版本所属的合同家族标识"，
     对 V1→V2 这一步，它的取值就是 V1 自己的 contract_id，和过去完全一致，

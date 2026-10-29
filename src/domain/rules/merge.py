@@ -1,7 +1,7 @@
 """merge_review_results：把主线路（LLM）结果和规则补充结果合并成最终列表。
 
 语义必须明确：ReviewResult 是"风险点"的结果，不是"条款"的结果——一个 Clause
-可以对应多条 ReviewResult（schemas.ReviewReport.results 本来就是不做去重
+可以对应多条 ReviewResult（core.ReviewReport.results 本来就是不做去重
 约束的扁平列表）。这里的合并是纯拼接，LLM 结果和规则结果都完整保留：
     - 不做覆盖：规则命中不会删除或顶替 LLM 已经产出的结果；
     - 不做去重：不判断两条结果是不是"同一个问题"；

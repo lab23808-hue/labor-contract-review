@@ -2,18 +2,18 @@
 
     Clause → 生成 query → LegalKnowledgeRetriever 检索 Evidence
            → prompts.review 构造 messages → llm client 调用 → 校验 JSON
-           → 补全字段 → schemas.ReviewResult
+           → 补全字段 → core.ReviewResult
 
 依赖边界：
-    - schemas（Clause、Evidence、ReviewResult、ReviewSource）
-    - rag（只用 LegalKnowledgeRetriever，不碰 database.py / knowledge_loader.py）
-    - llm.client（LLM 连接层） + prompts.review（Prompt 模板）
-    - agents.review_schemas.LLMReviewOutput（本模块自己的“LLM 原始输出”结构）
+    - core（Clause、Evidence、ReviewResult、ReviewSource）
+    - retrieval（只用 LegalKnowledgeRetriever）
+    - domain.ports.LLMPort（LLM 连接层）+ domain.prompts.review（Prompt 模板）
+    - domain.agents.review_schemas.LLMReviewOutput（本模块自己的“LLM 原始输出”结构）
     不依赖 contract/document 业务模块——Clause 对象从外部传入，
-    本模块不关心它是怎么切出来的；也不依赖 workflows/*。
+    本模块不关心它是怎么切出来的；也不依赖 workflow/*。
 
 目前是单条顺序调用，没有引入 LangGraph 或任何编排框架；
-多条款/多阶段的整体编排由 workflows.review_workflow 负责。
+多条款/多阶段的整体编排由 workflow.review_workflow 负责。
 """
 
 from typing import Optional

@@ -1,8 +1,8 @@
 """Modification Agent 的 Prompt 模板 + modify_clause 工具的 Function Calling schema。
 
 只负责"把条款、审查结果、律师意见拼成 messages + 工具定义"，不调用 LLM
-（那是 llm/client.py 的事），不做校验（那是 modification/validator.py 的事）。
-和 llm/prompts.py（审查用的 Prompt）是同一种分层方式，但故意分成两个文件：
+（那是 infra/llm/client.py 的事），不做校验（那是 domain/modification/validator.py 的事）。
+和 domain/prompts/review.py（审查用的 Prompt）是同一种分层方式，但故意分成两个文件：
 审查 Prompt 和修改 Prompt 是两类完全不同的任务，写在一起只会让两边都更难改。
 """
 

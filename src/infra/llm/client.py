@@ -51,6 +51,7 @@ class OpenAICompatibleClient:
                 model=self.model,
                 messages=messages,
                 temperature=temperature,
+                timeout=settings.LLM_TIMEOUT_SECONDS,
                 **kwargs,
             )
         except OpenAIError as exc:
@@ -71,7 +72,7 @@ class OpenAICompatibleClient:
         只有一个工具。
 
         tool_choice 用 "auto" 而不是强制指定这个工具名（P-21，见
-        docs/PITFALLS.md）：DeepSeek 的 thinking 模式（部分模型默认开启）
+        历史记录：DeepSeek 的 thinking 模式（部分模型默认开启）
         不支持强制/具名的 tool_choice，会直接返回 400
         "Thinking mode does not support this tool_choice"；"auto" 在
         thinking 模式和非 thinking 模式下都被接受。因为工具集只有一个，
@@ -96,6 +97,7 @@ class OpenAICompatibleClient:
                 model=self.model,
                 messages=messages,
                 temperature=temperature,
+                timeout=settings.LLM_TIMEOUT_SECONDS,
                 tools=[tool_schema],
                 tool_choice="auto",
             )

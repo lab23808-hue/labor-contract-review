@@ -1,4 +1,4 @@
-"""合同管理记录的数据结构（对应 SQLite 中保存的合同元数据）。
+"""合同管理记录的数据结构（对应文件系统中保存的合同元数据）。
 
 只描述“这份合同是什么、处理到哪一步了”，不包含文件路径：
 文件按约定放在 contracts/<contract_id>/ 下（original_file、parsed_text、clauses、report），

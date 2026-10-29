@@ -6,8 +6,8 @@ ModificationTask 和 ReviewResult 是两个不同层次的业务概念，故意�
     ModificationTask  —— 人（律师）看完判断之后提出的"我要怎么改"，人类生成，
                           后续由 Modification Agent 消费、由律师确认。
 
-本次改动（见 docs/PITFALLS.md / docs/DEVELOPMENT_LOG.md 对应日期的记录）：
-    1. 引入 ModificationBatch（schemas/modification_batch.py）：律师显式开启
+本次改动：
+    1. 引入 ModificationBatch（core/modification_batch.py）：律师显式开启
        一轮修改后得到一个 batch_id，此后创建的每一条 ModificationTask 都必须
        显式携带 batch_id——不再有"默认 batch"、不再靠猜测归属。
     2. 新增 source_review_id + source_review_snapshot：任务创建时冻结一份
@@ -48,7 +48,7 @@ ModificationTask 和 ReviewResult 是两个不同层次的业务概念，故意�
     - abandoned                 律师明确放弃这条修改任务，终态
 
     CONFIRMED / ABANDONED 都是终态，不存在 "→ COMPLETED" 这种转换——V2 是否
-    生成成功记录在 ModificationBatch 上（见 schemas/modification_batch.py）。
+    生成成功记录在 ModificationBatch 上（见 core/modification_batch.py）。
 
 要求：
     1. 一个任务对应一个目标条款（target_clause_id），属于一个确定的 batch_id
@@ -166,7 +166,7 @@ class ModificationTask(BaseModel):
     contract_id: str = Field(..., min_length=1)
 
     # 这条任务所属的批次；本阶段起每条任务必须显式携带 batch_id，不再有
-    # "默认 batch"（见 schemas/modification_batch.py）。
+    # "默认 batch"（见 core/modification_batch.py）。
     batch_id: str = Field(..., min_length=1)
 
     # 这条任务是针对哪一次审查提出的（ReviewRecord.review_id）。

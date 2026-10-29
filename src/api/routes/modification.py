@@ -337,7 +337,7 @@ def run_version_review(
     V1 还是 V2。
 
     映射方式和 POST /contracts/{id}/review 基本一致，因为内部同样调用
-    workflows/review_workflow.py 里未改动的 run_review，会抛出同一组异常；
+    workflow/review_workflow.py 里未改动的 run_review，会抛出同一组异常；
     多出的 ContractNotFoundError 分支同时覆盖"合同不存在"和"该版本号不
     存在"两种情况（ContractManager.get_version 对这两者抛的是同一个异常）。
     """

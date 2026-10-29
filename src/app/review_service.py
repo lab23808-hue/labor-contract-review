@@ -2,7 +2,7 @@
 之间的唯一一层）。
 
 架构边界（这是本文件存在的唯一理由）：
-    Review Workflow（workflows/review_workflow.py）是一次完整合同审查的
+    Review Workflow（workflow/review_workflow.py）是一次完整合同审查的
     流程编排本身，它已经是"审查能力"这件事的正确归宿——不需要在它上面再包
     一层"ReviewCapability"之类的壳。但"审查完了要不要存、存成哪个版本号"
     这个决定不应该是 Workflow 自己做的（Workflow 甚至不知道"版本号"这个
@@ -27,7 +27,7 @@ contract_version 参数的定位：它只是 ContractManager.save_review 本来�
 一个"展示用标签"（只影响 review_id 的编号字符串是 "v1_00N" 还是
 "v2_00N"，不影响实际存到了哪个 contract_id 的目录下——真正区分 V1/V2 数据的
 是 contract_id 本身）。这个标签天然就需要由"知道这次审查是对谁发起的"调用方
-显式提供（ContractManager.save_review 一直是这样设计的，见 contract/manager.py
+显式提供（ContractManager.save_review 一直是这样设计的，见 infra/storage/manager.py
 里 P-22 的说明），本文件原样转发，不代表本文件"知道" V1/V2 的业务含义。
 """
 

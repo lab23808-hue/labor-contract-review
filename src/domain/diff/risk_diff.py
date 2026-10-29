@@ -11,7 +11,7 @@ from typing import Optional
 
 from core import ReviewResult, ReviewSource, RiskDiffEntry
 
-# --- 本次修复记录（P0 bug，见 docs/DEVELOPMENT_LOG.md 对应日期的记录）-------
+# --- 本次修复记录（P0 bug，
 #
 # 旧实现的 _result_key() 对规则来源的结果只用 rule_id 作为匹配键：
 #     return ("rule", result.rule_id)

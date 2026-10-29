@@ -10,7 +10,7 @@ ReviewRecord 是持久化层的外壳，把这些"存档信息"和 ReviewReport 
         contract_id
         contract_version    生成这份报告时，合同处于哪个版本（"v1" 或 "v2"；
                              由调用方显式传入，不是本模型自己判断出来的，
-                             见 contract/manager.py::save_review 的说明）
+                             见 infra/storage/manager.py::save_review 的说明）
         report: ReviewReport
         created_at
 

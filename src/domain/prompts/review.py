@@ -1,5 +1,5 @@
 """审查 Prompt 模板：只负责把条款和检索到的 Evidence 拼成 messages，
-不调用 LLM（那是 llm/client.py 的事），也不做检索（那是 rag 包的事）。
+不调用 LLM（那是 infra/llm/client.py 的事），也不做检索（那是 retrieval 包的事）。
 """
 
 from core import Evidence

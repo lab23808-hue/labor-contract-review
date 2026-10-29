@@ -1,17 +1,17 @@
 """法律知识库纯文本结构校验（不依赖 chromadb / langchain_text_splitters / BGE-M3）。
 
-背景：生产代码 `rag/knowledge_loader.py::KnowledgeLoader` 在模块顶层
+背景：生产代码 `retrieval/knowledge_loader.py::KnowledgeLoader` 在模块顶层
 `from langchain_text_splitters import RecursiveCharacterTextSplitter`，
 导致即使只想验证"按第X条切分"这一步纯文本逻辑，也无法在没装这个包的环境
-里 import 这个模块。本脚本不改动 `rag/knowledge_loader.py`，而是用同一份
-切分正则（_ARTICLE_RE，必须和 `rag/knowledge_loader.py` 保持一致——见下方
+里 import 这个模块。本脚本不改动 `retrieval/knowledge_loader.py`，而是用同一份
+切分正则（_ARTICLE_RE，必须和 `retrieval/knowledge_loader.py` 保持一致——见下方
 断言）独立实现一遍"按条切分 + 结构校验"，纯标准库，任何环境都能跑。
 
 **这个脚本能证明什么、不能证明什么（如实说明，不夸大）：**
 - 能证明：data/knowledge/*.txt 里的"第X条"切分点、条号是否重复、是否有
   空块、哪些条文长度超过 KNOWLEDGE_CHUNK_SIZE（会被生产代码二次切分）。
 - 不能证明：真正写入 Chroma 后能不能检索到（需要真实 chromadb + BGE-M3，
-  本沙箱不可用，见 docs/EVAL_DIAGNOSTICS.md 里"实验1"的本地运行说明）。
+  本沙箱不可用，。
 - 不能证明：条文文本本身是否逐字匹配官方原文（见 data/knowledge/SOURCES.md
   "文本核验状态"——这是另一件事，本脚本不做这个核验）。
 
@@ -29,7 +29,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from config import settings  # noqa: E402
 
-# 必须和 rag/knowledge_loader.py 里的 _ARTICLE_RE 保持完全一致——这里独立
+# 必须和 retrieval/knowledge_loader.py 里的 _ARTICLE_RE 保持完全一致——这里独立
 # 复制一份而不是 import 该模块，是因为该模块的顶层 import 需要
 # langchain_text_splitters，本脚本的设计目标就是不依赖它。
 _CN_DIGITS = "一二三四五六七八九十百千零〇两"
@@ -175,13 +175,9 @@ def main() -> None:
         print()
 
     print("=" * 60)
-    print("重复加载是否会产生重复数据（读代码得到的结论，非本脚本运行验证）：")
-    print("  rag/knowledge_loader.py::KnowledgeLoader.index() 的 docstring 明确写着")
-    print("  \"本方法不做去重，重复调用会把相同内容再写入一份\"——这是生产代码自己声明的")
-    print("  设计行为（不是本脚本发现的 bug），意味着如果不小心对同一份文件调用两次")
-    print("  load_and_index_file()，向量库里会出现两份完全相同的 Evidence。真实验证")
-    print("  需要用真实 DenseBackend 调用两次 index() 后 kb.count()，本沙箱无")
-    print("  chromadb，这一步留给本地环境验证（见 docs/EVAL_DIAGNOSTICS.md）。")
+    print("重复加载：retrieval/knowledge_loader.py::KnowledgeLoader.index() 会按")
+    print("(source, article, part, content) 生成确定性 id，同一批内按 id 去重，")
+    print("跨批次由 ChromaVectorStore.upsert 覆盖同 id，因此重复索引同一文件不会重复计数。")
     print()
     print("结论：" + ("未发现结构性问题" if all_ok else "发现上述结构性问题，建议处理后再重建索引"))
 

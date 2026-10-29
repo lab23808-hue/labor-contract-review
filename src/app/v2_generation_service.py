@@ -118,7 +118,7 @@ class V2GenerationService:
 
         tmp_dir = tempfile.mkdtemp(prefix="contract_v2_")
         tmp_path = Path(tmp_dir) / f"{contract_id}_v2.txt"
-        # newline=""：见 docs/PITFALLS.md P-24，禁止平台相关的换行转换损坏原文。
+        # newline=""：，禁止平台相关的换行转换损坏原文。
         tmp_path.write_text(v2_text, encoding="utf-8", newline="")
 
         try:

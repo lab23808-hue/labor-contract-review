@@ -1,9 +1,9 @@
 """完整 LangGraph 流程的真实端到端验证脚本（独立测试流程，不修改任何已有模块）。
 
 这是目前项目里"从合同文件到最终结果"最完整的一次真实调用：
-    合同文件 → ContractManager 登记 → workflows.review_workflow.run_review()
-      内部依次跑：Contract Loading → (LLM Review ∥ Rule Check) → Merge → Report Assembly
-    → 打印最终 State → 用最终 State 重新构造一次 ReviewReport
+    合同文件 → ContractManager 登记 → workflow.review_workflow.run_review()
+      内部依次跑：Contract Loading → Retrieve → LLM Review / Rule Check → Merge → Report Assembly
+    → 打印 ReviewReport
 
 用真实 BGE-M3 + 真实 DeepSeek + 真实 LangGraph（需要已经 pip install -r
 requirements.txt，包含 langgraph）。

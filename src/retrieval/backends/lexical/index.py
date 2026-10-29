@@ -2,9 +2,7 @@
 
 只负责索引结构与打分/排序；对外的检索后端由 BM25Backend 提供。
 
-算法与分词器照搬 `experiment_kb/scripts/eval_working_kb_retrieval.py` 里的
-`_BM25Index` / `_char_bigram_tokenizer()`——本项目已经用真实实验（working/baseline
-两个知识库版本、47 个场景）反复验证过的实现，逐行保持一致，不重新发明。
+算法与分词器沿用项目历史检索实验验证过的实现，保持与既有评测口径一致。
 
 与实验脚本唯一的结构性差异：实验脚本里的 `_load_knowledge_documents_for_bm25()`
 会先按 (source, article) 把同一条法条的多个 part 合并成一份完整法条再建索引
@@ -34,7 +32,7 @@ from core import Evidence
 
 # 这条路径返回的 Evidence 相关性分数来自 BM25 原始分数（越大越相关），和
 # ChromaVectorStore 返回的向量距离（通常越小越相关）在数值量级和含义上都不是
-#一回事，不能直接比大小。已检查 prompts/review.py、rag/retriever.py，当前
+#一回事，不能直接比大小。已检查 prompts/review.py、retrieval/retriever.py，当前
 # 生产代码里没有任何地方对 Evidence.metadata["score"] 做跨策略的数值比较，
 # 所以这里只需要把语义标记出来，供以后任何想用这个分数做比较/排序/阈值判断的
 # 代码先检查这个标记，不是说现在就存在真正的冲突需要修复。
@@ -52,8 +50,7 @@ class BM25IndexBuildError(Exception):
 def char_bigram_tokenizer(text: str) -> list[str]:
     """字符二元组分词器：过滤空白字符后，把相邻两个字符配成一个长度为 2 的 token。
 
-    逐字符照搬 `experiment_kb/scripts/eval_working_kb_retrieval.py` 里
-    `_char_bigram_tokenizer()` 已经验证过的实现，不重新发明；这也是
+    沿用项目历史检索实验中验证过的 char-bigram 实现；这也是
     ART26_WORKPLACE_RELOCATION_DIAGNOSIS 这个已知诊断案例里用来证实"零字符
     二元组重合"结论所用的同一个算法。
     """
@@ -106,7 +103,7 @@ class BM25Index:
             # 哈希公式在两个地方各写一遍、以后悄悄跑偏；已在本次接入报告的
             # "遗留风险/知识树建议"里记录为一个值得关注的小瑕疵（更干净的做法是
             # 把它从 KnowledgeLoader 的内部实现细节提升成一个独立的公开函数，
-            # 但那属于改动 rag/knowledge_loader.py，超出本轮批准的改动范围）。
+            # 但那属于改动 retrieval/knowledge_loader.py，超出本轮批准的改动范围）。
             evidence_id = KnowledgeLoader._evidence_id(evidence)
             if evidence_id in seen_ids:
                 prior = seen_ids[evidence_id]
@@ -148,7 +145,7 @@ class BM25Index:
         """BM25Okapi 检索，返回按相关性从高到低排列、截断到 k 条的 (Document, score)。
 
         与 ChromaVectorStore.similarity_search 的返回契约一致，
-        rag/retriever.py 的调用方代码不需要知道背后是哪一种实现。
+        retrieval/retriever.py 的调用方代码不需要知道背后是哪一种实现。
 
         score 含义：BM25 原始分数，越大越相关；与 Chroma 的向量距离不是同一个
         量级/含义，不能直接比较数值大小（见模块顶部 SCORE_TYPE 的说明，以及每条

@@ -1,4 +1,4 @@
-"""workflows/review_workflow.py：LangGraph 编排层，把已经验证过的各模块串成一张图。
+"""workflow/review_workflow.py：LangGraph 编排层，把已经验证过的各模块串成一张图。
 
 State、Node、Edge 的设计已经在之前的讨论中确认，本文件只是把确认过的设计
 落成代码，不在这里重新做设计决策。
@@ -47,7 +47,7 @@ ContractManager、RuleChecker、agents.review_agent 仍然是本文件会引用�
       测试使用）+ run_review（对外，返回 ReviewReport）两个函数，而不是在
       一个函数里把两件事混在一起。
 
-本次修正（见 docs/PITFALLS.md 对应日期的记录）：之前 report_assembly 节点
+本次修正：之前 report_assembly 节点
 只是"构造一次 ReviewReport 用来验证能不能构造出来"，构造结果被直接丢弃，
 真正对外返回的 ReviewReport 是 run_review() 在图跑完之后、图外部重新拼一次
 ——这意味着"这一次审查最终的报告"实际上有两份构造逻辑（图内一份、图外一份），

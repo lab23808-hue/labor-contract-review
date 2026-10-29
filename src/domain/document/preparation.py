@@ -7,7 +7,7 @@ document.splitter（纯函数能力）+ contract.ContractManager（Storage），
 节点）、modification.service（generate_v2 对 V2 全文重新走一遍同样的流程）、
 api/routes/contracts.py（POST /parse 路由）三个调用方共用。
 
-本次（Stage 2）架构重构前，这段编排逻辑写在 workflows/review_workflow.py
+本次（Stage 2）架构重构前，这段编排逻辑写在 workflow/review_workflow.py
 里，被 review_workflow 自己、api/routes/contracts.py、modification/service.py
 三处分别 import——Review Workflow 因此变成了"其他模块伸手进来拿一个工具函数"
 的地方，这不是它该扮演的角色（Review Workflow 只应该编排"一次完整合同审查"

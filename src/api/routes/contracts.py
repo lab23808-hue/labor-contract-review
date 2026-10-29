@@ -105,7 +105,7 @@ def create_contract(
 
     临时文件为什么要保留原始文件名（而不是用随机文件名）：
         ContractManager.create_contract 把传入路径的 `.name` 原样记作
-        Contract.filename、把 `.suffix` 判定为 file_format（见 contract/manager.py）。
+        Contract.filename、把 `.suffix` 判定为 file_format（见 infra/storage/manager.py）。
         如果临时文件用随机名字，保存下来的合同元数据里 filename 就会变成一串
         随机字符，而不是用户实际上传的文件名——所以这里选择"临时目录 + 原始
         文件名"的方案，而不是更常见的 tempfile.NamedTemporaryFile（随机名）。
@@ -309,7 +309,7 @@ def review_contract(
           → ReviewApplicationService.review(contract_id, save_result=True)
               —— Review Application：调用 Review Workflow（LangGraph 编排，
                  Contract Loading → LLM Review ∥ Rule Check → Merge →
-                 Report Assembly，完全在 workflows/review_workflow.py 里）
+                 Report Assembly，完全在 workflow/review_workflow.py 里）
                  拿到 ReviewReport，再按 save_result 决定要不要持久化
           → 返回（HTTP 200）
 

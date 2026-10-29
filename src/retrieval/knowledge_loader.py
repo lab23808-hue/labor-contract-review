@@ -147,51 +147,12 @@ class KnowledgeLoader:
     # ------------------------------------------------------------------
 
     def index(self, evidences: list[Evidence]) -> list[str]:
-        """把 Evidence 列表写入 Chroma，返回写入后的文档 id 列表。
+        """把 Evidence 列表写入向量后端，返回写入后的文档 id 列表。
 
-        **去重/幂等性（2026-10-10 修正，之前的版本明确不做去重，见下方说明）**：
-        每个 Evidence 的 id 由 `_evidence_id()` 从 (source, article, part, content) 的
-        内容本身确定性地算出来（sha256 摘要），不是随机 id。这意味着内容完全相同的
-        Evidence 重复调用 `index()`（或 `load_and_index_file`/`load_and_index_directory`）
-        会得到完全相同的 id；`DenseBackend.add_texts(..., ids=...)` 转调
-        `langchain_chroma.Chroma.add_texts`，这个方法内部对所有写入路径都调用的是
-        `self._collection.upsert(...)`（已对照 langchain-ai/langchain 仓库
-        `libs/partners/chroma/langchain_chroma/vectorstores.py` 的 `Chroma.add_texts`
-        源码确认，核验日期 2026-10-10），upsert 对已存在的 id 是覆盖写入而不是新增一条，
-        所以重复加载同一份知识库文件不会造成文档数量重复增长。
-
-        **这个结论本身在当前沙箱里无法端到端验证**（本沙箱 `langchain_chroma`/
-        `chromadb` 均不可用，见 `docs/EVAL_BASELINE.md`/`docs/PITFALLS.md` 对
-        工具限制的历史记录），只能确认"id 生成是确定性的、相同内容产出相同 id"这一半
-        （`tests/test_rag_loader.py` 里针对 `_evidence_id()` 的单测可以在沙箱外直接
-        验证），"upsert 真的覆盖而不是追加"这一半依赖 chromadb 的真实行为，需要在
-        安装了完整依赖的本地环境运行 `tests/test_rag_loader.py` 里新增的
-        `test_reindexing_is_idempotent_and_does_not_duplicate` 才能最终确认。
-
-        在 2026-10-10 之前，这个方法确实不做去重（旧版本的 docstring 原话是
-        "重复调用会把相同内容再写入一份"），这不是编造的历史——如果需要复现旧行为用于
-        对比，可以查看版本历史，或者直接调用 `self.knowledge_base.add_texts(texts, metadatas)`
-        不传 `ids` 参数。
-
-        **2026-10-10 第二次修正（本轮，见 docs/PITFALLS.md P-29 的追加记录）**：
-        用户在本地真实环境里跑到了一个 `_evidence_id()` 设计时没覆盖到的场景——
-        一条超长法条如果内容高度重复（例如同一句话连续出现多次），二次切分出来的
-        多个 part 可能逐字相同；当时的 `_evidence_id()` 只看 (source, article,
-        content)，不看 part，于是同一批里出现了两个哈希完全相同的 id，传给
-        `add_texts(..., ids=...)` 时 chromadb 直接报 `DuplicateIDError`（这是
-        "同一次调用内部 id 不能重复"，和"跨次调用 upsert 覆盖同 id"是两件不同的事，
-        后者才是上面几段讲的幂等机制）。修复方式是把 `metadata["part"]`
-        纳入 id 计算（见 `_evidence_id()`），具体原理见那里的 docstring。
-
-        这次修复之后，仍然可能出现"同一批 evidences 里有两条 (source, article,
-        part, content) 完全相同"的情况——不是因为切分算法产出了无法区分的片段，
-        而是调用方本身传入了逐字重复的 Evidence（例如同一份内容被意外地构造了两次）。
-        这种情况下两条记录的 id 必然相同，这里选择的处理方式是**在写入前按 id 去重，
-        保留第一条**，而不是报错或者改用随机 id：既然 (source, article, part,
-        content) 全部相同，两条记录本来就代表同一件事，去重不会丢信息，也不会破坏
-        "相同输入产出相同 id、从而可以被后续 upsert 覆盖"这条幂等性的基础；改用随机
-        id 虽然能避免批内碰撞，但会重新引入"同一内容每次获得不同 id、无法被 upsert
-        识别为同一条记录"的旧问题，所以没有采用。
+        id 由 `_evidence_id()` 从 (source, article, part, content) 确定性生成；
+        相同内容重复 index 会命中同一个 id，由 ChromaVectorStore.upsert 覆盖。
+        同一批内若出现完全相同的 id，则按 id 保留第一条，避免 chromadb 的
+        批内 DuplicateIDError。
         """
         if not evidences:
             return []

@@ -1,14 +1,12 @@
 """正式知识库初始化脚本：把 data/knowledge 下的法律文本用真实 BGE-M3 写入 data/index/chroma。
 
 跟 scripts/verify_rag_pipeline.py 的区别：这个脚本写的是正式知识库（data/index/chroma，
-rag/vectorstore.py 里的默认持久化目录和 collection），且强制使用真实 BGE-M3——
+retrieval/backends/dense/store.py 里的默认持久化目录和 collection），且强制使用真实 BGE-M3——
 始终使用真实 BGE-M3；模型加载失败只报告环境问题（见 scripts/_common.py），不会换成假实现。
 
 用法：
     python scripts/build_knowledge_base.py            # 重建：先清空 collection 再写入（默认，幂等）
     python scripts/build_knowledge_base.py --append    # 不清空，直接在现有数据上追加
-                                                        # 注意：KnowledgeLoader 不做去重，
-                                                        # 对同一份文件重复 --append 会产生重复数据
 """
 
 import argparse

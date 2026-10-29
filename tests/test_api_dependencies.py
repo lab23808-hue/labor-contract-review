@@ -60,6 +60,7 @@ def _patch_heavy_builders(monkeypatch, tmp_path):
     """
     monkeypatch.setattr(settings, "RETRIEVAL_STRATEGY", "dense")
     monkeypatch.setattr("api.dependencies.build_embedder", lambda: FakeEmbeddings())
+    monkeypatch.setattr("api.dependencies.KnowledgeLoader.count_evidences", lambda self, directory: 0)
     monkeypatch.setattr(
         "api.dependencies.DenseBackend",
         lambda embedding_function: DenseBackend(

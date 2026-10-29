@@ -128,6 +128,10 @@ class KnowledgeLoader:
             evidences += self.load_file(file)
         return evidences
 
+    def count_evidences(self, dir_path: Union[str, Path]) -> int:
+        """只复用切分逻辑统计 Evidence 数量，不做 embedding、不写索引。"""
+        return len(self.load_directory(dir_path))
+
     # ------------------------------------------------------------------
     # 写入数据库
     # ------------------------------------------------------------------

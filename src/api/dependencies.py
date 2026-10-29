@@ -116,6 +116,13 @@ def build_app_state() -> AppState:
     elif strategy == "dense":
         embedder = build_embedder()  # 加载 BGE-M3，只在这里做一次
         knowledge_base = DenseBackend(embedding_function=embedder)
+        expected = KnowledgeLoader(None).count_evidences(settings.KNOWLEDGE_DIR)
+        actual = knowledge_base.count()
+        if actual != expected:
+            raise RuntimeError(
+                f"Dense 索引与知识库不一致：Chroma count={actual}，"
+                f"知识库 Evidence 数={expected}（目录 {settings.KNOWLEDGE_DIR}）"
+            )
         retriever = LegalKnowledgeRetriever(knowledge_base=knowledge_base)
     else:
         raise ValueError(

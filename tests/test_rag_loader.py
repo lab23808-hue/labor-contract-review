@@ -315,3 +315,9 @@ def test_index_deduplicates_literal_duplicate_evidences_within_one_call(tmp_path
     equivalent = Evidence(content="第一条内容。", source="法A", article="第一条")
     loader.index([equivalent])
     assert kb.count() == 1
+
+
+def test_count_evidences_reuses_split_logic_without_indexing(tmp_path):
+    (tmp_path / "法A.txt").write_text("第一条 内容一。\n\n第二条 内容二。", encoding="utf-8")
+    loader = KnowledgeLoader(None)
+    assert loader.count_evidences(tmp_path) == 2

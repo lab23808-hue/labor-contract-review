@@ -65,6 +65,7 @@ def _patch_heavy_builders(monkeypatch, tmp_path):
     # DenseBackend 替身真的会被用到，行为与接入前一致。
     monkeypatch.setattr(settings, "RETRIEVAL_STRATEGY", "dense")
     monkeypatch.setattr("api.dependencies.build_embedder", lambda: FakeEmbeddings())
+    monkeypatch.setattr("api.dependencies.KnowledgeLoader.count_evidences", lambda self, directory: 0)
     monkeypatch.setattr(
         "api.dependencies.DenseBackend",
         lambda embedding_function: DenseBackend(

@@ -38,6 +38,7 @@ CONTRACT_TEXT = (
 LOCKED_STATE_FIELDS = {
     "contract_id",
     "clauses",
+    "retrieval_results",
     "llm_results",
     "rule_results",
     "final_results",
@@ -244,6 +245,25 @@ def test_report_assembly_node_writes_real_report_into_state(tmp_path):
 
 
 # ---------------------------------------------------------------- 对外入口：run_review 返回 ReviewReport
+
+def test_retrieval_results_and_versions_are_recorded(tmp_path):
+    from config import settings
+    from retrieval.knowledge_loader import load_version
+
+    manager, contract_id = make_contract(tmp_path)
+    state = run_review_graph(contract_id, manager, make_reviewer(FakeLLMClient()), RuleChecker())
+
+    assert set(state["retrieval_results"]) == {"clause_001", "clause_002", "clause_003"}
+    assert all(len(items) == 1 for items in state["retrieval_results"].values())
+    assert all(len(r.evidences) == 1 for r in state["llm_results"])
+
+    report = state["report"]
+    assert report is not None
+    assert report.versions.llm_model == settings.LLM_MODEL_NAME
+    assert report.versions.prompt_version == "review-prompt-v1"
+    assert report.versions.ruleset_version
+    assert report.versions.knowledge_base_version == load_version()
+
 
 def test_run_review_returns_a_review_report_not_a_bare_state(tmp_path):
     """Stage 2 调整：run_review 对外的返回值必须是 ReviewReport 业务对象，

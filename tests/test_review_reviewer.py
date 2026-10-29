@@ -105,7 +105,8 @@ def test_generate_query_keeps_heading_keyword_not_present_in_body():
 
 def test_review_returns_review_result_with_expected_fields():
     clause = make_clause("第一条 试用期工资\n乙方试用期工资为正式工资的百分之五十。", clause_type="试用期工资")
-    reviewer = ClauseReviewer(FakeRetriever(), FakeLLMClient(response=VALID_LLM_JSON))
+    evidence = make_evidence()
+    reviewer = ClauseReviewer(FakeRetriever(evidences=[evidence]), FakeLLMClient(response=VALID_LLM_JSON))
 
     result = reviewer.review(clause)
 
@@ -117,6 +118,7 @@ def test_review_returns_review_result_with_expected_fields():
     assert result.reason == "试用期工资低于法定最低标准"
     assert result.legal_basis == ["《劳动合同法》第二十条"]
     assert result.suggestion == "调整为不低于百分之八十"
+    assert result.evidences == [evidence]
 
 
 def test_review_uses_generated_query_for_retrieval():

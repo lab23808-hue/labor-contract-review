@@ -9,6 +9,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, model_validator
 
+from core.evidence import Evidence
+
 
 class RiskLevel(str, Enum):
     """风险等级。
@@ -72,6 +74,9 @@ class ReviewResult(BaseModel):
 
     # 法律依据，例如 ["《劳动合同法》第十七条"]。无依据时为空列表。
     legal_basis: list[str] = Field(default_factory=list)
+
+    # 本次审查实际检索到、并传给 LLM 的证据本体，用于事后追溯。
+    evidences: list[Evidence] = Field(default_factory=list)
 
     # 修改建议；无风险时可为空字符串
     suggestion: str = ""

@@ -20,7 +20,7 @@ SYSTEM_PROMPT = (
     'risk 为 false 时必须是 "none"，risk 为 true 时不能是 "none"；\n'
     '- reason (string)：判断理由；\n'
     '- legal_basis (array of string)：引用的具体法律依据（例如 "《劳动合同法》第二十条"），'
-    "只能引用下面提供的法律依据，不能编造；没有合适依据时给空数组；\n"
+    "只能逐字引用下面提供的 Evidence 的 article + source，不能编造；没有合适依据时给空数组；\n"
     '- suggestion (string)：修改建议；无风险时可以是空字符串。'
 )
 

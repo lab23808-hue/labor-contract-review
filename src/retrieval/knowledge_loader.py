@@ -32,6 +32,16 @@ _ARTICLE_RE = re.compile(rf"{_INDENT}(第[{_CN_DIGITS}\d]+条)(?!的)", re.MULTI
 _SEPARATORS = [r"\n", r"(?<=[。；])", ""]
 
 
+def load_version(version_file: Optional[Union[str, Path]] = None) -> str:
+    """读取知识库 VERSION；文件缺失或为空时返回 "unknown"。"""
+    path = Path(version_file) if version_file is not None else settings.KNOWLEDGE_DIR / "VERSION"
+    try:
+        content = path.read_text(encoding="utf-8").strip()
+    except OSError:
+        return "unknown"
+    return content or "unknown"
+
+
 class KnowledgeLoader:
     """法律知识入库器。
 

@@ -62,16 +62,23 @@ from typing import Optional, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
+from config import settings
 from domain.agents.review_agent import ClauseReviewer, ReviewError
 from infra.storage import ContractManager
 from domain.document.preparation import parse_and_split_contract
+from domain.prompts.review import PROMPT_VERSION
 from domain.rules import RuleChecker, merge_review_results
-from core import Clause, FailedClause, ReviewReport, ReviewResult, ReviewVersions
+from domain.rules.checker import RULESET_VERSION
+from retrieval.knowledge_loader import load_version
+from core import Clause, Evidence, FailedClause, ReviewReport, ReviewResult, ReviewVersions
 
 
 class ReviewGraphState(TypedDict):
     contract_id: str
     clauses: list[Clause]
+
+    # clause_id → 本次检索到的 Evidence
+    retrieval_results: dict[str, list[Evidence]]
 
     llm_results: list[ReviewResult]
     rule_results: list[ReviewResult]
@@ -104,12 +111,19 @@ def build_graph(
     def llm_review(state: ReviewGraphState) -> dict:
         llm_results: list[ReviewResult] = []
         failed_clauses: list[FailedClause] = []
+        retrieval_results: dict[str, list[Evidence]] = {}
         for clause in state["clauses"]:
             try:
-                llm_results.append(reviewer.review(clause))
+                result = reviewer.review(clause)
+                llm_results.append(result)
+                retrieval_results[clause.clause_id] = list(result.evidences)
             except ReviewError as exc:
                 failed_clauses.append(FailedClause(clause_id=clause.clause_id, error=str(exc)))
-        return {"llm_results": llm_results, "failed_clauses": failed_clauses}
+        return {
+            "llm_results": llm_results,
+            "failed_clauses": failed_clauses,
+            "retrieval_results": retrieval_results,
+        }
 
     def rule_check(state: ReviewGraphState) -> dict:
         rule_results = rule_checker.check(state["clauses"])
@@ -129,7 +143,12 @@ def build_graph(
             contract_id=state["contract_id"],
             results=state["final_results"],
             failed_clauses=state["failed_clauses"],
-            versions=ReviewVersions(),
+            versions=ReviewVersions(
+                llm_model=settings.LLM_MODEL_NAME,
+                prompt_version=PROMPT_VERSION,
+                ruleset_version=RULESET_VERSION,
+                knowledge_base_version=load_version(),
+            ),
         )
         return {"report": report}
 
@@ -168,6 +187,7 @@ def run_review_graph(
     initial_state: ReviewGraphState = {
         "contract_id": contract_id,
         "clauses": [],
+        "retrieval_results": {},
         "llm_results": [],
         "rule_results": [],
         "final_results": [],

@@ -103,6 +103,7 @@ class ClauseReviewer:
             legal_basis=llm_result.legal_basis,
             suggestion=llm_result.suggestion,
             source=ReviewSource.LLM,
+            evidences=list(evidence),
         )
 
     @staticmethod

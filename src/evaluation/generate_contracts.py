@@ -20,7 +20,7 @@ from pathlib import Path
 from evaluation import clause_bank as cb
 from evaluation.schemas import ClauseAnswer, ContractAnswer, ContractSampleType
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "eval_samples"
+DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "eval_samples"
 CONTRACTS_DIR = DATA_DIR / "contracts"
 ANSWERS_DIR = DATA_DIR / "answers"
 

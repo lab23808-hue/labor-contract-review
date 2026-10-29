@@ -13,6 +13,10 @@ data/runtime/*
 data/index/*
 *.db
 
+# 评估样本与评估结果（由 scripts/generate_eval_contracts.py 生成）
+data/eval_samples/
+data/eval_results/
+
 # 本地 Python 虚拟环境
 venv/
 

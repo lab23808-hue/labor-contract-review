@@ -38,6 +38,7 @@ TEST_LAYERS = {
         "test_rag_bm25_index.py",
         "test_api_dependencies.py",
         "test_api_contracts.py",
+        "test_modification_service.py",
     ],
     "graph": [
         "test_review_pipeline.py",

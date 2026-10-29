@@ -71,6 +71,7 @@ def test_chat_passes_model_and_messages_and_temperature():
     assert kwargs["model"] == "my-model"
     assert kwargs["messages"] == [{"role": "user", "content": "hi"}]
     assert kwargs["temperature"] == 0.3
+    assert kwargs["timeout"] == 60
 
 
 def test_chat_default_temperature_is_zero():

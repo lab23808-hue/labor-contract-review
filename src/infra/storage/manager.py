@@ -23,7 +23,7 @@ import re
 import shutil
 import uuid
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 from config import settings
 from core._time import utc_now
@@ -311,6 +311,13 @@ class ContractManager:
             return [Clause(**item) for item in items]
         except ValueError as e:  # JSON 格式错误、字段校验失败
             raise ContractError(f"合同 {contract_id} 的 Clause 数据已损坏") from e
+
+    def load_clauses(self, contract_id: str) -> Optional[list[Clause]]:
+        """读取已保存的 Clause；不存在时返回 None，数据损坏仍抛 ContractError。"""
+        try:
+            return self.get_clauses(contract_id)
+        except ContractNotFoundError:
+            return None
 
     def save_review(self, contract_id: str, report: ReviewReport, contract_version: str = "v1") -> ReviewRecord:
         """持久化一次审查结果，并把合同状态推进到 reviewed。

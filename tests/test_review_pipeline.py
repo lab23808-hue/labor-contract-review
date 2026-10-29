@@ -20,6 +20,7 @@ from infra.storage import ContractManager, ContractNotFoundError
 from infra.llm import LLMClientError
 from domain.rules import RuleChecker
 from core import Evidence, ReviewReport, ReviewSource
+import workflow.review_workflow as review_workflow_module
 from workflow.review_workflow import ReviewGraphState, run_review, run_review_graph
 
 CONTRACT_TEXT = (
@@ -130,6 +131,23 @@ def test_contract_loading_produces_clauses_in_state(tmp_path):
     state = run_review_graph(contract_id, manager, make_reviewer(FakeLLMClient()), RuleChecker())
 
     assert [c.clause_id for c in state["clauses"]] == ["clause_001", "clause_002", "clause_003"]
+
+
+def test_second_review_reuses_saved_clauses_without_reparsing(tmp_path, monkeypatch):
+    manager, contract_id = make_contract(tmp_path)
+    calls = []
+    original = review_workflow_module.parse_and_split_contract
+
+    def spy(*args, **kwargs):
+        calls.append(args)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(review_workflow_module, "parse_and_split_contract", spy)
+
+    run_review_graph(contract_id, manager, make_reviewer(FakeLLMClient()), RuleChecker())
+    run_review_graph(contract_id, manager, make_reviewer(FakeLLMClient()), RuleChecker())
+
+    assert len(calls) == 1
 
 
 # ---------------------------------------------------------------- 并行分支与汇合

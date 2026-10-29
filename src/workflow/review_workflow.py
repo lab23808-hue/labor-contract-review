@@ -105,7 +105,9 @@ def build_graph(
 
     def contract_loading(state: ReviewGraphState) -> dict:
         contract_id = state["contract_id"]
-        clauses = parse_and_split_contract(contract_id, contract_manager)
+        clauses = contract_manager.load_clauses(contract_id)
+        if clauses is None:
+            clauses = parse_and_split_contract(contract_id, contract_manager)
         return {"clauses": clauses}
 
     def llm_review(state: ReviewGraphState) -> dict:

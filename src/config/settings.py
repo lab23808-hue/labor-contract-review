@@ -8,6 +8,7 @@
 """
 
 from pathlib import Path
+import os
 
 # ---------------------------------------------------------------- 路径
 # 基于本文件位置推导，不依赖运行时的当前工作目录。
@@ -33,7 +34,7 @@ RETRIEVAL_TOP_K = 5  # 每次检索返回的法律依据条数
 #       docs/ 下 2026-10-12 BM25 接入报告的"回滚方法"一节）。
 # 非法取值在 api/dependencies.py::build_app_state() 启动时直接报错，不会
 # 静默退化到某一个默认策略。
-RETRIEVAL_STRATEGY = "bm25"
+RETRIEVAL_STRATEGY = os.getenv("RETRIEVAL_STRATEGY", "bm25")
 
 # ---------------------------------------------------------------- 文本切分
 # 合同条款切分（clause/）和法律知识切分（rag/loader.py）是两个互相独立的模块，

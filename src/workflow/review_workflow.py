@@ -79,6 +79,8 @@ class ReviewGraphState(TypedDict):
 
     # clause_id → 本次检索到的 Evidence
     retrieval_results: dict[str, list[Evidence]]
+    # clause_id → 检索失败原因（与 LLM 失败分开记录）
+    retrieval_errors: dict[str, str]
 
     llm_results: list[ReviewResult]
     rule_results: list[ReviewResult]
@@ -110,22 +112,34 @@ def build_graph(
             clauses = parse_and_split_contract(contract_id, contract_manager)
         return {"clauses": clauses}
 
+    def retrieve(state: ReviewGraphState) -> dict:
+        results: dict[str, list[Evidence]] = {}
+        errors: dict[str, str] = {}
+        for clause in state["clauses"]:
+            try:
+                results[clause.clause_id] = reviewer.retrieve(clause)
+            except ReviewError as exc:
+                errors[clause.clause_id] = str(exc)
+        return {"retrieval_results": results, "retrieval_errors": errors}
+
     def llm_review(state: ReviewGraphState) -> dict:
         llm_results: list[ReviewResult] = []
         failed_clauses: list[FailedClause] = []
-        retrieval_results: dict[str, list[Evidence]] = {}
+        retrieval_results = state["retrieval_results"]
+        retrieval_errors = state["retrieval_errors"]
         for clause in state["clauses"]:
+            if clause.clause_id in retrieval_errors:
+                failed_clauses.append(
+                    FailedClause(clause_id=clause.clause_id, error=retrieval_errors[clause.clause_id])
+                )
+                continue
             try:
-                result = reviewer.review(clause)
-                llm_results.append(result)
-                retrieval_results[clause.clause_id] = list(result.evidences)
+                llm_results.append(
+                    reviewer.review(clause, retrieval_results.get(clause.clause_id, []))
+                )
             except ReviewError as exc:
                 failed_clauses.append(FailedClause(clause_id=clause.clause_id, error=str(exc)))
-        return {
-            "llm_results": llm_results,
-            "failed_clauses": failed_clauses,
-            "retrieval_results": retrieval_results,
-        }
+        return {"llm_results": llm_results, "failed_clauses": failed_clauses}
 
     def rule_check(state: ReviewGraphState) -> dict:
         rule_results = rule_checker.check(state["clauses"])
@@ -156,13 +170,15 @@ def build_graph(
 
     graph = StateGraph(ReviewGraphState)
     graph.add_node("contract_loading", contract_loading)
+    graph.add_node("retrieve", retrieve)
     graph.add_node("llm_review", llm_review)
     graph.add_node("rule_check", rule_check)
     graph.add_node("merge", merge)
     graph.add_node("report_assembly", report_assembly)
 
     graph.add_edge(START, "contract_loading")
-    graph.add_edge("contract_loading", "llm_review")
+    graph.add_edge("contract_loading", "retrieve")
+    graph.add_edge("retrieve", "llm_review")
     graph.add_edge("contract_loading", "rule_check")
     graph.add_edge("llm_review", "merge")
     graph.add_edge("rule_check", "merge")
@@ -190,6 +206,7 @@ def run_review_graph(
         "contract_id": contract_id,
         "clauses": [],
         "retrieval_results": {},
+        "retrieval_errors": {},
         "llm_results": [],
         "rule_results": [],
         "final_results": [],

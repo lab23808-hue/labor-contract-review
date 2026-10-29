@@ -46,7 +46,10 @@ class _FakeReviewer:
     def __init__(self) -> None:
         self.reviewed_clause_ids: list[str] = []
 
-    def review(self, clause: Clause) -> ReviewResult:
+    def retrieve(self, clause: Clause) -> list:
+        return []
+
+    def review(self, clause: Clause, evidences=None) -> ReviewResult:
         self.reviewed_clause_ids.append(clause.clause_id)
         return ReviewResult(
             clause_id=clause.clause_id,

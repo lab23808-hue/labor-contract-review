@@ -121,6 +121,18 @@ def test_review_returns_review_result_with_expected_fields():
     assert result.evidences == [evidence]
 
 
+def test_review_with_explicit_evidence_does_not_retrieve():
+    clause = make_clause("条款内容")
+    evidence = make_evidence()
+    retriever = FakeRetriever(error=RuntimeError("不应调用检索"))
+    reviewer = ClauseReviewer(retriever, FakeLLMClient(response=VALID_LLM_JSON))
+
+    result = reviewer.review(clause, [evidence])
+
+    assert retriever.calls == []
+    assert result.evidences == [evidence]
+
+
 def test_review_uses_generated_query_for_retrieval():
     clause = make_clause("第一条 试用期工资\n乙方试用期工资为正式工资的百分之五十。")
     retriever = FakeRetriever()

@@ -16,6 +16,8 @@
 多条款/多阶段的整体编排由 workflows.review_workflow 负责。
 """
 
+from typing import Optional
+
 import json
 import re
 
@@ -26,7 +28,7 @@ from config import settings
 from domain.ports import LLMPort, LLMPortError
 from domain.prompts.review import build_review_messages
 from core.retrieval import RetrievalService
-from core import Clause, ReviewResult, ReviewSource
+from core import Clause, Evidence, ReviewResult, ReviewSource
 
 _ARTICLE_NUMBER_RE = re.compile(r"^第[一二三四五六七八九十百千零〇两\d]+条[ \t　]*")
 _ITEM_PREFIX_RE = re.compile(r"^(?:\d+[.．、]|[（(][一二三四五六七八九十\d]+[）)])\s*")
@@ -71,21 +73,25 @@ class ClauseReviewer:
         self.llm_client = llm_client
         self.top_k = top_k
 
-    def review(self, clause: Clause) -> ReviewResult:
-        """跑完整条链路，返回 schemas.ReviewResult（source=llm）。"""
+    def retrieve(self, clause: Clause) -> list[Evidence]:
+        """按条款生成 query 并检索证据；检索失败抛 ReviewError。"""
         query = generate_query(clause)
-
         try:
-            evidence = self.retriever.search_legal_knowledge(query, k=self.top_k)
+            return self.retriever.search_legal_knowledge(query, k=self.top_k)
         except Exception as exc:
             raise ReviewError(
                 f"检索法律依据失败（clause_id={clause.clause_id}，query={query!r}）：{exc}"
             ) from exc
 
+    def review(self, clause: Clause, evidences: Optional[list[Evidence]] = None) -> ReviewResult:
+        """基于传入证据审查单条条款；未传入时才自行检索（兼容单条调用）。"""
+        if evidences is None:
+            evidences = self.retrieve(clause)
+
         messages = build_review_messages(
             clause_text=clause.original_text,
             clause_type=clause.clause_type,
-            evidence=evidence,
+            evidence=evidences,
         )
 
         try:
@@ -103,7 +109,7 @@ class ClauseReviewer:
             legal_basis=llm_result.legal_basis,
             suggestion=llm_result.suggestion,
             source=ReviewSource.LLM,
-            evidences=list(evidence),
+            evidences=list(evidences),
         )
 
     @staticmethod

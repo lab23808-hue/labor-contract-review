@@ -40,6 +40,7 @@ LOCKED_STATE_FIELDS = {
     "contract_id",
     "clauses",
     "retrieval_results",
+    "retrieval_errors",
     "llm_results",
     "rule_results",
     "final_results",
@@ -53,7 +54,11 @@ NO_RISK_JSON = '{"risk": false, "risk_level": "none", "reason": "示例：未发
 # ---------------------------------------------------------------- 测试替身（仅外部服务）
 
 class FakeRetriever:
+    def __init__(self):
+        self.queries = []
+
     def search_legal_knowledge(self, query, k=None):
+        self.queries.append(query)
         return [Evidence(content="示例法条内容", source="劳动合同法", article="第十七条", metadata={"score": 0.1})]
 
 
@@ -161,6 +166,18 @@ def test_both_parallel_branches_execute(tmp_path):
 
     assert llm_client.calls == 3  # LLM 分支：逐条审查 3 个条款
     assert rule_checker.calls == [["clause_001", "clause_002", "clause_003"]]  # 规则分支：一次拿到全部条款
+
+
+def test_retrieval_node_retrieves_each_clause(tmp_path):
+    manager, contract_id = make_contract(tmp_path)
+    retriever = FakeRetriever()
+    reviewer = ClauseReviewer(retriever, FakeLLMClient())
+
+    state = run_review_graph(contract_id, manager, reviewer, RuleChecker())
+
+    assert len(retriever.queries) == 3
+    assert set(state["retrieval_results"]) == {"clause_001", "clause_002", "clause_003"}
+    assert state["retrieval_errors"] == {}
 
 
 def test_branches_join_at_merge_without_overwriting(tmp_path):

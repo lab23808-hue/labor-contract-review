@@ -47,7 +47,7 @@ def test_settings_only_depends_on_standard_library():
             imported |= {a.name.split(".")[0] for a in node.names}
         elif isinstance(node, ast.ImportFrom) and node.module:
             imported.add(node.module.split(".")[0])
-    assert imported <= {"pathlib"}
+    assert imported <= {"pathlib", "os"}
 
 
 # ---------- 各模块的默认值来自 settings ----------

@@ -15,7 +15,7 @@ LLM 调用、RuleChecker 的行为完全由各自的模块决定。
 
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Union
 
 from fastapi import Depends, FastAPI, Request
 from langchain_core.embeddings import Embeddings
@@ -31,6 +31,7 @@ from infra.storage import ContractManager
 from infra.llm.client import OpenAICompatibleClient, build_deepseek_client
 from domain.modification.service import ModificationService
 from retrieval.backends.dense import DenseBackend
+from retrieval.backends.hybrid import HybridBackend
 from retrieval.backends.lexical import BM25Backend
 from retrieval.embedding import build_embedder
 from retrieval.knowledge_loader import KnowledgeLoader
@@ -56,7 +57,7 @@ class AppState:
 
     contract_manager: ContractManager
     embedder: Optional[Embeddings]
-    knowledge_base: Optional[DenseBackend]
+    knowledge_base: Optional[Union[DenseBackend, HybridBackend]]
     retriever: LegalKnowledgeRetriever
     llm_client: OpenAICompatibleClient
     reviewer: ClauseReviewer
@@ -125,9 +126,22 @@ def build_app_state() -> AppState:
                 f"知识库 Evidence 数={expected}（目录 {settings.KNOWLEDGE_DIR}）"
             )
         retriever = LegalKnowledgeRetriever(knowledge_base=knowledge_base)
+    elif strategy == "hybrid":
+        embedder = build_embedder()
+        dense = DenseBackend(embedding_function=embedder)
+        expected = KnowledgeLoader(None).count_evidences(settings.KNOWLEDGE_DIR)
+        actual = dense.count()
+        if actual != expected:
+            raise RuntimeError(
+                f"Hybrid 的 Dense 索引与知识库不一致：Chroma count={actual}，"
+                f"知识库 Evidence 数={expected}（目录 {settings.KNOWLEDGE_DIR}）"
+            )
+        evidences = KnowledgeLoader(None).load_directory(settings.KNOWLEDGE_DIR)
+        knowledge_base = HybridBackend(dense=dense, lexical=BM25Backend(evidences))
+        retriever = LegalKnowledgeRetriever(knowledge_base=knowledge_base)
     else:
         raise ValueError(
-            f"settings.RETRIEVAL_STRATEGY 取值非法：{strategy!r}，只能是 'bm25' 或 'dense'"
+            f"settings.RETRIEVAL_STRATEGY 取值非法：{strategy!r}，只能是 'bm25'、'dense' 或 'hybrid'"
         )
 
     llm_client = build_deepseek_client()  # 读 .env 里的 DEEPSEEK_API_KEY，只在这里做一次
@@ -182,7 +196,7 @@ def get_embedder(request: Request) -> Optional[Embeddings]:
     return get_app_state(request).embedder
 
 
-def get_knowledge_base(request: Request) -> Optional[DenseBackend]:
+def get_knowledge_base(request: Request) -> Optional[Union[DenseBackend, HybridBackend]]:
     """RETRIEVAL_STRATEGY="bm25" 时返回 None（没有任何路由依赖这个函数，
     见 AppState 的字段说明）。"""
     return get_app_state(request).knowledge_base

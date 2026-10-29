@@ -27,6 +27,7 @@ TEST_LAYERS = {
         "test_risk_diff.py",
         "test_validate_knowledge_base.py",
         "test_eval_metrics.py",
+        "test_retrieval_fusion.py",
     ],
     "module": [
         "test_parser_integration.py",

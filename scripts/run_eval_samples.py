@@ -136,9 +136,9 @@ def _run_one(answer: ContractAnswer, retriever, llm_client) -> dict:
 
 def _write_report(result: dict) -> None:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    (RESULTS_DIR / "eval_report.json").write_text(
-        json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    payload = json.dumps(result, ensure_ascii=False, indent=2)
+    (RESULTS_DIR / "eval_report.json").write_text(payload, encoding="utf-8")
+    (RESULTS_DIR / f"eval_report_{result['strategy']}.json").write_text(payload, encoding="utf-8")
 
     m = result["metrics"]
     lines = [

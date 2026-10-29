@@ -16,6 +16,7 @@ from retrieval.backends.dense import (
     DenseBackend,
     build_dense_backend,
 )
+from retrieval.backends.hybrid import HybridBackend
 from retrieval.backends.lexical import (
     SCORE_TYPE,
     BM25Backend,
@@ -25,12 +26,14 @@ from retrieval.backends.lexical import (
 )
 from retrieval.base import SimilaritySearchBackend, VectorSink
 from retrieval.embedding import DEFAULT_MODEL_NAME, EmbeddingService, build_embedder
+from retrieval.fusion import rrf_fuse, rrf_scores
 from retrieval.knowledge_loader import KnowledgeLoader
 from retrieval.retriever import LegalKnowledgeRetriever
 
 __all__ = [
     "ChromaVectorStore",
     "DenseBackend",
+    "HybridBackend",
     "build_dense_backend",
     "DEFAULT_COLLECTION_NAME",
     "DEFAULT_PERSIST_DIR",
@@ -46,4 +49,6 @@ __all__ = [
     "BM25IndexBuildError",
     "char_bigram_tokenizer",
     "SCORE_TYPE",
+    "rrf_fuse",
+    "rrf_scores",
 ]

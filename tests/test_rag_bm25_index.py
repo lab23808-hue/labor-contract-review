@@ -135,3 +135,8 @@ def test_bm25_index_satisfies_retriever_contract_end_to_end():
     assert len(results) == 1
     assert results[0].article == "第十九条"
     assert results[0].metadata["score_type"] == "bm25_okapi_char_bigram"
+
+
+def test_bm25_backend_filters_zero_score_results():
+    backend = BM25Backend([_evidence("劳动合同期限三个月。", article="第十九条")])
+    assert backend.similarity_search("zzzz-no-match", k=5) == []

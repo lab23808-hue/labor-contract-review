@@ -22,7 +22,8 @@ class BM25Backend:
         self.index = BM25Index(evidences, tokenize=tokenize, k1=k1, b=b)
 
     def similarity_search(self, query: str, k: int = 5) -> list[tuple[Document, float]]:
-        return self.index.similarity_search(query, k=k)
+        results = self.index.similarity_search(query, k=k)
+        return [(doc, score) for doc, score in results if score > 0]
 
     def count(self) -> int:
         return self.index.count()

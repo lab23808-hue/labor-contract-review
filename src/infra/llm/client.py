@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from openai import OpenAI, OpenAIError
 
 from config import settings
+from domain.ports import LLMPortError
 
 # DeepSeek 官方 OpenAI 兼容地址（固定写死，不要求写进 .env）。
 # 参考：https://api-docs.deepseek.com
@@ -22,7 +23,7 @@ DEEPSEEK_BASE_URL = "https://api.deepseek.com"
 DEFAULT_DEEPSEEK_MODEL = settings.LLM_MODEL_NAME
 
 
-class LLMClientError(Exception):
+class LLMClientError(LLMPortError):
     """LLM 连接/调用失败（缺配置、鉴权失败、网络错误、限流等）。
 
     只表示“连接层出了问题”，不涉及审查业务逻辑。

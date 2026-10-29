@@ -43,7 +43,7 @@ from typing import Optional
 from domain.agents.modification_agent import ModificationAgent, ModificationAgentError
 from domain.agents.review_agent import ClauseReviewer
 from domain.agents.risk_analyzer import analyze_modified_clause
-from infra.storage import ContractError, ContractManager, ContractNotFoundError
+from domain.ports import StorageNotFoundError, StoragePort
 from domain.modification.risk_resolution import determine_risk_resolution
 from domain.modification.validator import validate
 from core import (
@@ -88,7 +88,7 @@ def compute_batch_readiness(tasks: list[ModificationTask]) -> tuple[bool, list[M
 class ModificationService:
     def __init__(
         self,
-        contract_manager: ContractManager,
+        contract_manager: StoragePort,
         agent: ModificationAgent,
         reviewer: Optional[ClauseReviewer] = None,
     ) -> None:
@@ -111,7 +111,7 @@ class ModificationService:
         """
         try:
             self.contract_manager.get_review(contract_id, source_review_id)
-        except ContractNotFoundError as exc:
+        except StorageNotFoundError as exc:
             raise ModificationServiceError(
                 f"合同 {contract_id} 不存在审查记录 {source_review_id}，无法以此为依据开始一轮修改"
             ) from exc

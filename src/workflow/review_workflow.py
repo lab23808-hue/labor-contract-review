@@ -64,7 +64,7 @@ from langgraph.graph import END, START, StateGraph
 
 from config import settings
 from domain.agents.review_agent import ClauseReviewer, ReviewError
-from infra.storage import ContractManager
+from domain.ports import StoragePort
 from domain.document.preparation import parse_and_split_contract
 from domain.prompts.review import PROMPT_VERSION
 from domain.rules import RuleChecker, merge_review_results
@@ -92,7 +92,7 @@ class ReviewGraphState(TypedDict):
 
 
 def build_graph(
-    contract_manager: ContractManager,
+    contract_manager: StoragePort,
     reviewer: ClauseReviewer,
     rule_checker: RuleChecker,
 ):
@@ -174,7 +174,7 @@ def build_graph(
 
 def run_review_graph(
     contract_id: str,
-    contract_manager: ContractManager,
+    contract_manager: StoragePort,
     reviewer: ClauseReviewer,
     rule_checker: RuleChecker,
 ) -> ReviewGraphState:
@@ -201,7 +201,7 @@ def run_review_graph(
 
 def run_review(
     contract_id: str,
-    contract_manager: ContractManager,
+    contract_manager: StoragePort,
     reviewer: ClauseReviewer,
     rule_checker: RuleChecker,
 ) -> ReviewReport:

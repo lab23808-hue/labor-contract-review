@@ -34,6 +34,7 @@ from core.modification_batch import ModificationBatch
 from core.modification_task import ModificationTask, ReviewResultSnapshot
 from core.review_record import ReviewRecord
 from core.review_report import ReviewReport
+from domain.ports import StorageError, StorageNotFoundError
 
 # 默认存储根目录：见 config/settings.py 的 CONTRACTS_DIR（基于文件位置推导，不依赖当前工作目录）。
 DEFAULT_ROOT_DIR = settings.CONTRACTS_DIR
@@ -54,11 +55,11 @@ _EXTENSION_RE = re.compile(r"[a-z0-9]+")  # 与 Contract.file_format 的约束�
 _CHUNK_SIZE = 1024 * 1024  # 计算哈希时每次读 1MB，避免大文件一次性读入内存
 
 
-class ContractError(Exception):
+class ContractError(StorageError):
     """合同管理相关的错误基类。"""
 
 
-class ContractNotFoundError(ContractError):
+class ContractNotFoundError(ContractError, StorageNotFoundError):
     """合同不存在（包括 contract_id 格式不合法、目录不完整）。"""
 
 

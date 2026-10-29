@@ -23,7 +23,7 @@ from pydantic import ValidationError
 
 from domain.agents.review_schemas import LLMReviewOutput
 from config import settings
-from infra.llm.client import LLMClientError, OpenAICompatibleClient
+from domain.ports import LLMPort, LLMPortError
 from domain.prompts.review import build_review_messages
 from core.retrieval import RetrievalService
 from core import Clause, ReviewResult, ReviewSource
@@ -64,7 +64,7 @@ class ClauseReviewer:
     def __init__(
         self,
         retriever: RetrievalService,
-        llm_client: OpenAICompatibleClient,
+        llm_client: LLMPort,
         top_k: int = settings.RETRIEVAL_TOP_K,
     ) -> None:
         self.retriever = retriever
@@ -90,7 +90,7 @@ class ClauseReviewer:
 
         try:
             raw_output = self.llm_client.chat(messages, json_mode=True)
-        except LLMClientError as exc:
+        except LLMPortError as exc:
             raise ReviewError(f"调用 LLM 失败（clause_id={clause.clause_id}）：{exc}") from exc
 
         llm_result = self._parse_llm_output(raw_output, clause_id=clause.clause_id)

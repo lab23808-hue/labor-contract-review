@@ -27,7 +27,7 @@ contract.manager。
 
 from typing import Optional, Union
 
-from infra.llm.client import LLMClientError, OpenAICompatibleClient
+from domain.ports import LLMPort, LLMPortError
 from domain.modification.tool import ModificationToolError, execute_modify_clause
 from domain.prompts.modification import MODIFY_CLAUSE_TOOL_SCHEMA, build_modification_messages
 from core import Clause, ModificationResult, ReviewResult, ReviewResultSnapshot
@@ -44,7 +44,7 @@ class ModificationAgentError(Exception):
 class ModificationAgent:
     """针对单个条款的修改 Agent：拼 Prompt → Function Calling → 解析工具调用。"""
 
-    def __init__(self, llm_client: OpenAICompatibleClient) -> None:
+    def __init__(self, llm_client: LLMPort) -> None:
         self.llm_client = llm_client
 
     def generate_candidate(
@@ -68,7 +68,7 @@ class ModificationAgent:
 
         try:
             arguments = self.llm_client.chat_with_tool(messages, MODIFY_CLAUSE_TOOL_SCHEMA)
-        except LLMClientError as exc:
+        except LLMPortError as exc:
             raise ModificationAgentError(f"调用 LLM 失败（clause_id={clause.clause_id}）：{exc}") from exc
 
         try:

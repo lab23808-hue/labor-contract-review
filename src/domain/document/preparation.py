@@ -25,7 +25,7 @@ parse_and_split_contract（或 parse_contract / split_contract），不应该
 
 from typing import Optional
 
-from infra.storage import ContractManager
+from domain.ports import StoragePort
 from domain.document.parser import DocumentParser
 from domain.document.splitter import ClauseSplitter
 from core import Clause
@@ -33,7 +33,7 @@ from core import Clause
 
 def parse_contract(
     contract_id: str,
-    contract_manager: ContractManager,
+    contract_manager: StoragePort,
     document_parser: Optional[DocumentParser] = None,
 ) -> str:
     """解析某份已上传的合同，并把结果保存回它的合同目录。返回解析出的文本。
@@ -51,7 +51,7 @@ def parse_contract(
 
 def split_contract(
     contract_id: str,
-    contract_manager: ContractManager,
+    contract_manager: StoragePort,
     clause_splitter: Optional[ClauseSplitter] = None,
 ) -> list[Clause]:
     """切分某份已解析的合同，并把结果保存回它的合同目录。返回 Clause 列表。
@@ -70,7 +70,7 @@ def split_contract(
 
 def parse_and_split_contract(
     contract_id: str,
-    contract_manager: ContractManager,
+    contract_manager: StoragePort,
     document_parser: Optional[DocumentParser] = None,
     clause_splitter: Optional[ClauseSplitter] = None,
 ) -> list[Clause]:
